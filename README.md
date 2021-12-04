@@ -1,1 +1,1 @@
-# Essensplaner Team 0
+# EventManager Team 0
