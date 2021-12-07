@@ -19,11 +19,9 @@
                     <h:outputText value="#{user.lastName}"/>
                 </p:column>
                 <p:column headerText="Roles">
-                    <h:outputText value="#{user.roles}" />
+                    <h:outputText value="#{user.role}" />
                 </p:column>
-                <p:column headerText="Enabled">
-                    <h:selectBooleanCheckbox value="#{user.enabled}" disabled="true"/>
-                </p:column>
+
                 <p:column style="width:100px;text-align: center">
                     <p:commandButton update=":userForm:userEditDialog" oncomplete="PF('userEditDialog').show()" icon="pi pi-user-edit" title="Edit">
                         <f:setPropertyActionListener value="#{user}" target="#{userDetailController.user}" />

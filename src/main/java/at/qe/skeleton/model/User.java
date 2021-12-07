@@ -32,30 +32,20 @@ public class User implements Persistable<String>, Serializable, Comparable<User>
     @Id
     @Column(length = 100)
     private String username;
+    private String password;
 
-    @ManyToOne(optional = false)
-    private User createUser;
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createDate;
-    @ManyToOne(optional = true)
-    private User updateUser;
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date updateDate;
-
-    private String password;
 
     private String firstName;
     private String lastName;
     private String email;
-    private String phone;
 
     boolean enabled;
 
-    @ElementCollection(targetClass = UserRole.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "User_UserRole")
     @Enumerated(EnumType.STRING)
-    private Set<UserRole> roles;
+    private UserRole role;
 
     public String getUsername() {
         return username;
@@ -97,38 +87,6 @@ public class User implements Persistable<String>, Serializable, Comparable<User>
         this.email = email;
     }
 
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public Set<UserRole> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<UserRole> roles) {
-        this.roles = roles;
-    }
-
-    public User getCreateUser() {
-        return createUser;
-    }
-
-    public void setCreateUser(User createUser) {
-        this.createUser = createUser;
-    }
-
     public Date getCreateDate() {
         return createDate;
     }
@@ -137,20 +95,12 @@ public class User implements Persistable<String>, Serializable, Comparable<User>
         this.createDate = createDate;
     }
 
-    public User getUpdateUser() {
-        return updateUser;
+    public UserRole getRole() {
+        return role;
     }
 
-    public void setUpdateUser(User updateUser) {
-        this.updateUser = updateUser;
-    }
-
-    public Date getUpdateDate() {
-        return updateDate;
-    }
-
-    public void setUpdateDate(Date updateDate) {
-        this.updateDate = updateDate;
+    public void setRole(UserRole role) {
+        this.role = role;
     }
 
     @Override
@@ -198,5 +148,4 @@ public class User implements Persistable<String>, Serializable, Comparable<User>
 	public int compareTo(User o) {
 		return this.username.compareTo(o.getUsername());
 	}
-
 }

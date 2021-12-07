@@ -59,10 +59,6 @@ public class UserService {
     public User saveUser(User user) {
         if (user.isNew()) {
             user.setCreateDate(new Date());
-            user.setCreateUser(getAuthenticatedUser());
-        } else {
-            user.setUpdateDate(new Date());
-            user.setUpdateUser(getAuthenticatedUser());
         }
         return userRepository.save(user);
     }
@@ -76,11 +72,6 @@ public class UserService {
     public void deleteUser(User user) {
         userRepository.delete(user);
         // :TODO: write some audit log stating who and when this user was permanently deleted.
-    }
-
-    private User getAuthenticatedUser() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return userRepository.findFirstByUsername(auth.getName());
     }
 
 }

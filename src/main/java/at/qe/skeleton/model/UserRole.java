@@ -2,15 +2,13 @@ package at.qe.skeleton.model;
 
 /**
  * Enumeration of available user roles.
- *
- * This class is part of the skeleton project provided for students of the
- * courses "Software Architecture" and "Software Engineering" offered by the
- * University of Innsbruck.
+ * <p>
+ * This class is part of the Event Manager Program by Team 0
  */
 public enum UserRole {
 
     ADMIN,
-    MANAGER,
-    EMPLOYEE
+    LOCATION_MANAGER,
+    USER
 
 }
