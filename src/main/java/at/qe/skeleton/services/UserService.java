@@ -2,15 +2,12 @@ package at.qe.skeleton.services;
 
 import at.qe.skeleton.model.User;
 import at.qe.skeleton.repositories.UserRepository;
-
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 /**
@@ -22,7 +19,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Scope("application")
-public class UserService {
+public class UserService implements Serializable{
 
     @Autowired
     private UserRepository userRepository;
