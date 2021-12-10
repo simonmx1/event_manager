@@ -42,16 +42,16 @@
                         <p:outputLabel for="username" value="Username: " />
                         <p:inputText id="username" value="#{userDetailController.user.username}" disabled="true"/>
                         <p:outputLabel for="password" value="Password: " />
-                        <p:password id="password" value="#{userDetailController.user.password}"/>
+                        <p:password id="password" value="#{userDetailController.user.password}" disabled="true"/>
                     </h:panelGrid>
                     <p:separator />
                     <h:panelGrid columns="2">
                         <p:outputLabel for="firstName" value="First Name: " />
-                        <p:inputText id="firstName" value="#{userDetailController.user.firstName}"/>
+                        <p:inputText id="firstName" value="#{userDetailController.user.firstName}" required="true" requiredMessage="First Name is required"/>
                         <p:outputLabel for="firstName" value="Last Name: " />
-                        <p:inputText id="lastName" value="#{userDetailController.user.lastName}"/>
+                        <p:inputText id="lastName" value="#{userDetailController.user.lastName}" required="true" requiredMessage="Last Name is required"/>
                         <p:outputLabel for="email" value="E-Mail: " />
-                        <p:inputText id="email" value="#{userDetailController.user.email}"/>
+                        <p:inputText id="email" value="#{userDetailController.user.email}" required="true" requiredMessage="Email is required"/>
                     </h:panelGrid>
                     <p:separator />
                     <h:panelGrid columns="2">
@@ -67,8 +67,12 @@
                         </p:selectOneMenu>
                     </h:panelGrid>
                     <p:separator />
+                    <p:messages id="messages" showDetail="true">
+                        <p:autoUpdate/>
+                    </p:messages>
+                    <p:separator/>
                     <h:panelGrid columns="3">
-                        <p:commandButton value="Save" action="#{userDetailController.doSaveUser()}" oncomplete="PF('userEditDialog').hide()" update=":userForm:usersTable"/>
+                        <p:commandButton value="Save" action="#{userDetailController.doSaveUser()}" onsuccess="PF('userEditDialog').hide()" update=":userForm:usersTable"/>
                         <p:commandButton value="Reload" action="#{userDetailController.doReloadUser()}" update=":userForm:userData"/>
                         <p:commandButton value="Abort" onclick="PF('userEditDialog').hide()"/>
                     </h:panelGrid>
