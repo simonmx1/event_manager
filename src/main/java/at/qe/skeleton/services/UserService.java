@@ -74,7 +74,6 @@ public class UserService {
      * @param user the user to save
      * @return the updated user
      */
-    @PreAuthorize("hasAuthority('ADMIN')")
     public User createUser(User user) {
         if (!this.getAllUsers().contains(user)) {
             return saveUser(user);

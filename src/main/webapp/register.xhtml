@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3c.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/templates/main.xhtml">
+    <ui:define name="content">
+        <h:form>
+        <p:outputPanel id="userData" rendered="#{not empty userCreateController.user}">
+            <h:panelGrid columns="2">
+                <p:outputLabel for="username" value="Username: "/>
+                <p:inputText id="username" value="#{userCreateController.user.username}" required="true" requiredMessage="Username is required"/>
+                <p:outputLabel for="password" value="Password: "/>
+                <p:password id="password" value="#{userCreateController.user.password}" required="true" requiredMessage="Password is required"/>
+            </h:panelGrid>
+            <p:separator/>
+            <h:panelGrid columns="2">
+                <p:outputLabel for="firstName" value="First Name: "/>
+                <p:inputText id="firstName" value="#{userCreateController.user.firstName}" required="true" requiredMessage="First Name is required"/>
+                <p:outputLabel for="firstName" value="Last Name: "/>
+                <p:inputText id="lastName" value="#{userCreateController.user.lastName}" required="true" requiredMessage="Last Name is required"/>
+                <p:outputLabel for="email" value="E-Mail: "/>
+                <p:inputText id="email" value="#{userCreateController.user.email}" required="true" requiredMessage="Email is required">
+                    <f:validateRegex pattern="([^.@]+)(.[^.@]+)*@([^.@]+.)+([^.@]+)"/>
+                </p:inputText>
+            </h:panelGrid>
+            <p:separator/>
+            <h:panelGrid columns="2">
+                <p:outputLabel for="enabled" value="Enabled: "/>
+                <p:selectBooleanCheckbox id="enabled" value="#{userCreateController.user.enabled}"/>
+            </h:panelGrid>
+            <h:panelGrid columns="2">
+                <p:outputLabel for="role" value="Role: "/>
+                <p:selectOneMenu id="role" value="#{userCreateController.user.role}">
+                    <f:selectItem itemLabel="User" itemValue="USER"/>
+                </p:selectOneMenu>
+            </h:panelGrid>
+            <p:separator/>
+            <h:panelGrid columns="1">
+                <p:commandButton update="@form" value="Save" action="#{userCreateController.createUser()}"/>
+                <p:messages id="messages" showDetail="true">
+                    <p:autoUpdate/>
+                </p:messages>
+            </h:panelGrid>
+        </p:outputPanel>
+        </h:form>
+    </ui:define>
+</ui:composition>
