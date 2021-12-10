@@ -42,7 +42,7 @@ public class User implements Persistable<String>, Serializable, Comparable<User>
     private String lastName;
     private String email;
 
-    boolean enabled;
+    boolean enabled = true;
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
@@ -101,6 +101,14 @@ public class User implements Persistable<String>, Serializable, Comparable<User>
 
     public void setRole(UserRole role) {
         this.role = role;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     @Override

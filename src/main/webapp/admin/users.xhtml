@@ -18,8 +18,11 @@
                 <p:column headerText="Last Name">
                     <h:outputText value="#{user.lastName}"/>
                 </p:column>
-                <p:column headerText="Roles">
+                <p:column headerText="Role">
                     <h:outputText value="#{user.role}" />
+                </p:column>
+                <p:column headerText="Enabled">
+                    <h:outputText value="#{user.enabled}" />
                 </p:column>
 
                 <p:column style="width:100px;text-align: center">
@@ -39,7 +42,7 @@
                         <p:outputLabel for="username" value="Username: " />
                         <p:inputText id="username" value="#{userDetailController.user.username}" disabled="true"/>
                         <p:outputLabel for="password" value="Password: " />
-                        <p:password id="password" value="#{userDetailController.user.password}" disabled="true"/>
+                        <p:password id="password" value="#{userDetailController.user.password}"/>
                     </h:panelGrid>
                     <p:separator />
                     <h:panelGrid columns="2">
@@ -49,13 +52,19 @@
                         <p:inputText id="lastName" value="#{userDetailController.user.lastName}"/>
                         <p:outputLabel for="email" value="E-Mail: " />
                         <p:inputText id="email" value="#{userDetailController.user.email}"/>
-                        <p:outputLabel for="phone" value="Phone: " />
-                        <p:inputMask id="phone" value="#{userDetailController.user.phone}" mask="+99? 999 9999999"/>
                     </h:panelGrid>
                     <p:separator />
                     <h:panelGrid columns="2">
                         <p:outputLabel for="enabled" value="Enabled: " />
                         <p:selectBooleanCheckbox id="enabled" value="#{userDetailController.user.enabled}"/>
+                    </h:panelGrid>
+                    <h:panelGrid columns="2">
+                        <p:outputLabel for="role" value="Role: "/>
+                        <p:selectOneMenu id="role" value="#{userDetailController.user.role}">
+                            <f:selectItem itemLabel="User" itemValue="USER"/>
+                            <f:selectItem itemLabel="Location Manager" itemValue="LOCATION_MANAGER"/>
+                            <f:selectItem itemLabel="Admin" itemValue="ADMIN"/>
+                        </p:selectOneMenu>
                     </h:panelGrid>
                     <p:separator />
                     <h:panelGrid columns="3">
