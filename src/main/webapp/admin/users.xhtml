@@ -47,11 +47,24 @@
                     <p:separator />
                     <h:panelGrid columns="2">
                         <p:outputLabel for="firstName" value="First Name: " />
-                        <p:inputText id="firstName" value="#{userDetailController.user.firstName}" required="true" requiredMessage="First Name is required" />
+                        <p:inputText id="firstName" value="#{userDetailController.user.firstName}" required="true" requiredMessage="First Name is required" validatorMessage="First Name is required" />
+                        <p:message for="firstName">
+                            <p:autoUpdate/>
+                        </p:message>
+                        <br/>
                         <p:outputLabel for="firstName" value="Last Name: " />
-                        <p:inputText id="lastName" value="#{userDetailController.user.lastName}" required="true" requiredMessage="Last Name is required"/>
+                        <p:inputText id="lastName" value="#{userDetailController.user.lastName}" required="true" requiredMessage="Last Name is required" validatorMessage="Last Name is required"/>
+                        <p:message for="lastName">
+                            <p:autoUpdate/>
+                        </p:message>
+                        <br/>
                         <p:outputLabel for="email" value="E-Mail: " />
-                        <p:inputText id="email" value="#{userDetailController.user.email}" required="true" requiredMessage="Email is required"/>
+                        <p:inputText id="email" value="#{userCreateController.user.email}" required="true" requiredMessage="Email is required" validatorMessage="Incorrect Email address.">
+                            <f:validateRegex pattern="([^.@]+)(.[^.@]+)*@([^.@]+.)+([^.@]+)"/>
+                        </p:inputText>
+                        <p:message for="email">
+                            <p:autoUpdate/>
+                        </p:message>
                     </h:panelGrid>
                     <p:separator />
                     <h:panelGrid columns="2">
@@ -66,10 +79,6 @@
                             <f:selectItem itemLabel="Admin" itemValue="ADMIN"/>
                         </p:selectOneMenu>
                     </h:panelGrid>
-                    <p:separator />
-                    <p:messages id="messages" showDetail="true">
-                        <p:autoUpdate/>
-                    </p:messages>
                     <p:separator/>
                     <h:panelGrid columns="3">
                         <p:commandButton value="Save" action="#{userDetailController.doSaveUser()}"  onselect="PF('userEditDialog').hide()" update=":userForm:usersTable"/>
