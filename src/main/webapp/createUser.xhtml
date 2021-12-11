@@ -5,7 +5,7 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
-                xmlns:p="http://primefaces.org/ui"
+                xmlns:p="http://primefaces.org/ui" xmlns:c="http://java.sun.com/jsp/jstl/core"
                 template="/WEB-INF/templates/main.xhtml">
     <ui:define name="content">
         <h:form>
@@ -35,7 +35,16 @@
             <h:panelGrid columns="2">
                 <p:outputLabel for="role" value="Role: "/>
                 <p:selectOneMenu id="role" value="#{userCreateController.user.role}">
-                    <f:selectItem itemLabel="User" itemValue="USER"/>
+                    <c:choose>
+                        <c:when test="#{sessionInfoBean.hasRole('ADMIN')}">
+                            <f:selectItem itemLabel="User" itemValue="USER"/>
+                            <f:selectItem itemLabel="Location Manager" itemValue="LOCATION_MANAGER"/>
+                            <f:selectItem itemLabel="Admin" itemValue="ADMIN"/>
+                        </c:when>
+                        <c:otherwise>
+                            <f:selectItem itemLabel="User" itemValue="USER"/>
+                        </c:otherwise>
+                    </c:choose>
                 </p:selectOneMenu>
             </h:panelGrid>
             <p:separator/>
