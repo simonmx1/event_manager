@@ -17,7 +17,7 @@
                 <button type="submit" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
                     <span class="ui-button-text">Login</span>
                 </button>
-                <p:link outcome="createUser" value="No User? Register here."></p:link>
+                <p:linkButton outcome="createUser" value="No User? Register here."/>
             </h:panelGrid>
             <c:if test="${param.error != null}">
                 <div id="userForm:j_idt38" role="alert" aria-atomic="true" aria-live="polite"
