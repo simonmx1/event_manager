@@ -55,7 +55,6 @@ public class UserCreateController implements Serializable {
     private void dialog(String title, String text, FacesMessage.Severity icon) {
         FacesMessage message = new FacesMessage(icon, title, text);
         PrimeFaces.current().dialog().showMessageDynamic(message);
-
     }
 
 }

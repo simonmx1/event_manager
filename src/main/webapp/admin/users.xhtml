@@ -47,7 +47,7 @@
                     <p:separator />
                     <h:panelGrid columns="2">
                         <p:outputLabel for="firstName" value="First Name: " />
-                        <p:inputText id="firstName" value="#{userDetailController.user.firstName}" required="true" requiredMessage="First Name is required"/>
+                        <p:inputText id="firstName" value="#{userDetailController.user.firstName}" required="true" requiredMessage="First Name is required" />
                         <p:outputLabel for="firstName" value="Last Name: " />
                         <p:inputText id="lastName" value="#{userDetailController.user.lastName}" required="true" requiredMessage="Last Name is required"/>
                         <p:outputLabel for="email" value="E-Mail: " />
@@ -72,7 +72,7 @@
                     </p:messages>
                     <p:separator/>
                     <h:panelGrid columns="3">
-                        <p:commandButton value="Save" action="#{userDetailController.doSaveUser()}" onsuccess="PF('userEditDialog').hide()" update=":userForm:usersTable"/>
+                        <p:commandButton value="Save" action="#{userDetailController.doSaveUser()}"  onselect="PF('userEditDialog').hide()" update=":userForm:usersTable"/>
                         <p:commandButton value="Reload" action="#{userDetailController.doReloadUser()}" update=":userForm:userData"/>
                         <p:commandButton value="Abort" onclick="PF('userEditDialog').hide()"/>
                     </h:panelGrid>
