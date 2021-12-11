@@ -19,8 +19,14 @@
                 </button>
                 <p:link outcome="createUser" value="No User? Register here."></p:link>
             </h:panelGrid>
-            <c:if test="${not empty param.error}" >
-                <p:message>Wrong username or password</p:message>
+            <c:if test="${param.error != null}">
+                <div id="userForm:j_idt38" role="alert" aria-atomic="true" aria-live="polite"
+                     class="ui-message ui-message-error ui-widget ui-corner-all">
+                    <div>
+                        <span class="ui-message-error-icon"/>
+                        <span class="ui-message-error-detail" id="userForm:j_idt38_error-detail">Wrong password or username!</span>
+                    </div>
+                </div>
             </c:if>
 
         </form>
