@@ -45,21 +45,19 @@
                         <p:password id="password" value="#{userDetailController.user.password}" disabled="true"/>
                     </h:panelGrid>
                     <p:separator />
-                    <h:panelGrid columns="2">
+                    <h:panelGrid columns="3">
                         <p:outputLabel for="firstName" value="First Name: " />
-                        <p:inputText id="firstName" value="#{userDetailController.user.firstName}" required="true" requiredMessage="First Name is required" validatorMessage="First Name is required" />
+                        <p:inputText id="firstName" value="#{userDetailController.user.firstName}" required="true" requiredMessage="First Name is required"/>
                         <p:message for="firstName">
                             <p:autoUpdate/>
                         </p:message>
-                        <br/>
                         <p:outputLabel for="firstName" value="Last Name: " />
-                        <p:inputText id="lastName" value="#{userDetailController.user.lastName}" required="true" requiredMessage="Last Name is required" validatorMessage="Last Name is required"/>
+                        <p:inputText id="lastName" value="#{userDetailController.user.lastName}" required="true" requiredMessage="Last Name is required"/>
                         <p:message for="lastName">
                             <p:autoUpdate/>
                         </p:message>
-                        <br/>
                         <p:outputLabel for="email" value="E-Mail: " />
-                        <p:inputText id="email" value="#{userCreateController.user.email}" required="true" requiredMessage="Email is required" validatorMessage="Incorrect Email address.">
+                        <p:inputText id="email" value="#{userDetailController.user.email}" required="true" requiredMessage="Email is required" validatorMessage="Incorrect Email address.">
                             <f:validateRegex pattern="([^.@]+)(.[^.@]+)*@([^.@]+.)+([^.@]+)"/>
                         </p:inputText>
                         <p:message for="email">
@@ -82,7 +80,7 @@
                     <p:separator/>
                     <h:panelGrid columns="3">
                         <p:commandButton value="Save" action="#{userDetailController.doSaveUser()}"  onselect="PF('userEditDialog').hide()" update=":userForm:usersTable"/>
-                        <p:commandButton value="Reload" action="#{userDetailController.doReloadUser()}" update=":userForm:userData"/>
+                        <p:commandButton value="Reload" action="#{userDetailController.doReloadUser()}" update=":userForm:userData" immediate="true"/>
                         <p:commandButton value="Abort" onclick="PF('userEditDialog').hide()"/>
                     </h:panelGrid>
                 </p:outputPanel>
