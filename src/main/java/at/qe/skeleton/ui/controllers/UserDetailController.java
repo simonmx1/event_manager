@@ -3,9 +3,13 @@ package at.qe.skeleton.ui.controllers;
 import at.qe.skeleton.model.User;
 import at.qe.skeleton.services.UserService;
 import java.io.Serializable;
+
+import org.primefaces.PrimeFaces;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import javax.faces.application.FacesMessage;
 
 /**
  * Controller for the user detail view.
@@ -60,6 +64,7 @@ public class UserDetailController implements Serializable {
      */
     public void doSaveUser() {
         user = this.userService.saveUser(user);
+        dialog("Success", "User updated successfully!", FacesMessage.SEVERITY_INFO);
     }
 
     /**
@@ -68,6 +73,11 @@ public class UserDetailController implements Serializable {
     public void doDeleteUser() {
         this.userService.deleteUser(user);
         user = null;
+    }
+
+    private void dialog(String title, String text, FacesMessage.Severity icon) {
+        FacesMessage message = new FacesMessage(icon, title, text);
+        PrimeFaces.current().dialog().showMessageDynamic(message);
     }
 
 }
