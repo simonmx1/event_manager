@@ -1,6 +1,7 @@
 package at.qe.skeleton.ui.controllers;
 
 import at.qe.skeleton.model.User;
+import at.qe.skeleton.model.UserRole;
 import at.qe.skeleton.services.UserService;
 import java.io.Serializable;
 
