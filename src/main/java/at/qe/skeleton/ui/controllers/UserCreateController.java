@@ -46,7 +46,7 @@ public class UserCreateController implements Serializable {
     public void createUser() {
         User response = this.userService.createUser(user);
         if (response == null) {
-            dialog("Error", "User already exists!", FacesMessage.SEVERITY_ERROR);
+            dialog("Error", "Username already exists!", FacesMessage.SEVERITY_ERROR);
         } else {
             dialog("Success", "User created!", FacesMessage.SEVERITY_INFO);
         }
