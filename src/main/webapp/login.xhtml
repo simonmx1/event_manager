@@ -3,9 +3,9 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:ng="http://xmlns.jcp.org/jsf/passthrough"
-                xmlns:p="http://primefaces.org/ui"
+                xmlns:p="http://primefaces.org/ui" xmlns:c="http://java.sun.com/jsp/jstl/core"
                 template="/WEB-INF/templates/main.xhtml">
-    <ui:define name ="content">
+    <ui:define name="content">
         <form id="login_form" action="#{request.contextPath}/login" method="post">
             <h:panelGrid columns="2">
                 <p:outputLabel for="username" value="Username:"/>
@@ -19,6 +19,10 @@
                 </button>
                 <p:link outcome="createUser" value="No User? Register here."></p:link>
             </h:panelGrid>
+            <c:if test="${not empty param.error}" >
+                <p:message>Wrong username or password</p:message>
+            </c:if>
+
         </form>
     </ui:define>
 </ui:composition>

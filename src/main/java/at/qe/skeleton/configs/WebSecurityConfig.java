@@ -55,7 +55,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().formLogin()
                 .loginPage("/login.xhtml")
                 .loginProcessingUrl("/login")
-                .defaultSuccessUrl("/secured/welcome.xhtml");
+                .defaultSuccessUrl("/secured/welcome.xhtml")
+                .failureUrl("/login.xhtml?error=login");
                 
         // :TODO: user failureUrl(/login.xhtml?error) and make sure that a corresponding message is displayed
  
