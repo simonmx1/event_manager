@@ -1,0 +1,4 @@
+INSERT INTO USER (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, EMAIL, ROLE, CREATE_DATE) VALUES('true', 'Admin', 'Istrator', 'passwd', 'admin', 'admin@admin.com', 'ADMIN', '2016-01-01 00:00:00')
+INSERT INTO USER (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, EMAIL, ROLE, CREATE_DATE) VALUES('true', 'Susi', 'Kaufgern', 'passwd', 'user1', 'admin2@admin.com', 'LOCATION_MANAGER', '2016-01-01 00:00:00')
+INSERT INTO USER (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, EMAIL, ROLE, CREATE_DATE) VALUES('true', 'Max', 'Mustermann', 'passwd', 'user2', 'user@nichtadmin.com', 'USER', '2016-01-01 00:00:00')
+INSERT INTO USER (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, EMAIL, ROLE, CREATE_DATE) VALUES('true', 'Elvis', 'The King', 'passwd', 'elvis', 'elvis@elvis.com', 'USER', '2016-01-01 00:00:00')
