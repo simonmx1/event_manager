@@ -2,6 +2,8 @@ package at.qe.skeleton.repositories;
 
 import at.qe.skeleton.model.User;
 import at.qe.skeleton.model.UserRole;
+
+import java.io.Serializable;
 import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,7 +15,7 @@ import org.springframework.data.repository.query.Param;
  * courses "Software Architecture" and "Software Engineering" offered by the
  * University of Innsbruck.
  */
-public interface UserRepository extends AbstractRepository<User, String> {
+public interface UserRepository extends AbstractRepository<User, String>, Serializable {
 
     User findFirstByUsername(String username);
 
@@ -22,7 +24,7 @@ public interface UserRepository extends AbstractRepository<User, String> {
     @Query("SELECT u FROM User u WHERE CONCAT(u.firstName, ' ', u.lastName) = :wholeName")
     List<User> findByWholeNameConcat(@Param("wholeName") String wholeName);
 
-    @Query("SELECT u FROM User u WHERE :role MEMBER OF u.roles")
+    @Query("SELECT u FROM User u WHERE :role = u.role")
     List<User> findByRole(@Param("role") UserRole role);
 
 }

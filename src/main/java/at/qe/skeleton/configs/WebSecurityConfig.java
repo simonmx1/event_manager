@@ -50,14 +50,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .hasAnyAuthority("ADMIN")
                 //Permit access only for some roles
                 .antMatchers("/secured/**")
-                .hasAnyAuthority("ADMIN", "MANAGER", "EMPLOYEE")
+                .hasAnyAuthority("ADMIN", "LOCATION_MANAGER", "USER")
                 // Allow only certain roles to use websockets (only logged in users)
                 .and().formLogin()
                 .loginPage("/login.xhtml")
                 .loginProcessingUrl("/login")
-                .defaultSuccessUrl("/secured/welcome.xhtml");
-                
-        // :TODO: user failureUrl(/login.xhtml?error) and make sure that a corresponding message is displayed
+                .defaultSuccessUrl("/secured/welcome.xhtml")
+                .failureUrl("/login.xhtml?error");
  
         http.exceptionHandling().accessDeniedPage("/error/access_denied.xhtml");
         http.sessionManagement().invalidSessionUrl("/error/invalid_session.xhtml");
@@ -69,7 +68,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         //Configure roles and passwords via datasource
         auth.jdbcAuthentication().dataSource(dataSource)
                 .usersByUsernameQuery("select username, password, enabled from user where username=?")
-                .authoritiesByUsernameQuery("select user_username, roles from user_user_role where user_username=?");
+                .authoritiesByUsernameQuery("select username, role from user where username=?");
     }
 
     @Bean

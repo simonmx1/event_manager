@@ -1,8 +1,8 @@
 package at.qe.skeleton.ui.controllers;
 
 import at.qe.skeleton.model.User;
-import at.qe.skeleton.model.UserRole;
 import at.qe.skeleton.services.UserService;
+
 import java.io.Serializable;
 
 import org.primefaces.PrimeFaces;
@@ -14,14 +14,14 @@ import javax.faces.application.FacesMessage;
 
 /**
  * Controller for the user detail view.
- *
+ * <p>
  * This class is part of the skeleton project provided for students of the
  * courses "Software Architecture" and "Software Engineering" offered by the
  * University of Innsbruck.
  */
 @Component
 @Scope("view")
-public class UserDetailController implements Serializable {
+public class UserCreateController implements Serializable {
 
     @Autowired
     private UserService userService;
@@ -29,20 +29,7 @@ public class UserDetailController implements Serializable {
     /**
      * Attribute to cache the currently displayed user
      */
-    private User user;
-
-    /**
-     * Sets the currently displayed user and reloads it form db. This user is
-     * targeted by any further calls of
-     * {@link #doReloadUser()}, {@link #doSaveUser()} and
-     * {@link #doDeleteUser()}.
-     *
-     * @param user
-     */
-    public void setUser(User user) {
-        this.user = user;
-        doReloadUser();
-    }
+    private User user = new User();
 
     /**
      * Returns the currently displayed user.
@@ -54,26 +41,15 @@ public class UserDetailController implements Serializable {
     }
 
     /**
-     * Action to force a reload of the currently displayed user.
-     */
-    public void doReloadUser() {
-        user = userService.loadUser(user.getUsername());
-    }
-
-    /**
      * Action to save the currently displayed user.
      */
-    public void doSaveUser() {
-        user = this.userService.saveUser(user);
-        dialog("Success", "User updated successfully!", FacesMessage.SEVERITY_INFO);
-    }
-
-    /**
-     * Action to delete the currently displayed user.
-     */
-    public void doDeleteUser() {
-        this.userService.deleteUser(user);
-        user = null;
+    public void createUser() {
+        User response = this.userService.createUser(user);
+        if (response == null) {
+            dialog("Error", "Username already exists!", FacesMessage.SEVERITY_ERROR);
+        } else {
+            dialog("Success", "User created!", FacesMessage.SEVERITY_INFO);
+        }
     }
 
     private void dialog(String title, String text, FacesMessage.Severity icon) {

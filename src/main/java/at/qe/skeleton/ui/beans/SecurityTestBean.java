@@ -34,15 +34,15 @@ public class SecurityTestBean {
         showOkDialog = true;
     }
 
-    @PreAuthorize("hasAuthority('MANAGER')")
-    public void doManagerAction() {
-        performedAction = "MANAGER";
+    @PreAuthorize("hasAuthority('LOCATION_MANAGER')")
+    public void doLocationManagerAction() {
+        performedAction = "LOCATION_MANAGER";
         showOkDialog = true;
     }
 
-    @PreAuthorize("hasAuthority('EMPLOYEE')")
-    public void doEmployeeAction() {
-        performedAction = "EMPLOYEE";
+    @PreAuthorize("hasAuthority('USER')")
+    public void doUserAction() {
+        performedAction = "USER";
         showOkDialog = true;
     }
 
