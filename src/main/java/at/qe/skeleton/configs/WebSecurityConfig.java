@@ -31,17 +31,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.csrf().disable();
 
+        http.cors().disable();
+
+        http.authorizeRequests()
+                .anyRequest().authenticated()
+                .and()
+                .httpBasic();
+
         http.headers().frameOptions().disable(); // needed for H2 console
 
-        http.logout()
+        /*http.logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
                 .logoutSuccessUrl("/login.xhtml");
 
-        http.authorizeRequests()
+        http.authorizeRequests().antMatchers("/").permitAll().anyRequest().authenticated();
                 //Permit access to the H2 console
-                .antMatchers("/h2-console/**").permitAll()
+                /*.antMatchers("/h2-console/**").permitAll()
                 //Permit access for all to error pages
                 .antMatchers("/error/**")
                 .permitAll()
@@ -57,7 +64,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginProcessingUrl("/login")
                 .defaultSuccessUrl("/secured/welcome.xhtml")
                 .failureUrl("/login.xhtml?error");
- 
+ */
         http.exceptionHandling().accessDeniedPage("/error/access_denied.xhtml");
         http.sessionManagement().invalidSessionUrl("/error/invalid_session.xhtml");
 
