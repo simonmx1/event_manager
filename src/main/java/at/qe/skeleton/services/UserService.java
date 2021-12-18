@@ -29,7 +29,7 @@ public class UserService implements Serializable{
      *
      * @return
      */
-    @PreAuthorize("hasAuthority('ADMIN')")
+    //@PreAuthorize("hasAuthority('ADMIN')")
     public Collection<User> getAllUsers() {
         return userRepository.findAll();
     }

@@ -7,6 +7,9 @@ import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Controller for the user list view.
@@ -15,8 +18,8 @@ import org.springframework.stereotype.Component;
  * courses "Software Architecture" and "Software Engineering" offered by the
  * University of Innsbruck.
  */
-@Component
-@Scope("view")
+@RestController
+@RequestMapping("/api/userlist")
 public class UserListController implements Serializable {
 
     @Autowired
@@ -27,6 +30,7 @@ public class UserListController implements Serializable {
      *
      * @return
      */
+    @GetMapping("/getUsers")
     public Collection<User> getUsers() {
         return userService.getAllUsers();
     }
