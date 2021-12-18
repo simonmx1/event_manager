@@ -49,12 +49,14 @@ export default {
   },
   methods: {
     login() {
-      axios.post('http://localhost:8080/login', {
-
-        username:this.username,
-        password:this.password,
-      }, {
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      let form_data;
+      form_data = new FormData()
+      form_data.append('username', this.username)
+      form_data.append('password', this.password)
+      axios.post('http://localhost:8080/login',
+        form_data
+      ,{
+        headers: { "Content-Type": "application/json" },
       }).then(res => {
         console.log(res);
       }).catch(err => {
