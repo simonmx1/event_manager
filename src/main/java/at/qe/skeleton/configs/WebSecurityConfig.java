@@ -37,7 +37,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
-                .logoutSuccessUrl("/login.xhtml");
+                .logoutSuccessUrl("/");
 
         http.authorizeRequests()
                 //Permit access to the H2 console
@@ -53,10 +53,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .hasAnyAuthority("ADMIN", "LOCATION_MANAGER", "USER")
                 // Allow only certain roles to use websockets (only logged in users)
                 .and().formLogin()
-                .loginPage("/login.xhtml")
+                .loginPage("/")
                 .loginProcessingUrl("/login")
-                .defaultSuccessUrl("/secured/welcome.xhtml")
-                .failureUrl("/login.xhtml?error");
+                .defaultSuccessUrl("/home")
+                .failureUrl("/?error");
  
         http.exceptionHandling().accessDeniedPage("/error/access_denied.xhtml");
         http.sessionManagement().invalidSessionUrl("/error/invalid_session.xhtml");
