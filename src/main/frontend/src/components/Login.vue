@@ -9,12 +9,14 @@
           <v-card-text>
             <v-form>
               <v-text-field
+                  v-model="username"
                   prepend-icon="mdi-account-box"
                   name="login"
                   label="Login"
                   type="text"
               ></v-text-field>
               <v-text-field
+                  v-model="password"
                   id="mdi-password"
                   prepend-icon="mdi-lock"
                   name="password"
@@ -38,7 +40,9 @@ import axios from "axios";
 export default {
   name: 'Login',
   data: () => ({
-    users: null
+    users: null,
+    username: '',
+    password: '',
   }),
   mounted() {
     fetch("/api/userlist/getUsers").then(response => response.text()).then(data => this.users = JSON.parse(data))
@@ -46,6 +50,7 @@ export default {
   methods: {
     login() {
       axios.post('http://localhost:8080/login', {
+
         username:this.username,
         password:this.password,
       }, {
