@@ -34,6 +34,7 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   name: 'Login',
   data: () => ({
@@ -44,7 +45,16 @@ export default {
   },
   methods: {
     login() {
-
+      axios.post('http://localhost:8080/login', {
+        username:this.username,
+        password:this.password,
+      }, {
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      }).then(res => {
+        console.log(res);
+      }).catch(err => {
+        console.log(err.response);
+      });
     }
   }
 }

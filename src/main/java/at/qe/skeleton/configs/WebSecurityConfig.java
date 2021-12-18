@@ -33,7 +33,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.headers().frameOptions().disable(); // needed for H2 console
 
-        /*http.logout()
+        http.logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
@@ -59,7 +59,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .failureUrl("/login.xhtml?error");
  
         http.exceptionHandling().accessDeniedPage("/error/access_denied.xhtml");
-        http.sessionManagement().invalidSessionUrl("/error/invalid_session.xhtml");*/
+        http.sessionManagement().invalidSessionUrl("/error/invalid_session.xhtml");
 
     }
 
