@@ -17,12 +17,17 @@
 
 <script>
 import UserManagement from "@/components/UserManagement";
+// import axios from "axios";
 export default {
   name: "Home",
   components: {UserManagement},
   data: () => ({
-    drawer: false
-  })
+    drawer: false,
+    users: null
+  }),
+  mounted() {
+    fetch("http://localhost:8080/api/userlist/getUsers").then(data => console.log(data)).then(console.log(this.users))
+  }
 }
 </script>
 
