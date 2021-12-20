@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -35,9 +36,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.cors().and().csrf().disable();
 
-
+        
         http.headers().frameOptions().disable(); // needed for H2 console
-
+        
+        http.addFilterAfter(new HistoryModeFilter(), FilterSecurityInterceptor.class);
+        
         http.logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .invalidateHttpSession(true)
@@ -48,20 +51,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 //Permit access to the H2 console
                 .antMatchers("/h2-console/**").permitAll()
                 //Permit access for all to error pages
-                .antMatchers("/error/**")
-                .permitAll()
-                // Only access with admin role
-                .antMatchers("/admin/**")
-                .hasAnyAuthority("ADMIN")
-                //Permit access only for some roles
-                .antMatchers("/home/**")
-                .hasAnyAuthority("ADMIN", "LOCATION_MANAGER", "USER")
+//                .antMatchers("/error/**")
+//                .permitAll()
+//                // Only access with admin role
+//                .antMatchers("/admin/**")
+//                .hasAnyAuthority("ADMIN")
+//                //Permit access only for some roles
+//                .antMatchers("/secured/**")
+//                .hasAnyAuthority("ADMIN", "LOCATION_MANAGER", "USER")
                 // Allow only certain roles to use websockets (only logged in users)
                 .and().formLogin()
-                .loginPage("/login")
+                .loginPage("/")
                 .loginProcessingUrl("/login")
                 .defaultSuccessUrl("/home")
-                .failureUrl("/login?error");
+                .failureUrl("/?error");
 
 //        http.exceptionHandling().accessDeniedPage("/error/access_denied.xhtml");
 //        http.sessionManagement().invalidSessionUrl("/error/invalid_session.xhtml");

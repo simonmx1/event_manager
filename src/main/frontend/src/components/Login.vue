@@ -45,9 +45,9 @@ export default {
     username: '',
     password: '',
   }),
-  mounted() {
-    fetch("/api/userlist/getUsers").then(response => response.text()).then(data => this.users = JSON.parse(data))
-  },
+  // mounted() {
+  //   fetch("/api/userlist/getUsers").then(response => response.text()).then(data => this.users = data).then(console.log(this.users))
+  // },
   methods: {
     login() {
       let form_data;
@@ -58,8 +58,10 @@ export default {
         form_data
       ,{
         headers: { "Content-Type": "application/json" },
-      }).then(() => {
-        // this.$router.push("/home")
+      }).then(res => {
+        console.log(res.request.responseURL);
+        
+        this.$router.push(res.request.responseURL.replace("http://localhost:8080/", ""))
       }).catch(err => {
         console.log(err.response);
       });
