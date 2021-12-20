@@ -58,8 +58,8 @@ export default {
         form_data
       ,{
         headers: { "Content-Type": "application/json" },
-      }).then(res => {
-        console.log(res);
+      }).then(() => {
+        // this.$router.push("/home")
       }).catch(err => {
         console.log(err.response);
       });

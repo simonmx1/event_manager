@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-main>
     <v-app-bar clipped-left>
       <v-app-bar-nav-icon @click="drawer = !drawer"/>
       <v-app-bar-title>
@@ -12,7 +12,7 @@
     <v-container>
       <user-management/>
     </v-container>
-  </v-app>
+  </v-main>
 </template>
 
 <script>

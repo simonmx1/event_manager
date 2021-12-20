@@ -12,12 +12,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * Spring configuration for web security.
@@ -57,17 +54,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin/**")
                 .hasAnyAuthority("ADMIN")
                 //Permit access only for some roles
-                .antMatchers("/secured/**")
+                .antMatchers("/home/**")
                 .hasAnyAuthority("ADMIN", "LOCATION_MANAGER", "USER")
                 // Allow only certain roles to use websockets (only logged in users)
                 .and().formLogin()
-                .loginPage("/")
+                .loginPage("/login")
                 .loginProcessingUrl("/login")
                 .defaultSuccessUrl("/home")
-                .failureUrl("/?error");
+                .failureUrl("/login?error");
 
-        http.exceptionHandling().accessDeniedPage("/error/access_denied.xhtml");
-        http.sessionManagement().invalidSessionUrl("/error/invalid_session.xhtml");
+//        http.exceptionHandling().accessDeniedPage("/error/access_denied.xhtml");
+//        http.sessionManagement().invalidSessionUrl("/error/invalid_session.xhtml");
 
     }
 
