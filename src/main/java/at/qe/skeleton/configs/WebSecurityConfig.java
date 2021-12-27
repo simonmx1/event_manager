@@ -2,9 +2,12 @@ package at.qe.skeleton.configs;
 
 import javax.sql.DataSource;
 
+import at.qe.skeleton.services.AppUserDetailsService;
+import at.qe.skeleton.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -19,24 +22,27 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 /**
  * Spring configuration for web security.
- *
+ * <p>
  * This class is part of the skeleton project provided for students of the
  * courses "Software Architecture" and "Software Engineering" offered by the
  * University of Innsbruck.
  */
 @Configuration
-@EnableWebSecurity()
+@EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     DataSource dataSource;
 
+    @Autowired
+    private AppUserDetailsService appUserDetailsService;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        http.cors().and().csrf().disable();
+        http.cors().and().csrf().disable().authorizeRequests().antMatchers("/api/auth").permitAll()
+                .anyRequest().authenticated();
 
-        
         http.headers().frameOptions().disable(); // needed for H2 console
         
         http.addFilterAfter(new HistoryModeFilter(), FilterSecurityInterceptor.class);
@@ -47,7 +53,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .deleteCookies("JSESSIONID")
                 .logoutSuccessUrl("/");
 
-        http.authorizeRequests()
+        /*http.authorizeRequests()
                 //Permit access to the H2 console
                 .antMatchers("/h2-console/**").permitAll()
                 //Permit access for all to error pages
@@ -64,7 +70,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/")
                 .loginProcessingUrl("/login")
                 .defaultSuccessUrl("/home")
-                .failureUrl("/?error");
+                .failureUrl("/?error");*/
 
 //        http.exceptionHandling().accessDeniedPage("/error/access_denied.xhtml");
 //        http.sessionManagement().invalidSessionUrl("/error/invalid_session.xhtml");
@@ -77,6 +83,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.jdbcAuthentication().dataSource(dataSource)
                 .usersByUsernameQuery("select username, password, enabled from user where username=?")
                 .authoritiesByUsernameQuery("select username, role from user where username=?");
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(appUserDetailsService);
+    }
+
+    @Override
+    @Bean
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 
     @Bean
