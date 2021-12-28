@@ -1,5 +1,6 @@
 package at.qe.skeleton.configs;
 
+import javax.servlet.Filter;
 import javax.sql.DataSource;
 
 import at.qe.skeleton.services.AppUserDetailsService;
@@ -12,10 +13,13 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.AnyRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -37,22 +41,33 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private AppUserDetailsService appUserDetailsService;
 
+    @Autowired
+    private Filter jwtRequestFilter;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        http.cors().and().csrf().disable().authorizeRequests().antMatchers("/api/auth").permitAll()
-                .anyRequest().authenticated();
+        http.cors().and().csrf().disable()
+                .authorizeRequests()
+                .antMatchers("/api/auth").permitAll() // allow authentication
+                .antMatchers("/h2-console/**").permitAll() // allow H2 console
+                .anyRequest().authenticated()
+                .and().sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.headers().frameOptions().disable(); // needed for H2 console
-        
-        http.addFilterAfter(new HistoryModeFilter(), FilterSecurityInterceptor.class);
-        
+
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class); // check for jwt on requests
+        //http.addFilterAfter(new HistoryModeFilter(), FilterSecurityInterceptor.class);
+/*
+
+
         http.logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
                 .logoutSuccessUrl("/");
-
+*/
         /*http.authorizeRequests()
                 //Permit access to the H2 console
                 .antMatchers("/h2-console/**").permitAll()
