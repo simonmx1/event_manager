@@ -45,24 +45,16 @@ export default {
     username: '',
     password: '',
   }),
-  // mounted() {
-  //   fetch("/api/userlist/getUsers").then(response => response.text()).then(data => this.users = data).then(console.log(this.users))
-  // },
   methods: {
     login() {
-      let form_data;
-      form_data = new FormData()
-      form_data.append('username', this.username)
-      form_data.append('password', this.password)
-      axios.post('http://localhost:8080/login',
-        form_data
-      ,{
-        headers: { "Content-Type": "application/json" },
-      }).then(res => {
-        console.log(res.request.responseURL);
-        
-        this.$router.push(res.request.responseURL.replace("http://localhost:8080/", ""))
+      axios.post('http://localhost:8080/api/auth',
+          {'username': this.username, 'password': this.password}, {
+            headers: {"Content-Type": "application/json"},
+          }).then(res => {
+        console.log("Success: ");
+        console.log(res.request);
       }).catch(err => {
+        console.log("Error:");
         console.log(err.response);
       });
     }

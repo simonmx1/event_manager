@@ -17,6 +17,7 @@ import org.springframework.data.repository.query.Param;
  */
 public interface UserRepository extends AbstractRepository<User, String>, Serializable {
 
+    @Query("SELECT u FROM User u WHERE :username = u.username")
     User findFirstByUsername(String username);
 
     List<User> findByUsernameContaining(String username);

@@ -170,4 +170,11 @@
     <orderEntry type="library" name="Maven: org.springframework.security:spring-security-web:5.5.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: nl.jqno.equalsverifier:equalsverifier:3.7.1" level="project" />
   </component>
+  <component name="TemplatesService">
+    <option name="TEMPLATE_FOLDERS">
+      <list>
+        <option value="$MODULE_DIR$/src/main/frontend" />
+      </list>
+    </option>
+  </component>
 </module>

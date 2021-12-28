@@ -3,7 +3,6 @@ package at.qe.skeleton.configs;
 import javax.servlet.Filter;
 import javax.sql.DataSource;
 
-import at.qe.skeleton.services.AppUserDetailsService;
 import at.qe.skeleton.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -16,10 +15,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.security.web.util.matcher.AnyRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -39,7 +35,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     DataSource dataSource;
 
     @Autowired
-    private AppUserDetailsService appUserDetailsService;
+    private UserService userService;
 
     @Autowired
     private Filter jwtRequestFilter;
@@ -92,17 +88,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     }
 
-    @Autowired
+    /*@Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         //Configure roles and passwords via datasource
         auth.jdbcAuthentication().dataSource(dataSource)
                 .usersByUsernameQuery("select username, password, enabled from user where username=?")
                 .authoritiesByUsernameQuery("select username, role from user where username=?");
-    }
+    }*/
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(appUserDetailsService);
+        auth.userDetailsService(userService);
     }
 
     @Override

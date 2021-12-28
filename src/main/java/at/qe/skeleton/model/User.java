@@ -1,6 +1,7 @@
 package at.qe.skeleton.model;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
 import javax.persistence.Column;
@@ -11,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.springframework.data.domain.Persistable;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * Entity representing users.
@@ -20,7 +23,7 @@ import org.springframework.data.domain.Persistable;
  * University of Innsbruck.
  */
 @Entity
-public class User implements Persistable<String>, Serializable, Comparable<User> {
+public class User implements Persistable<String>, Serializable, Comparable<User>, UserDetails {
 
     private static final long serialVersionUID = 1L;
 
@@ -104,6 +107,26 @@ public class User implements Persistable<String>, Serializable, Comparable<User>
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return isEnabled();
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return isEnabled();
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return isEnabled();
     }
 
     @Override

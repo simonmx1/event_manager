@@ -3,11 +3,15 @@ package at.qe.skeleton.services;
 import at.qe.skeleton.model.User;
 import at.qe.skeleton.repositories.UserRepository;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 /**
@@ -19,7 +23,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Scope("application")
-public class UserService implements Serializable{
+public class UserService implements Serializable, UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
@@ -88,6 +92,15 @@ public class UserService implements Serializable{
     public void deleteUser(User user) {
         userRepository.delete(user);
         // :TODO: write some audit log stating who and when this user was permanently deleted.
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User u = userRepository.findFirstByUsername(username);
+//        System.out.println(u.getUsername());
+//        System.out.println(u.getPassword());
+//        System.out.println(u.getFirstName());
+        return u;
     }
 
 }
