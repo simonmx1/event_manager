@@ -46,6 +46,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/api/auth").permitAll() // allow authentication
+                .antMatchers("/").permitAll()
+                .antMatchers("/js/**").permitAll()
+                .antMatchers("/css/**").permitAll()
+                .antMatchers("/favicon.ico").permitAll()
                 .antMatchers("/h2-console/**").permitAll() // allow H2 console
                 .anyRequest().authenticated()
                 .and().sessionManagement()
@@ -55,46 +59,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class); // check for jwt on requests
         //http.addFilterAfter(new HistoryModeFilter(), FilterSecurityInterceptor.class);
-/*
-
-
-        http.logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID")
-                .logoutSuccessUrl("/");
-*/
-        /*http.authorizeRequests()
-                //Permit access to the H2 console
-                .antMatchers("/h2-console/**").permitAll()
-                //Permit access for all to error pages
-//                .antMatchers("/error/**")
-//                .permitAll()
-//                // Only access with admin role
-//                .antMatchers("/admin/**")
-//                .hasAnyAuthority("ADMIN")
-//                //Permit access only for some roles
-//                .antMatchers("/secured/**")
-//                .hasAnyAuthority("ADMIN", "LOCATION_MANAGER", "USER")
-                // Allow only certain roles to use websockets (only logged in users)
-                .and().formLogin()
-                .loginPage("/")
-                .loginProcessingUrl("/login")
-                .defaultSuccessUrl("/home")
-                .failureUrl("/?error");*/
 
 //        http.exceptionHandling().accessDeniedPage("/error/access_denied.xhtml");
 //        http.sessionManagement().invalidSessionUrl("/error/invalid_session.xhtml");
 
     }
-
-    /*@Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        //Configure roles and passwords via datasource
-        auth.jdbcAuthentication().dataSource(dataSource)
-                .usersByUsernameQuery("select username, password, enabled from user where username=?")
-                .authoritiesByUsernameQuery("select username, role from user where username=?");
-    }*/
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {

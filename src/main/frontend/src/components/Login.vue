@@ -47,7 +47,7 @@ export default {
   }),
   methods: {
     login() {
-      axios.post('http://localhost:8080/api/auth',
+      axios.post('/api/auth',
           {'username': this.username, 'password': this.password}, {
             headers: {"Content-Type": "application/json"},
           }).then(res => {
