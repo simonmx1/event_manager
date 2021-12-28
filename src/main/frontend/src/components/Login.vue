@@ -10,6 +10,7 @@
             <v-form>
               <v-text-field
                   v-model="username"
+                  :rules="usernameRules"
                   prepend-icon="mdi-account-box"
                   name="login"
                   label="Login"
@@ -17,13 +18,21 @@
               ></v-text-field>
               <v-text-field
                   v-model="password"
-                  id="mdi-password"
+                  :rules="passwordRules"
                   prepend-icon="mdi-lock"
                   name="password"
                   label="Password"
                   type="password"
               ></v-text-field>
             </v-form>
+            <v-alert
+                v-if="wrongCredentials"
+                dense
+                outlined
+                type="error"
+            >
+              <strong>Incorrect username or password</strong>
+            </v-alert>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
@@ -36,7 +45,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import api from "@/utils/api";
 
 export default {
   name: 'Login',
@@ -44,20 +53,18 @@ export default {
     users: null,
     username: '',
     password: '',
+    wrongCredentials: false,
+    usernameRules: [
+      v => !!v || 'Username is required'
+    ],
+    passwordRules: [
+      v => !!v || 'Password is required',
+    ],
   }),
   methods: {
     login() {
-      axios.post('/api/auth',
-          {'username': this.username, 'password': this.password}, {
-            headers: {"Content-Type": "application/json"},
-          }).then(res => {
-        console.log("Success: ");
-        console.log(res.request);
-      }).catch(err => {
-        console.log("Error:");
-        console.log(err.response);
-      });
-    }
+      api.login(this.username, this.password).then(response => {response ? this.$router.push("/home") : this.wrongCredentials = true})
+    },
   }
 }
 </script>

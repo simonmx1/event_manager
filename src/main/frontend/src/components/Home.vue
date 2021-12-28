@@ -26,7 +26,7 @@ export default {
     users: null
   }),
   mounted() {
-    fetch("http://localhost:8080/api/userlist/getUsers").then(data => console.log(data)).then(console.log(this.users))
+    //fetch("http://localhost:8080/api/userlist/getUsers").then(data => console.log(data)).then(console.log(this.users))
   }
 }
 </script>
