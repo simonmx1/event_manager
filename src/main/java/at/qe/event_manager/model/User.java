@@ -145,15 +145,12 @@ public class User implements Persistable<String>, Serializable, Comparable<User>
             return false;
         }
         final User other = (User) obj;
-        if (!Objects.equals(this.username, other.username)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.username, other.username);
     }
 
     @Override
     public String toString() {
-        return "at.qe.skeleton.model.User[ id=" + username + " ]";
+        return "at.qe.event_manager.model.User[ id=" + username + " ]";
     }
 
     @Override

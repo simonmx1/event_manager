@@ -61,8 +61,7 @@ public class SessionInfoBean implements Serializable {
             return "";
         }
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String name = auth.getName(); //get logged in username
-        return name;
+        return auth.getName(); //get logged in username
     }
 
     /**
