@@ -25,7 +25,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
  * spring. It is reserved for the CDI-injection-mechanisms (Weld). Only add
  * CDI-managed components.
  */
-@ComponentScan(basePackages = "at.qe.eventManager", excludeFilters = @Filter(type = FilterType.REGEX, pattern = "at.qe.eventManager.ui.websockets.*"))
+@ComponentScan(basePackages = "at.qe.event_manager", excludeFilters = @Filter(type = FilterType.REGEX, pattern = "at.qe.event_manager.ui.websockets.*"))
 public class Main {
 
     public static void main(String[] args) {
