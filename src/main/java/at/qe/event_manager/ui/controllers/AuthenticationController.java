@@ -1,9 +1,9 @@
-package at.qe.eventManager.ui.controllers;
+package at.qe.event_manager.ui.controllers;
 
-import at.qe.eventManager.model.AuthenticationRequest;
-import at.qe.eventManager.model.AuthenticationResponse;
-import at.qe.eventManager.services.UserService;
-import at.qe.eventManager.util.JwtUtil;
+import at.qe.event_manager.model.AuthenticationRequest;
+import at.qe.event_manager.model.AuthenticationResponse;
+import at.qe.event_manager.services.UserService;
+import at.qe.event_manager.util.JwtUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

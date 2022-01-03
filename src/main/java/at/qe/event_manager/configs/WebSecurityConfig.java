@@ -1,4 +1,4 @@
-package at.qe.eventManager.configs;
+package at.qe.event_manager.configs;
 
 import javax.servlet.Filter;
 import javax.sql.DataSource;
@@ -19,7 +19,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import at.qe.eventManager.services.UserService;
+import at.qe.event_manager.services.UserService;
 
 /**
  * Spring configuration for web security.

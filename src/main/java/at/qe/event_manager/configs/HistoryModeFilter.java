@@ -1,4 +1,4 @@
-package at.qe.eventManager.configs;
+package at.qe.event_manager.configs;
 
 import org.springframework.web.filter.OncePerRequestFilter;
 import javax.servlet.FilterChain;

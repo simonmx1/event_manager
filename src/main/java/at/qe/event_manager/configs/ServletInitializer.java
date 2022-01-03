@@ -1,9 +1,9 @@
-package at.qe.eventManager.configs;
+package at.qe.event_manager.configs;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
-import at.qe.eventManager.Main;
+import at.qe.event_manager.Main;
 
 public class ServletInitializer extends SpringBootServletInitializer{
 	@Override

@@ -1,4 +1,4 @@
-package at.qe.eventManager.repositories;
+package at.qe.event_manager.repositories;
 
 import java.io.Serializable;
 import java.util.List;

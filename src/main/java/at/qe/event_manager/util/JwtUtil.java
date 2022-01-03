@@ -1,4 +1,4 @@
-package at.qe.eventManager.util;
+package at.qe.event_manager.util;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

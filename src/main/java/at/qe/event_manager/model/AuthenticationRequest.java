@@ -1,4 +1,4 @@
-package at.qe.eventManager.model;
+package at.qe.event_manager.model;
 
 public class AuthenticationRequest {
 

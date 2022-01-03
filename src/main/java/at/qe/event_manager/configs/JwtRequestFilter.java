@@ -1,7 +1,7 @@
-package at.qe.eventManager.configs;
+package at.qe.event_manager.configs;
 
-import at.qe.eventManager.services.UserService;
-import at.qe.eventManager.util.JwtUtil;
+import at.qe.event_manager.services.UserService;
+import at.qe.event_manager.util.JwtUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

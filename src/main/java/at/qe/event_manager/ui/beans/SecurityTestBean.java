@@ -1,4 +1,4 @@
-package at.qe.eventManager.ui.beans;
+package at.qe.event_manager.ui.beans;
 
 import javax.inject.Named;
 import org.springframework.context.annotation.Scope;

@@ -1,8 +1,8 @@
-package at.qe.eventManager.ui.beans;
+package at.qe.event_manager.ui.beans;
 
-import at.qe.eventManager.model.User;
-import at.qe.eventManager.model.UserRole;
-import at.qe.eventManager.services.UserService;
+import at.qe.event_manager.model.User;
+import at.qe.event_manager.model.UserRole;
+import at.qe.event_manager.services.UserService;
 
 import java.io.Serializable;
 import org.springframework.beans.factory.annotation.Autowired;

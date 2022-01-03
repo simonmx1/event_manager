@@ -1,7 +1,7 @@
-package at.qe.eventManager.services;
+package at.qe.event_manager.services;
 
-import at.qe.eventManager.model.User;
-import at.qe.eventManager.repositories.UserRepository;
+import at.qe.event_manager.model.User;
+import at.qe.event_manager.repositories.UserRepository;
 
 import java.io.Serializable;
 import java.util.Collection;
