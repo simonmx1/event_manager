@@ -1,8 +1,9 @@
-package at.qe.skeleton.ui.beans;
+package at.qe.eventManager.ui.beans;
 
-import at.qe.skeleton.model.User;
-import at.qe.skeleton.model.UserRole;
-import at.qe.skeleton.services.UserService;
+import at.qe.eventManager.model.User;
+import at.qe.eventManager.model.UserRole;
+import at.qe.eventManager.services.UserService;
+
 import java.io.Serializable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -22,7 +23,9 @@ import org.springframework.stereotype.Component;
 @Scope("session")
 public class SessionInfoBean implements Serializable {
 
-    @Autowired
+	private static final long serialVersionUID = 1L;
+
+	@Autowired
     private UserService userService;
 
     /**

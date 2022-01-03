@@ -1,4 +1,4 @@
-package at.qe.skeleton.model;
+package at.qe.eventManager.model;
 
 public class AuthenticationRequest {
 

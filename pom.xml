@@ -3,12 +3,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>at.qe</groupId>
-    <artifactId>skeleton</artifactId>
-    <version>1.0.5</version>
+    <artifactId>eventManager</artifactId>
+    <version>1.0.0</version>
     <packaging>war</packaging>
 
-    <name>skeleton</name>
-    <description>A skeleton project to be used as starting point for the courses
+    <name>eventManager</name>
+    <description>A eventManager project to be used as starting point for the courses
         "Software Architecture" and "Software Engineering" offered by the
         University of Innsbruck.
 
@@ -17,7 +17,7 @@
         for the web frontend. PrimeFaces (http://primefaces.org) is used as
         JSF component library to prettify the frontend.
 
-        Feel free to use this skeleton project as you see fit - but keept in
+        Feel free to use this eventManager project as you see fit - but keept in
         mind that this project is primarily provided to be used for educational
         purposes. Don't use it for production.
     </description>

@@ -1,9 +1,9 @@
-package at.qe.skeleton.configs;
+package at.qe.eventManager.configs;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
-import at.qe.skeleton.Main;
+import at.qe.eventManager.Main;
 
 public class ServletInitializer extends SpringBootServletInitializer{
 	@Override

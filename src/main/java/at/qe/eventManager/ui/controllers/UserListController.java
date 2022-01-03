@@ -1,13 +1,10 @@
-package at.qe.skeleton.ui.controllers;
+package at.qe.eventManager.ui.controllers;
 
-import at.qe.skeleton.model.User;
-import at.qe.skeleton.services.UserService;
+import at.qe.eventManager.model.User;
+import at.qe.eventManager.services.UserService;
 import java.io.Serializable;
 import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,7 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/userlist")
 public class UserListController implements Serializable {
 
-    @Autowired
+	private static final long serialVersionUID = 1L;
+	
+	@Autowired
     private UserService userService;
 
     /**

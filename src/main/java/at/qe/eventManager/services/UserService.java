@@ -1,9 +1,9 @@
-package at.qe.skeleton.services;
+package at.qe.eventManager.services;
 
-import at.qe.skeleton.model.User;
-import at.qe.skeleton.repositories.UserRepository;
+import at.qe.eventManager.model.User;
+import at.qe.eventManager.repositories.UserRepository;
+
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,9 @@ import org.springframework.stereotype.Component;
 @Scope("application")
 public class UserService implements Serializable, UserDetailsService {
 
-    @Autowired
+	private static final long serialVersionUID = 1L;
+	
+	@Autowired
     private UserRepository userRepository;
 
     /**

@@ -1,15 +1,12 @@
-package at.qe.skeleton.ui.controllers;
+package at.qe.eventManager.ui.controllers;
 
-import at.qe.skeleton.model.User;
-import at.qe.skeleton.model.UserRole;
-import at.qe.skeleton.services.UserService;
+import at.qe.eventManager.model.User;
+import at.qe.eventManager.services.UserService;
 import java.io.Serializable;
-
 import org.primefaces.PrimeFaces;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-
 import javax.faces.application.FacesMessage;
 
 /**
@@ -23,7 +20,9 @@ import javax.faces.application.FacesMessage;
 @Scope("view")
 public class UserDetailController implements Serializable {
 
-    @Autowired
+	private static final long serialVersionUID = 1L;
+
+	@Autowired
     private UserService userService;
 
     /**

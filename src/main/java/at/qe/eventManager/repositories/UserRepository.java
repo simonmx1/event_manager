@@ -1,12 +1,12 @@
-package at.qe.skeleton.repositories;
-
-import at.qe.skeleton.model.User;
-import at.qe.skeleton.model.UserRole;
+package at.qe.eventManager.repositories;
 
 import java.io.Serializable;
 import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import at.qe.eventManager.model.User;
+import at.qe.eventManager.model.UserRole;
 
 /**
  * Repository for managing {@link User} entities.

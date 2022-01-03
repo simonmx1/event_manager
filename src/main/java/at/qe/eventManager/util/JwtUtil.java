@@ -1,4 +1,4 @@
-package at.qe.skeleton.util;
+package at.qe.eventManager.util;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

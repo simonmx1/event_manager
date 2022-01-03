@@ -1,15 +1,15 @@
-package at.qe.skeleton.ui.controllers;
+package at.qe.eventManager.ui.controllers;
 
-import at.qe.skeleton.model.AuthenticationRequest;
-import at.qe.skeleton.model.AuthenticationResponse;
-import at.qe.skeleton.services.UserService;
-import at.qe.skeleton.util.JwtUtil;
+import at.qe.eventManager.model.AuthenticationRequest;
+import at.qe.eventManager.model.AuthenticationResponse;
+import at.qe.eventManager.services.UserService;
+import at.qe.eventManager.util.JwtUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 

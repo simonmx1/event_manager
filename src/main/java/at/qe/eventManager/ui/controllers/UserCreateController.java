@@ -1,7 +1,7 @@
-package at.qe.skeleton.ui.controllers;
+package at.qe.eventManager.ui.controllers;
 
-import at.qe.skeleton.model.User;
-import at.qe.skeleton.services.UserService;
+import at.qe.eventManager.model.User;
+import at.qe.eventManager.services.UserService;
 
 import java.io.Serializable;
 
@@ -23,7 +23,9 @@ import javax.faces.application.FacesMessage;
 @Scope("view")
 public class UserCreateController implements Serializable {
 
-    @Autowired
+	private static final long serialVersionUID = 1L;
+
+	@Autowired
     private UserService userService;
 
     /**

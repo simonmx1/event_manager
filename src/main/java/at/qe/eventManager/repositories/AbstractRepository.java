@@ -1,4 +1,4 @@
-package at.qe.skeleton.repositories;
+package at.qe.eventManager.repositories;
 
 import java.io.Serializable;
 import java.util.List;

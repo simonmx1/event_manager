@@ -1,7 +1,8 @@
-package at.qe.skeleton.configs;
+package at.qe.eventManager.configs;
 
-import at.qe.skeleton.services.UserService;
-import at.qe.skeleton.util.JwtUtil;
+import at.qe.eventManager.services.UserService;
+import at.qe.eventManager.util.JwtUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;

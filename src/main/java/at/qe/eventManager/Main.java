@@ -1,4 +1,4 @@
-package at.qe.skeleton;
+package at.qe.eventManager;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -25,7 +25,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
  * spring. It is reserved for the CDI-injection-mechanisms (Weld). Only add
  * CDI-managed components.
  */
-@ComponentScan(basePackages = "at.qe.skeleton", excludeFilters = @Filter(type = FilterType.REGEX, pattern = "at.qe.skeleton.ui.websockets.*"))
+@ComponentScan(basePackages = "at.qe.eventManager", excludeFilters = @Filter(type = FilterType.REGEX, pattern = "at.qe.eventManager.ui.websockets.*"))
 public class Main {
 
     public static void main(String[] args) {
