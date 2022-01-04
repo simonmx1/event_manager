@@ -8,7 +8,7 @@
           </v-toolbar>
           <v-card-text>
             <v-form>
-              <v-text-field
+              <v-text-field @keyup.enter="login()"
                   v-model="username"
                   :rules="usernameRules"
                   prepend-icon="mdi-account-box"
@@ -16,7 +16,7 @@
                   label="Login"
                   type="text"
               ></v-text-field>
-              <v-text-field
+              <v-text-field @keyup.enter="login()"
                   v-model="password"
                   :rules="passwordRules"
                   prepend-icon="mdi-lock"
@@ -36,7 +36,7 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" @click="login">Login</v-btn>
+            <v-btn color="primary" @click="login()">Login</v-btn>
           </v-card-actions>
         </v-card>
       </v-flex>
