@@ -137,7 +137,7 @@ export default {
     register() {
       if(this.$refs.form.validate()) {
         api.register(this.username, this.password, this.firstName, this.lastName, this.email, this.enabled, this.role)
-        .then(response => {response ? (this.successfulRegistered = true, this.wrongUsername = false) : this.wrongUsername = true})
+        .then(response => {response ? (this.successfulRegistered = true, this.wrongUsername = false) : (this.wrongUsername = true, this.successfulRegistered = false)})
       }
     },
     closeDialog() {
