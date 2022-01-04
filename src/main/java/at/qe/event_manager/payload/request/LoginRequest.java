@@ -1,14 +1,14 @@
-package at.qe.event_manager.model;
+package at.qe.event_manager.payload.request;
 
-public class AuthenticationRequest {
+public class LoginRequest {
 
     private String username;
     private String password;
 
-    public AuthenticationRequest() {
+    public LoginRequest() {
     }
 
-    public AuthenticationRequest(String username, String password) {
+    public LoginRequest(String username, String password) {
         this.username = username;
         this.password = password;
     }

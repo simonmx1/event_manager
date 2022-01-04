@@ -12,8 +12,8 @@
                   v-model="username"
                   :rules="usernameRules"
                   prepend-icon="mdi-account-box"
-                  name="login"
-                  label="Login"
+                  name="username"
+                  label="Username"
                   type="text"
               ></v-text-field>
               <v-text-field @keyup.enter="login()"
@@ -35,6 +35,7 @@
             </v-alert>
           </v-card-text>
           <v-card-actions>
+              <register/>
             <v-spacer></v-spacer>
             <v-btn color="primary" @click="login()">Login</v-btn>
           </v-card-actions>
@@ -46,11 +47,12 @@
 
 <script>
 import api from "@/utils/api";
+import Register from './Register.vue';
 
 export default {
   name: 'Login',
+  components: { Register },
   data: () => ({
-    users: null,
     username: '',
     password: '',
     wrongCredentials: false,
@@ -59,12 +61,12 @@ export default {
     ],
     passwordRules: [
       v => !!v || 'Password is required',
-    ],
+    ]
   }),
   methods: {
     login() {
       api.login(this.username, this.password).then(response => {response ? this.$router.push("/home") : this.wrongCredentials = true})
-    },
+    }
   }
 }
 </script>
