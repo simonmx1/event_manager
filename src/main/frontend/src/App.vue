@@ -20,11 +20,11 @@
     <v-navigation-drawer app clipped v-model="drawer">
       <v-list>
         <v-list-item>
-          <v-btn @click="closeDrawer" to="/users">User Management</v-btn>
+          <v-btn @click="closeDrawer()" to="/users">User Management</v-btn>
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-container @click="closeDrawer" style="height: 100%">
+    <v-container @click="closeDrawer()" style="height: 100%">
       <router-view/>
     </v-container>
   </v-app>
