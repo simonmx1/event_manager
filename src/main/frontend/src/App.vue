@@ -24,7 +24,7 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-container>
+    <v-container @click="closeDrawer" style="height: 100%">
       <router-view/>
     </v-container>
   </v-app>
