@@ -58,12 +58,12 @@ export default {
       api.loggedIn()
     },
     navToHome() {
-      this.hasKey() ? this.$router.push("/home") : null
+      (this.$route.path !== "/home") ? this.$router.push("/home") : null
     }
   },
   computed: {},
   mounted() {
-    if (!localStorage.getItem('jwt') && this.$route.path !== "/login") {
+    if (!this.hasKey() && this.$route.path !== "/login") {
       this.$router.push("/login")
     }
   }

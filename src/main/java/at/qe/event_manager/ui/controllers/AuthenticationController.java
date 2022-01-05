@@ -30,20 +30,24 @@ public class AuthenticationController {
     @Autowired
     private JwtUtil jwtTokenUtil;
     @Autowired
-	PasswordEncoder encoder;
+    PasswordEncoder encoder;
 
     @PostMapping("/loggedIn")
     public ResponseEntity<?> loggedIn(@RequestBody LoggedInRequest loggedInRequest) {
         System.out.println(loggedInRequest.getJwt());
-        String username = jwtTokenUtil.extractUsername(loggedInRequest.getJwt());
-        System.out.println(username);
-        String role = userService.loadUserByUsername(username).getRole().toString();
-    	return new ResponseEntity<>(new String[]{username,role}, HttpStatus.OK);
+        if (loggedInRequest.getJwt() != null) {
+            String username = jwtTokenUtil.extractUsername(loggedInRequest.getJwt());
+            System.out.println(username);
+            String role = userService.loadUserByUsername(username).getRole().toString();
+            return new ResponseEntity<>(new String[]{username, role}, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("", HttpStatus.EXPECTATION_FAILED);
+        }
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody LoginRequest authenticationRequest) throws Exception {
-    	try {
+        try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword())).getCredentials();
         } catch (BadCredentialsException e) {
             throw new Exception("Incorrect username or password", e);
@@ -53,17 +57,16 @@ public class AuthenticationController {
         System.out.println(userService.loadUserByUsername(jwtTokenUtil.extractUsername(jwt)).getRole());
         return ResponseEntity.ok(new MessageResponse(jwt));
     }
-    
+
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
-    	user.setPassword(encoder.encode(user.getPassword()));
-    	if(userService.createUser(user) == null) {
+        user.setPassword(encoder.encode(user.getPassword()));
+        if (userService.createUser(user) == null) {
             return new ResponseEntity<>("Error: Username is already taken!", HttpStatus.OK);
-    	}
-    	else {
+        } else {
             return new ResponseEntity<>("User registered successfully!", HttpStatus.CREATED);
-    	}
+        }
     }
-    
-    
+
+
 }

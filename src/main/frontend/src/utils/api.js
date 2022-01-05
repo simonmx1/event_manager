@@ -50,6 +50,7 @@ export default {
             {headers: {"Content-Type": "application/json"}}
         ).then(response => {
             console.log(response)
-        })
+            return response.data
+        }).catch(() => false)
     }
 }
