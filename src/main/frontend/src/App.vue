@@ -2,9 +2,12 @@
   <v-app app>
     <v-app-bar app clipped-left>
       <v-app-bar-nav-icon v-if="hasKey()" @click="drawer = !drawer"/>
-      <v-app-bar-title>
-        Event Manager
-      </v-app-bar-title>
+      <v-img src="favicon.png" max-height="50" max-width="50" @click="navToHome()" style="cursor: pointer"/>
+      <div @click="navToHome()" style="cursor: pointer">
+        <v-app-bar-title style="color: #ffffff; margin-left: 10px">
+          Event Manager
+        </v-app-bar-title>
+      </div>
       <v-spacer/>
       <v-btn v-if="hasKey()" color="primary" @click="loggedIn">
         Test Role
@@ -21,7 +24,7 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-container>
+    <v-container @click="closeDrawer()" style="height: 100%">
       <router-view/>
     </v-container>
   </v-app>
@@ -43,6 +46,7 @@ export default {
     },
     logout() {
       api.logout().then(this.$router.push("/login"))
+      this.closeDrawer()
     },
     navto() {
       console.log("hallo")
@@ -52,11 +56,12 @@ export default {
     },
     loggedIn() {
       api.loggedIn()
+    },
+    navToHome() {
+      this.hasKey() ? this.$router.push("/home") : null
     }
   },
-  computed: {
-
-  },
+  computed: {},
   mounted() {
     if (!localStorage.getItem('jwt') && this.$route.path !== "/login") {
       this.$router.push("/login")
