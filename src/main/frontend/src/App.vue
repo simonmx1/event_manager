@@ -10,7 +10,7 @@
       </div>
       <v-spacer/>
       <span v-if="hasKey()" style="margin-right: 20px">Logged in: {{ session }}</span>
-      <v-btn v-if="hasKey()" color="primary" @click="closeDrawer(); logout();">
+      <v-btn v-if="hasKey()" color="primary" @click="logout();">
         <v-icon>mdi-logout</v-icon>
         Logout
       </v-btn>
