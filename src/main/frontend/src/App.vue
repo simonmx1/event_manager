@@ -2,9 +2,14 @@
   <v-app app>
     <v-app-bar app clipped-left>
       <v-app-bar-nav-icon v-if="hasKey()" @click="drawer = !drawer"/>
-      <v-app-bar-title>
-        Event Manager
-      </v-app-bar-title>
+      <router-link to="/home">
+        <v-img src="favicon.png" max-height="50" max-width="50"/>
+      </router-link>
+      <router-link to="/home">
+        <v-app-bar-title style="color: #ffffff; margin-left: 10px">
+          Event Manager
+        </v-app-bar-title>
+      </router-link>
       <v-spacer/>
       <v-btn v-if="hasKey()" color="primary" @click="logout()">
         <v-icon>mdi-logout</v-icon>
@@ -45,9 +50,7 @@ export default {
       return JSON.parse(localStorage.getItem('jwt'))
     }
   },
-  computed: {
-
-  },
+  computed: {},
   mounted() {
     if (!localStorage.getItem('jwt') && this.$route.path !== "/login") {
       this.$router.push("/login")
