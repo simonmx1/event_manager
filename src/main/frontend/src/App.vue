@@ -54,13 +54,9 @@ export default {
       return JSON.parse(localStorage.getItem('jwt'))
     },
     loggedIn() {
-      console.log(api.loggedIn().then(function(result) {
-        console.log(result);
-      }));
       let text = "Fetza";
       api.loggedIn().then((result) => {
         text = result.toString();
-        console.log(text);
         this.session = text;
       });
     },
@@ -74,6 +70,11 @@ export default {
       this.$router.push("/login")
     }
    this.loggedIn();
-  }
+  },
+  watch: {
+    $route: function () {
+      this.loggedIn();
+    }
+  },
 }
 </script>
