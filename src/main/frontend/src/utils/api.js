@@ -42,18 +42,13 @@ export default {
         }).catch(() => false);
     },
     async loggedIn() {
-        let jwt;
-        jwt= JSON.parse(localStorage.getItem('jwt'));
-        console.log(jwt);
-        if (jwt == null) {
+        if (JSON.parse(localStorage.getItem('jwt')) == null) {
             return ""
         } else  {
             return await axios.post('/api/auth/loggedIn',
-                {'jwt': jwt},
+                {'jwt': JSON.parse(localStorage.getItem('jwt'))},
                 {headers: {"Content-Type": "application/json"}}
-            ).then(response => {
-                return response.data;
-            })
+            ).then(response => response.data).catch(() => false)
         }
 
     }
