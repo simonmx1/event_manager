@@ -2,14 +2,12 @@
   <v-app app>
     <v-app-bar app clipped-left>
       <v-app-bar-nav-icon v-if="hasKey()" @click="drawer = !drawer"/>
-      <router-link to="/home">
-        <v-img src="favicon.png" max-height="50" max-width="50"/>
-      </router-link>
-      <router-link to="/home">
+      <v-img src="favicon.png" max-height="50" max-width="50" @click="navToHome()" style="cursor: pointer"/>
+      <div @click="navToHome()" style="cursor: pointer">
         <v-app-bar-title style="color: #ffffff; margin-left: 10px">
           Event Manager
         </v-app-bar-title>
-      </router-link>
+      </div>
       <v-spacer/>
       <v-btn v-if="hasKey()" color="primary" @click="loggedIn">
         Test Role
@@ -45,6 +43,7 @@ export default {
   methods: {
     logout() {
       api.logout().then(this.$router.push("/login"))
+      this.closeDrawer()
     },
     navto() {
       console.log("hallo")
@@ -57,6 +56,9 @@ export default {
     },
     loggedIn() {
       api.loggedIn()
+    },
+    navToHome() {
+      this.hasKey() ? this.$router.push("/home") : null
     }
   },
   computed: {},
