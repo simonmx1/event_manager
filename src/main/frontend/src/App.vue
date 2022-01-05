@@ -11,6 +11,9 @@
         </v-app-bar-title>
       </router-link>
       <v-spacer/>
+      <v-btn v-if="hasKey()" color="primary" @click="loggedIn">
+        Test Role
+      </v-btn>
       <v-btn v-if="hasKey()" color="primary" @click="logout()">
         <v-icon>mdi-logout</v-icon>
         Logout
@@ -19,7 +22,7 @@
     <v-navigation-drawer app clipped v-model="drawer">
       <v-list>
         <v-list-item>
-          <v-btn to="/users">User Management</v-btn>
+          <v-btn @click="closeDrawer" to="/users">User Management</v-btn>
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
@@ -48,6 +51,12 @@ export default {
     },
     hasKey() {
       return JSON.parse(localStorage.getItem('jwt'))
+    },
+    closeDrawer() {
+      this.drawer = false
+    },
+    loggedIn() {
+      api.loggedIn()
     }
   },
   computed: {},
