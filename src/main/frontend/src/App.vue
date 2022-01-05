@@ -9,8 +9,8 @@
         </v-app-bar-title>
       </div>
       <v-spacer/>
-      <span style="margin-right: 20px">Logged in: {{ session }}</span>
-      <v-btn v-if="hasKey()" color="primary" @click="closeDrawer(); logout()">
+      <span v-if="hasKey()" style="margin-right: 20px">Logged in: {{ session }}</span>
+      <v-btn v-if="hasKey()" color="primary" @click="closeDrawer(); logout();">
         <v-icon>mdi-logout</v-icon>
         Logout
       </v-btn>
@@ -58,7 +58,7 @@ export default {
         console.log(result);
       }));
       let text = "Fetza";
-      api.loggedIn().then(function(result) {
+      api.loggedIn().then((result) => {
         text = result.toString();
         console.log(text);
         this.session = text;
