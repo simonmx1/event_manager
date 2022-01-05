@@ -1,10 +1,5 @@
 <template>
   <div class="text-center">
-    <v-dialog v-model="dialog" width="500" persistent>
-      <template v-slot:activator="{ on, attrs }">
-        <v-btn color="red lighten-2" dark v-bind="attrs" v-on="on">Not A User? Register here!</v-btn>
-      </template>
-
       <v-card class="elevation-12">
           <v-toolbar dark color="primary">
             <v-toolbar-title>Register form</v-toolbar-title>
@@ -90,7 +85,6 @@
           <v-btn color="primary" text @click="register()">Register</v-btn>
         </v-card-actions>
       </v-card>
-    </v-dialog>
   </div>
 </template>
 
@@ -100,7 +94,6 @@ import api from "@/utils/api";
 export default {
   name: 'Register',
   data: () => ({
-    dialog: false,
     valid: true,
     wrongUsername: false,
     successfulRegistered: false,
@@ -152,6 +145,7 @@ export default {
       this.successfulRegistered = false
       this.wrongUsername = false
       this.$refs.form.resetValidation()
+      this.$emit("close")
     }
   }
 }

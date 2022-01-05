@@ -24,7 +24,22 @@ export default {
             return false
         });
     },
-    async getUserList() {
-
+    async getUsers() {
+        return await axios.get('/api/users/get',
+            {headers: {"Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt'))}}
+        ).then(response => {
+            return response.data;
+        }).catch(() => false);
+    },
+    async loggedIn() {
+        if (localStorage.getItem('jwt')) {
+            return await axios.get('/api/auth/loggedIn',
+                {headers: {"Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt'))}}
+            ).then(response => {
+                console.log(response.data)
+            })
+        } else {
+            return false;
+        }
     }
 }

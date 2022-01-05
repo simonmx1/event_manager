@@ -28,9 +28,9 @@ public class AuthenticationController {
     @Autowired
 	PasswordEncoder encoder;
 
-    @GetMapping("/hello")
-    public String hello() {
-        return "Hello World";
+    @GetMapping("/loggedIn")
+    public String loggedin() {
+        return "na";
     }
 
     @PostMapping("/login")

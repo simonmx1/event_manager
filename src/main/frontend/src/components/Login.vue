@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-main>
     <v-layout align-center justify-center>
       <v-flex xs12 sm8 md4>
         <v-card class="elevation-12">
@@ -8,7 +8,8 @@
           </v-toolbar>
           <v-card-text>
             <v-form>
-              <v-text-field @keyup.enter="login()"
+              <v-text-field
+                  @keyup.enter="login()"
                   v-model="username"
                   :rules="usernameRules"
                   prepend-icon="mdi-account-box"
@@ -16,7 +17,8 @@
                   label="Username"
                   type="text"
               ></v-text-field>
-              <v-text-field @keyup.enter="login()"
+              <v-text-field
+                  @keyup.enter="login()"
                   v-model="password"
                   :rules="passwordRules"
                   prepend-icon="mdi-lock"
@@ -35,14 +37,28 @@
             </v-alert>
           </v-card-text>
           <v-card-actions>
-              <register/>
+            <v-dialog
+                v-model="dialog"
+                width="500"
+                persistent>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                    color="red lighten-2"
+                    dark
+                    v-bind="attrs"
+                    v-on="on">
+                  Not A User? Register here!
+                </v-btn>
+              </template>
+              <register @close="dialog = false"/>
+            </v-dialog>
             <v-spacer></v-spacer>
             <v-btn color="primary" @click="login()">Login</v-btn>
           </v-card-actions>
         </v-card>
       </v-flex>
     </v-layout>
-  </v-container>
+  </v-main>
 </template>
 
 <script>
@@ -51,8 +67,9 @@ import Register from './Register.vue';
 
 export default {
   name: 'Login',
-  components: { Register },
+  components: {Register},
   data: () => ({
+    dialog: false,
     username: '',
     password: '',
     wrongCredentials: false,
@@ -65,7 +82,9 @@ export default {
   }),
   methods: {
     login() {
-      api.login(this.username, this.password).then(response => {response ? this.$router.push("/home") : this.wrongCredentials = true})
+      api.login(this.username, this.password).then(response => {
+        response ? this.$router.push("/home") : this.wrongCredentials = true
+      })
     }
   }
 }
