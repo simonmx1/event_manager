@@ -1,7 +1,6 @@
 package at.qe.event_manager.ui.controllers;
 
 import at.qe.event_manager.model.User;
-import at.qe.event_manager.payload.request.RegisterRequest;
 import at.qe.event_manager.payload.response.MessageResponse;
 import at.qe.event_manager.services.UserService;
 
@@ -41,7 +40,7 @@ public class UserManagementController implements Serializable {
     @PostMapping("/edit")
     public ResponseEntity<?> edit(@RequestBody User user) {
         if(userService.saveUser(user) == null) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Error: User does not exist!"));
+            return ResponseEntity.ok(new MessageResponse("Error: User does not exist!"));
         }
         else {
             return ResponseEntity.ok(new MessageResponse("User edited successfully!"));

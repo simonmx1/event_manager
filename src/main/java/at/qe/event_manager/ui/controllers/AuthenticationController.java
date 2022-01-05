@@ -6,6 +6,7 @@ import at.qe.event_manager.payload.response.MessageResponse;
 import at.qe.event_manager.services.UserService;
 import at.qe.event_manager.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -48,10 +49,10 @@ public class AuthenticationController {
     public ResponseEntity<?> registerUser(@RequestBody User user) {
     	user.setPassword(encoder.encode(user.getPassword()));
     	if(userService.createUser(user) == null) {
-    		return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
+            return new ResponseEntity<>("Error: Username is already taken!", HttpStatus.OK);
     	}
     	else {
-    		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+            return new ResponseEntity<>("User registered successfully!", HttpStatus.CREATED);
     	}
     }
 }
