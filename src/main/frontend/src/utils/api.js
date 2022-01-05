@@ -45,11 +45,16 @@ export default {
         let jwt;
         jwt= JSON.parse(localStorage.getItem('jwt'));
         console.log(jwt);
-        return await axios.post('/api/auth/loggedIn',
-            {'jwt': jwt},
-            {headers: {"Content-Type": "application/json"}}
-        ).then(response => {
-            console.log(response)
-        })
+        if (jwt == null) {
+            return ""
+        } else  {
+            return await axios.post('/api/auth/loggedIn',
+                {'jwt': jwt},
+                {headers: {"Content-Type": "application/json"}}
+            ).then(response => {
+                return response.data;
+            })
+        }
+
     }
 }
