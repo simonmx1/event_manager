@@ -9,9 +9,7 @@
         </v-app-bar-title>
       </div>
       <v-spacer/>
-      <v-btn v-if="hasKey()" color="primary" @click="loggedIn">
-        Test Role
-      </v-btn>
+      <span style="margin-right: 20px">Logged in: {{ session }}</span>
       <v-btn v-if="hasKey()" color="primary" @click="closeDrawer(); logout()">
         <v-icon>mdi-logout</v-icon>
         Logout
@@ -38,7 +36,8 @@ export default {
   name: 'App',
   data: () => ({
     drawer: false,
-    users: null
+    users: null,
+    session: "Not logged in!"
   }),
   methods: {
     closeDrawer() {
@@ -55,7 +54,15 @@ export default {
       return JSON.parse(localStorage.getItem('jwt'))
     },
     loggedIn() {
-      api.loggedIn()
+      console.log(api.loggedIn().then(function(result) {
+        console.log(result);
+      }));
+      let text = "Fetza";
+      api.loggedIn().then(function(result) {
+        text = result.toString();
+        console.log(text);
+        this.session = text;
+      });
     },
     navToHome() {
       (this.$route.path !== "/home") ? this.$router.push("/home") : null
@@ -66,6 +73,7 @@ export default {
     if (!this.hasKey() && this.$route.path !== "/login") {
       this.$router.push("/login")
     }
+   this.loggedIn();
   }
 }
 </script>

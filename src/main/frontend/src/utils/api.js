@@ -43,14 +43,14 @@ export default {
     },
     async loggedIn() {
         let jwt;
-        jwt= JSON.parse(localStorage.getItem('jwt'));
-        console.log(jwt);
-        return await axios.post('/api/auth/loggedIn',
-            {'jwt': jwt},
-            {headers: {"Content-Type": "application/json"}}
-        ).then(response => {
-            console.log(response)
-            return response.data
-        }).catch(() => false)
+        if (JSON.parse(localStorage.getItem('jwt')) == null) {
+            return ""
+        } else  {
+            return await axios.post('/api/auth/loggedIn',
+                {'jwt': JSON.parse(localStorage.getItem('jwt'))},
+                {headers: {"Content-Type": "application/json"}}
+            ).then(response => response.data).catch(() => false)
+        }
+
     }
 }
