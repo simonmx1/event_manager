@@ -42,11 +42,13 @@ export default {
         }).catch(() => false);
     },
     async loggedIn() {
-        if (localStorage.getItem('jwt')) {
-            return await axios.get('/api/auth/loggedIn',
+        let jwt = localStorage.getItem('jwt')
+        if (jwt) {
+            return await axios.post('/api/auth/loggedIn',
+                {'jwtToken': jwt},
                 {headers: {"Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt'))}}
             ).then(response => {
-                console.log(response.data)
+                console.log(response)
             })
         } else {
             return false;

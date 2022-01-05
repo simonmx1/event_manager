@@ -1,6 +1,7 @@
 package at.qe.event_manager.ui.controllers;
 
 import at.qe.event_manager.model.User;
+import at.qe.event_manager.payload.request.LoggedInRequest;
 import at.qe.event_manager.payload.request.LoginRequest;
 import at.qe.event_manager.payload.response.MessageResponse;
 import at.qe.event_manager.services.UserService;
@@ -27,9 +28,10 @@ public class AuthenticationController {
     @Autowired
 	PasswordEncoder encoder;
 
-    @GetMapping("/loggedIn")
-    public String loggedin() {
-        return "na";
+    @PostMapping("/loggedIn")
+    public ResponseEntity<?> loggedIn(@RequestBody LoggedInRequest loggedInRequest) {
+    	System.out.println(loggedInRequest.getJwtToken());
+    	return new ResponseEntity<>("", HttpStatus.OK);
     }
 
     @PostMapping("/login")
@@ -55,4 +57,6 @@ public class AuthenticationController {
             return new ResponseEntity<>("User registered successfully!", HttpStatus.CREATED);
     	}
     }
+    
+    
 }
