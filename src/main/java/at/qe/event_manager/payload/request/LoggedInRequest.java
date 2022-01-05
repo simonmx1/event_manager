@@ -1,17 +1,20 @@
 package at.qe.event_manager.payload.request;
 
 public class LoggedInRequest {
-	private String jwtToken;
+	private String jwt;
+
+	public LoggedInRequest() {
+	}
 	
-	public LoggedInRequest(String jwtToken) {
-		this.jwtToken = jwtToken;
+	public LoggedInRequest(String jwt) {
+		this.jwt = jwt;
 	}
 
-	public String getJwtToken() {
-		return jwtToken;
+	public String getJwt() {
+		return jwt;
 	}
 
-	public void setJwtToken(String jwtToken) {
-		this.jwtToken = jwtToken;
+	public void setJwt(String jwt) {
+		this.jwt = jwt;
 	}
 }

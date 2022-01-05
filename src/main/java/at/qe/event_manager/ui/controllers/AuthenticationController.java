@@ -1,6 +1,7 @@
 package at.qe.event_manager.ui.controllers;
 
 import at.qe.event_manager.model.User;
+import at.qe.event_manager.model.UserRole;
 import at.qe.event_manager.payload.request.LoggedInRequest;
 import at.qe.event_manager.payload.request.LoginRequest;
 import at.qe.event_manager.payload.response.MessageResponse;
@@ -14,6 +15,9 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -30,8 +34,11 @@ public class AuthenticationController {
 
     @PostMapping("/loggedIn")
     public ResponseEntity<?> loggedIn(@RequestBody LoggedInRequest loggedInRequest) {
-    	System.out.println(loggedInRequest.getJwtToken());
-    	return new ResponseEntity<>("", HttpStatus.OK);
+        System.out.println(loggedInRequest.getJwt());
+        String username = jwtTokenUtil.extractUsername(loggedInRequest.getJwt());
+        System.out.println(username);
+        String role = userService.loadUserByUsername(username).getRole().toString();
+    	return new ResponseEntity<>(new String[]{username,role}, HttpStatus.OK);
     }
 
     @PostMapping("/login")
