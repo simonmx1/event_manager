@@ -42,7 +42,6 @@ export default {
         }).catch(() => false);
     },
     async loggedIn() {
-        let jwt;
         if (JSON.parse(localStorage.getItem('jwt')) == null) {
             return ""
         } else  {
