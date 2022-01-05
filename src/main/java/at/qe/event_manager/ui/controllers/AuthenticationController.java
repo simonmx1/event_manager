@@ -2,11 +2,9 @@ package at.qe.event_manager.ui.controllers;
 
 import at.qe.event_manager.model.User;
 import at.qe.event_manager.payload.request.LoginRequest;
-import at.qe.event_manager.payload.request.RegisterRequest;
 import at.qe.event_manager.payload.response.MessageResponse;
 import at.qe.event_manager.services.UserService;
 import at.qe.event_manager.util.JwtUtil;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,7 +32,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody LoginRequest authenticationRequest) throws Exception {
+    public ResponseEntity<?> loginUser(@RequestBody LoginRequest authenticationRequest) throws Exception {
     	try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword())).getCredentials();
         } catch (BadCredentialsException e) {
@@ -47,15 +45,8 @@ public class AuthenticationController {
     }
     
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody RegisterRequest registerRequest) {
-    	User user = new User();
-    	user.setUsername(registerRequest.getUsername());
-    	user.setPassword(encoder.encode(registerRequest.getPassword()));
-    	user.setFirstName(registerRequest.getFirstName());
-    	user.setLastName(registerRequest.getLastName());
-    	user.setEmail(registerRequest.getEmail());
-    	user.setEnabled(registerRequest.isEnabled());
-    	user.setRole(registerRequest.getRole());
+    public ResponseEntity<?> registerUser(@RequestBody User user) {
+    	user.setPassword(encoder.encode(user.getPassword()));
     	if(userService.createUser(user) == null) {
     		return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
     	}
