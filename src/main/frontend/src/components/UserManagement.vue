@@ -5,6 +5,9 @@
         :headers="headers"
         :items="users"
         :items-per-page="15"
+        :search="search"
+        sort-by="role"
+        sort-by.next="username"
         class="elevation-1">
 
       <template v-slot:top>
@@ -17,6 +20,15 @@
               inset
               vertical
           ></v-divider>
+          <v-text-field
+              v-model="search"
+              append-icon="mdi-magnify"
+              label="Search"
+              single-line
+              hide-details
+          ></v-text-field>
+          <v-spacer></v-spacer>
+          <v-spacer></v-spacer>
           <v-spacer></v-spacer>
           <v-dialog
               v-model="createDialog"
@@ -83,6 +95,7 @@ export default {
   },
   data: () => ({
     createDialog: false,
+    search: '',
     headers: [
       {text: 'Username', align: 'left', value: 'username'},
       {text: 'Firstname', align: 'left', value: 'firstName'},
