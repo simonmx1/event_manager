@@ -27,7 +27,7 @@
           <v-text-field
               v-model="firstName"
               :rules="firstNameRules"
-              prepend-icon="mdi-account-box"
+              prepend-icon="mdi-form-textbox"
               name="firstName"
               label="First Name"
               type="firstName"
@@ -36,7 +36,7 @@
           <v-text-field
               v-model="lastName"
               :rules="lastNameRules"
-              prepend-icon="mdi-account-box"
+              prepend-icon="mdi-form-textbox"
               name="lastName"
               label="Last Name"
               type="lastName"
@@ -44,7 +44,7 @@
           <v-text-field
               v-model="email"
               :rules="emailRules"
-              prepend-icon="mdi-account-box"
+              prepend-icon="mdi-mail"
               name="email"
               label="Email"
               type="email"
