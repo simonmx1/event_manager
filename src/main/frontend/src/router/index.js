@@ -36,7 +36,6 @@ router.beforeEach((to, from, next) => {
     }
     if (to.name === 'UserManagement') {
         api.loggedIn().then(response => {
-            console.log(response)
             if (to.name === 'UserManagement' && response !== false && response[1] === 'ADMIN') next()
             else next(false)
         })

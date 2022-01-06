@@ -59,7 +59,10 @@
             </v-card>
           </v-dialog>
           <v-dialog v-model="editDialog" max-width="500px">
-            <register @close="editDialog = false; currentUser = null"></register>
+            <edit-user
+                v-if="currentUser != null"
+                @close="editDialog = false; currentUser = null; getUsers()"
+                :user="currentUser"></edit-user>
           </v-dialog>
         </v-toolbar>
       </template>
@@ -103,11 +106,13 @@
 <script>
 import api from "@/utils/api";
 import Register from "@/components/Register";
+import EditUser from "@/components/EditUser";
 
 export default {
   name: "UserManagement",
   components: {
-    Register
+    Register,
+    EditUser
   },
   data: () => ({
     createDialog: false,
@@ -152,11 +157,6 @@ export default {
     openDeleteDialog(user) {
       this.currentUser = user;
       this.deleteDialog = true;
-    },
-    editUserConfirm() {
-      api.editUser(this.currentUser).then(() => this.getUsers())
-      this.currentUser = null;
-      this.editDialog = false
     },
     deleteUserConfirm() {
       api.deleteUser(this.currentUser.username).then(() => this.getUsers())

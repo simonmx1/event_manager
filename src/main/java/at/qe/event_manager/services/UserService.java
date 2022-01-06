@@ -59,7 +59,6 @@ public class UserService implements Serializable, UserDetailsService {
      * @param user the user to save
      * @return the updated user
      */
-    @PreAuthorize("hasAuthority('ADMIN')")
     public User saveUser(User user) {
         if (user.isNew()) {
             user.setCreateDate(new Date());

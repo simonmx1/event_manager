@@ -43,10 +43,10 @@ public class UserManagementController implements Serializable {
 
     @PostMapping("/edit")
     public ResponseEntity<?> edit(@RequestBody User user) {
+        System.out.println(user.getUsername());
         if(userService.saveUser(user) == null) {
             return ResponseEntity.ok(new MessageResponse("Error: User does not exist!"));
-        }
-        else {
+        } else {
             return ResponseEntity.ok(new MessageResponse("User edited successfully!"));
         }
     }

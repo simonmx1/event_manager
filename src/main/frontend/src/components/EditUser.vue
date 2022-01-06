@@ -2,10 +2,16 @@
   <div class="text-center">
     <v-card class="elevation-12">
       <v-toolbar dark color="primary">
-        <v-toolbar-title> {{ admin ? 'Create User' : 'Register' }}</v-toolbar-title>
+        <v-toolbar-title>Edit User</v-toolbar-title>
       </v-toolbar>
       <v-card-text>
-        <user-form ref="form" :admin="admin" @validated="register"/>
+        <user-form
+            v-if="user != null"
+            ref="form"
+            :admin="true"
+            :user="user"
+            :edit="true"
+            @validated="edit"/>
         <v-alert
             v-if="typeof success !== 'undefined'"
             dense
@@ -20,8 +26,8 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="closeDialog()">{{ admin ? 'Cancel' : 'Close' }}</v-btn>
-        <v-btn color="primary" text @click="tryRegister()"> {{ admin ? 'Create User' : 'Register' }}</v-btn>
+        <v-btn color="blue darken-1" text @click="closeDialog()">Close</v-btn>
+        <v-btn color="primary" text @click="tryEdit()">Save User</v-btn>
       </v-card-actions>
     </v-card>
   </div>
@@ -32,10 +38,10 @@ import api from "@/utils/api";
 import UserForm from "@/components/UserForm";
 
 export default {
-  name: 'Register',
+  name: 'Edit',
   components: {UserForm},
   props: {
-    admin: {type: Boolean, default: false}
+    user: {type: Object, required: true},
   },
   data: () => ({
     response: '',
@@ -43,15 +49,16 @@ export default {
     success: undefined,
   }),
   methods: {
-    tryRegister() {
+    tryEdit() {
       this.$refs.form.validate()
     },
-    register(event) {
-      api.register(event)
+    edit(event) {
+      api.editUser(event)
           .then(response => {
-            this.success = response.status === 201;
-            this.response = response.data
+            this.success = response.status === 200;
+            this.response = response.data.msg
           })
+
     },
     closeDialog() {
       this.$refs.form.clear()

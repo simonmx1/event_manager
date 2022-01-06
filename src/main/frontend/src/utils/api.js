@@ -19,7 +19,6 @@ export default {
             'email': user.email, 'enabled': user.enabled, 'role': user.role
             }
         ).then(response => {
-            console.log(response)
             return response
         }).catch(() => false);
     },
@@ -46,7 +45,6 @@ export default {
         }).catch(() => false);
     },
     async deleteUser(username) {
-        console.log(username)
         return await axios.post('/api/users/delete', {'username': username},
             {
                 headers: {

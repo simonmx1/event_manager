@@ -1,7 +1,12 @@
 <template>
-  <v-form ref="form" v-model="valid" lazy-validation>
+  <v-form
+      ref="form"
+      v-model="valid"
+      lazy-validation
+      v-if="currentUser != null">
     <v-text-field
-        v-model="user.username"
+        v-model="currentUser.username"
+        :disabled="editMode"
         :rules="usernameRules"
         prepend-icon="mdi-account-box"
         name="username"
@@ -9,7 +14,8 @@
         type="text"
     ></v-text-field>
     <v-text-field
-        v-model="user.password"
+        v-model="currentUser.password"
+        :disabled="editMode"
         :rules="passwordRules"
         prepend-icon="mdi-lock"
         name="password"
@@ -18,7 +24,7 @@
     ></v-text-field>
     <v-divider></v-divider>
     <v-text-field
-        v-model="user.firstName"
+        v-model="currentUser.firstName"
         :rules="firstNameRules"
         prepend-icon="mdi-form-textbox"
         name="firstName"
@@ -27,7 +33,7 @@
         required
     ></v-text-field>
     <v-text-field
-        v-model="user.lastName"
+        v-model="currentUser.lastName"
         :rules="lastNameRules"
         prepend-icon="mdi-form-textbox"
         name="lastName"
@@ -35,7 +41,7 @@
         type="lastName"
     ></v-text-field>
     <v-text-field
-        v-model="user.email"
+        v-model="currentUser.email"
         :rules="emailRules"
         prepend-icon="mdi-mail"
         name="email"
@@ -44,13 +50,13 @@
     ></v-text-field>
     <v-select
         v-if="admin"
-        v-model="user.role"
+        v-model="currentUser.role"
         :items="roles"
         label="Select Role"
     ></v-select>
     <v-checkbox
         v-if="admin"
-        v-model="user.enabled"
+        v-model="currentUser.enabled"
         label="Enable Account"
     ></v-checkbox>
   </v-form>
@@ -60,19 +66,24 @@
 export default {
   name: "UserForm",
   props: {
+    user: {
+      type: Object, default: () => ({
+        username: '',
+        password: '',
+        firstName: '',
+        lastName: '',
+        email: '',
+        role: 'USER',
+        enabled: true,
+      })
+    },
+    edit: {type: Boolean, default: false},
     admin: {type: Boolean, default: false}
   },
   data: () => ({
+    editMode: false,
+    currentUser: null,
     valid: true,
-    user: {
-      username: '',
-      password: '',
-      firstName: '',
-      lastName: '',
-      email: '',
-      role: 'USER',
-      enabled: true,
-    },
     roles: ['USER'],
     usernameRules: [
       v => !!v || 'Username is required'
@@ -97,20 +108,12 @@ export default {
   methods: {
     validate() {
       if (this.$refs.form.validate()) {
-        this.$emit('validated', this.user)
+        this.$emit('validated', this.currentUser)
       }
     },
     clear() {
       this.$refs.form.resetValidation()
-      this.user = {
-        username: '',
-        password: '',
-        firstName: '',
-        lastName: '',
-        email: '',
-        role: 'USER',
-        enabled: true,
-      }
+      this.currentUser = JSON.parse(JSON.stringify(this.user));
     }
   },
   mounted() {
@@ -121,6 +124,8 @@ export default {
         'USER'
       ]
     }
+    this.currentUser = JSON.parse(JSON.stringify(this.user));
+    this.editMode = this.edit
   }
 }
 </script>
