@@ -89,7 +89,7 @@ public class UserService implements Serializable, UserDetailsService {
      *
      * @param user the user to delete
      */
-    @PreAuthorize("hasAuthority('ADMIN')")
+    //@PreAuthorize("hasAuthority('ADMIN')")
     public void deleteUser(User user) {
         userRepository.delete(user);
         // :TODO: write some audit log stating who and when this user was permanently deleted.
@@ -97,11 +97,7 @@ public class UserService implements Serializable, UserDetailsService {
 
     @Override
     public User loadUserByUsername(String username) throws UsernameNotFoundException {
-        User u = userRepository.findFirstByUsername(username);
-//        System.out.println(u.getUsername());
-//        System.out.println(u.getPassword());
-//        System.out.println(u.getFirstName());
-        return u;
+        return userRepository.findFirstByUsername(username);
     }
 
 }

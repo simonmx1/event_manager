@@ -13,11 +13,10 @@ export default {
     async logout() {
         localStorage.removeItem('jwt');
     },
-    async register(username, password, firstName, lastName, email, enabled, role) {
-        return await axios.post('/api/auth/register',
-            {
-                'username': username, 'password': password, 'firstName': firstName, 'lastName': lastName,
-                'email': email, 'enabled': enabled, 'role': role
+    async register(user) {
+        return await axios.post('/api/auth/register', {
+            'username': user.username, 'password': user.password, 'firstName': user.firstName, 'lastName': user.lastName,
+            'email': user.email, 'enabled': user.enabled, 'role': user.role
             }
         ).then(response => {
             console.log(response)
@@ -31,12 +30,30 @@ export default {
             return response.data;
         }).catch(() => false);
     },
-    async editUser(username, password, firstName, lastName, email, enabled, role) {
+    async editUser(user) {
         return await axios.post('/api/users/edit', {
-                'username': username, 'password': password, 'firstName': firstName, 'lastName': lastName,
-                'email': email, 'enabled': enabled, 'role': role
+                'username': user.username, 'password': user.password, 'firstName': user.firstName, 'lastName': user.lastName,
+                'email': user.email, 'enabled': user.enabled, 'role': user.role
             },
-            {headers: {"Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt'))}}
+            {
+                headers: {
+                    "Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt')),
+                    "Content-Type": "application/json"
+                }
+            }
+        ).then(response => {
+            return response;
+        }).catch(() => false);
+    },
+    async deleteUser(username) {
+        console.log(username)
+        return await axios.post('/api/users/delete', {'username': username},
+            {
+                headers: {
+                    "Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt')),
+                    "Content-Type": "application/json"
+                }
+            }
         ).then(response => {
             return response;
         }).catch(() => false);
@@ -44,7 +61,7 @@ export default {
     async loggedIn() {
         if (JSON.parse(localStorage.getItem('jwt')) == null) {
             return ""
-        } else  {
+        } else {
             return await axios.post('/api/auth/loggedIn',
                 {'jwt': JSON.parse(localStorage.getItem('jwt'))},
                 {headers: {"Content-Type": "application/json"}}

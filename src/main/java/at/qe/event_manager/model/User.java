@@ -1,6 +1,7 @@
 package at.qe.event_manager.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
@@ -111,7 +112,7 @@ public class User implements Persistable<String>, Serializable, Comparable<User>
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return new ArrayList<>();
     }
 
     @Override

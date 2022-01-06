@@ -6,6 +6,10 @@ import at.qe.event_manager.services.UserService;
 
 import java.io.Serializable;
 import java.util.Collection;
+
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.sun.faces.util.Json;
+import org.primefaces.shaded.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,5 +49,11 @@ public class UserManagementController implements Serializable {
         else {
             return ResponseEntity.ok(new MessageResponse("User edited successfully!"));
         }
+    }
+
+    @PostMapping("/delete")
+    public ResponseEntity<?> delete(@RequestBody String username) {
+        userService.deleteUser(userService.loadUserByUsername(new JSONObject(username).getString("username")));
+        return ResponseEntity.ok(new MessageResponse("User deleted successfully!"));
     }
 }

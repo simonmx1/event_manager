@@ -24,12 +24,11 @@
               v-model="search"
               append-icon="mdi-magnify"
               label="Search"
+              style="width: 50px"
               single-line
               hide-details
           ></v-text-field>
-          <v-spacer></v-spacer>
-          <v-spacer></v-spacer>
-          <v-spacer></v-spacer>
+          <v-spacer/>
           <v-dialog
               v-model="createDialog"
               width="500"
@@ -46,7 +45,21 @@
                 Create User
               </v-btn>
             </template>
-            <register @close="userCreated()"/>
+            <register :admin="true" @close="userCreated()"/>
+          </v-dialog>
+          <v-dialog v-model="deleteDialog" max-width="500px">
+            <v-card >
+              <v-card-title style="width: 100%">Are you sure you want to delete this user?</v-card-title>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn @click="deleteDialog = false; currentUser = null" color="primary">Cancel</v-btn>
+                <v-btn @click="deleteUserConfirm()" color="red">Delete</v-btn>
+                <v-spacer></v-spacer>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+          <v-dialog v-model="editDialog" max-width="500px">
+            <register @close="editDialog = false; currentUser = null"></register>
           </v-dialog>
         </v-toolbar>
       </template>
@@ -72,13 +85,13 @@
         <v-icon
             small
             class="mr-2"
-            @click="editUser(item)"
+            @click="openEditDialog(item)"
         >
           mdi-pencil
         </v-icon>
         <v-icon
             small
-            @click="deleteUser(item)"
+            @click="openDeleteDialog(item)"
         >
           mdi-delete
         </v-icon>
@@ -98,6 +111,9 @@ export default {
   },
   data: () => ({
     createDialog: false,
+    deleteDialog: false,
+    editDialog: false,
+    currentUser: null,
     search: '',
     headers: [
       {text: 'Username', align: 'left', value: 'username'},
@@ -123,19 +139,29 @@ export default {
       }
     },
     formatDate(date) {
-      let d = new Date(date).toISOString().slice(0, 10)
-      console.log(d)
-      return d;
+      return new Date(date).toISOString().slice(0, 10);
     },
     userCreated() {
       this.getUsers()
       this.createDialog = false
     },
-    editUser(user) {
-      console.log(user)
+    openEditDialog(user) {
+      this.currentUser = user;
+      this.editDialog = true;
     },
-    deleteUser(user) {
-      console.log(user)
+    openDeleteDialog(user) {
+      this.currentUser = user;
+      this.deleteDialog = true;
+    },
+    editUserConfirm() {
+      api.editUser(this.currentUser).then(() => this.getUsers())
+      this.currentUser = null;
+      this.editDialog = false
+    },
+    deleteUserConfirm() {
+      api.deleteUser(this.currentUser.username).then(() => this.getUsers())
+      this.currentUser = null;
+      this.deleteDialog = false
     },
     getUsers() {
       api.getUsers().then(response => this.users = response)
