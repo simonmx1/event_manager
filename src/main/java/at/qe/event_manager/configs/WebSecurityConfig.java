@@ -47,22 +47,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/api/auth/**").permitAll() // allow authentication
-                .antMatchers("/").permitAll()
-                .antMatchers("/login").permitAll()
-                .antMatchers("/js/**").permitAll()
-                .antMatchers("/css/**").permitAll()
-                .antMatchers("/favicon.ico").permitAll()
-                .antMatchers("/h2-console/**").permitAll() // allow H2 console
-                .anyRequest().authenticated()
-                .and().sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                .antMatchers("/api/**").authenticated()
+                .anyRequest().permitAll()
+                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.headers().frameOptions().disable(); // needed for H2 console
 
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class); // check for jwt on requests
         //http.addFilterAfter(new HistoryModeFilter(), FilterSecurityInterceptor.class);
 
-//        http.exceptionHandling().accessDeniedPage("/error/access_denied.xhtml");
+        //http.exceptionHandling().accessDeniedPage("/error").and().;
 //        http.sessionManagement().invalidSessionUrl("/error/invalid_session.xhtml");
 
     }
