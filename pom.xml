@@ -80,12 +80,6 @@
             <artifactId>primefaces-spring-boot-starter</artifactId>
             <version>${joinfaces.version}</version>
         </dependency>
-        
-        <dependency>
-            <groupId>org.joinfaces</groupId>
-            <artifactId>omnifaces3-spring-boot-starter</artifactId>
-            <version>${joinfaces.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
@@ -103,7 +97,7 @@
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
-        
+
         <!-- special test dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

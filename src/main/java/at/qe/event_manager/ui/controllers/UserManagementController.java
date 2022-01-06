@@ -7,8 +7,6 @@ import at.qe.event_manager.services.UserService;
 import java.io.Serializable;
 import java.util.Collection;
 
-import com.fasterxml.jackson.annotation.JsonValue;
-import com.sun.faces.util.Json;
 import org.primefaces.shaded.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
