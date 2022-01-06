@@ -28,7 +28,14 @@ export default {
         }).catch(() => false);
     },
     async getUsers() {
-        return await axios.get('/api/users/get',
+        return await axios.get('/api/users/getAll',
+            {headers: {"Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt'))}}
+        ).then(response => {
+            return response.data;
+        }).catch(() => false);
+    },
+    async getUser(username) {
+        return await axios.get('/api/users/get?username=' + username,
             {headers: {"Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt'))}}
         ).then(response => {
             return response.data;

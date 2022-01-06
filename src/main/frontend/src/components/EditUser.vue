@@ -8,7 +8,7 @@
         <user-form
             v-if="user != null"
             ref="form"
-            :admin="true"
+            :admin="admin"
             :user="user"
             :edit="true"
             @validated="edit"/>
@@ -42,6 +42,7 @@ export default {
   components: {UserForm},
   props: {
     user: {type: Object, required: true},
+    admin: {type: Boolean, default: true}
   },
   data: () => ({
     response: '',

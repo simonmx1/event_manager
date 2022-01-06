@@ -38,7 +38,7 @@
             </v-list-item-title>
           </v-list-item>
           <v-list-item>
-            <v-list-item-title @click="logout()">
+            <v-list-item-title @click="settings()">
               <v-icon>mdi-cog</v-icon>
               Settings
             </v-list-item-title>
@@ -94,6 +94,9 @@ export default {
     logout() {
       api.logout().then(() => this.$router.push("/login"))
       this.closeDrawer()
+    },
+    settings() {
+      this.$router.push("/accountSettings")
     },
     setLoggedInLabel() {
       api.loggedIn().then(result => {

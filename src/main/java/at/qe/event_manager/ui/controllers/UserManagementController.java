@@ -33,15 +33,21 @@ public class UserManagementController implements Serializable {
      *
      * @return
      */
-    @GetMapping("/get")
+    @GetMapping("/getAll")
     public Collection<User> getUsers() {
         return userService.getAllUsers();
     }
 
+    @GetMapping("/get")
+    @ResponseBody
+    public User get(@RequestParam(name = "username") String username) {
+        User u = userService.loadUserByUsername(username);
+        u.setPassword("");
+        return u;
+    }
 
     @PostMapping("/edit")
     public ResponseEntity<?> edit(@RequestBody User user) {
-        System.out.println(user.getUsername());
         if(userService.saveUser(user) == null) {
             return ResponseEntity.ok(new MessageResponse("Error: User does not exist!"));
         } else {

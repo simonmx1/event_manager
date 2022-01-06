@@ -62,7 +62,8 @@
             <edit-user
                 v-if="currentUser != null"
                 @close="editDialog = false; currentUser = null; getUsers()"
-                :user="currentUser"></edit-user>
+                :user="currentUser"
+                :admin="loggedInUser !== currentUser.username"></edit-user>
           </v-dialog>
         </v-toolbar>
       </template>
@@ -95,6 +96,7 @@
         <v-icon
             small
             @click="openDeleteDialog(item)"
+            :disabled="loggedInUser === item.username"
         >
           mdi-delete
         </v-icon>
@@ -115,6 +117,7 @@ export default {
     EditUser
   },
   data: () => ({
+    loggedInUser: null,
     createDialog: false,
     deleteDialog: false,
     editDialog: false,
@@ -169,6 +172,7 @@ export default {
   },
   mounted() {
     this.getUsers()
+    api.loggedIn().then(response => {if (response !== false) {this.loggedInUser = response[0]}})
   }
 }
 </script>

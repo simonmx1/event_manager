@@ -26,7 +26,12 @@ const routes = [
         path: '/location',
         name: 'LocationManagement',
         component: () => import('@/components/LocationManagement.vue')
-    }
+    },
+    {
+        path: '/accountSettings',
+        name: 'AccountSettings',
+        component: () => import('@/components/AccountSettings.vue')
+    },
 ]
 
 const router = new VueRouter({
