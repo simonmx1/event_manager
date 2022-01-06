@@ -51,12 +51,6 @@
         </v-toolbar>
       </template>
 
-      <template v-slot:item.enabled="{ item }">
-        <v-simple-checkbox
-            v-model="item.enabled"
-            disabled
-        ></v-simple-checkbox>
-      </template>
       <template v-slot:item.role="{ item }">
         <v-chip
             :color="getColor(item.role)"
@@ -64,6 +58,15 @@
         >
           {{ item.role }}
         </v-chip>
+      </template>
+      <template v-slot:item.createDate="{ item }">
+        {{ formatDate(item.createDate) }}
+      </template>
+      <template v-slot:item.enabled="{ item }">
+        <v-simple-checkbox
+            v-model="item.enabled"
+            disabled
+        ></v-simple-checkbox>
       </template>
       <template v-slot:item.actions="{ item }">
         <v-icon
@@ -102,7 +105,8 @@ export default {
       {text: 'Lastname', align: 'left', value: 'lastName'},
       {text: 'Email', align: 'left', value: 'email'},
       {text: 'Role', align: 'left', value: 'role'},
-      {text: 'Enabled', align: 'center', value: 'enabled'},
+      {text: 'Enabled', align: 'left', value: 'enabled'},
+      {text: 'Created', align: 'left', value: 'createDate'},
       {text: 'Actions', value: 'actions'},
     ],
     users: []
@@ -117,6 +121,11 @@ export default {
         case 'USER':
           return '#359100';
       }
+    },
+    formatDate(date) {
+      let d = new Date(date).toISOString().slice(0, 10)
+      console.log(d)
+      return d;
     },
     userCreated() {
       this.getUsers()

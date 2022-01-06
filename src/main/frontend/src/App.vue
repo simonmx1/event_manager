@@ -37,25 +37,22 @@ export default {
   data: () => ({
     drawer: false,
     users: null,
-    session: "Not logged in!"
+    session: "Not logged in!",
   }),
   methods: {
     closeDrawer() {
       this.drawer = false;
     },
     logout() {
-      api.logout().then(this.$router.push("/login"))
+      api.logout().then(() => this.$router.push("/login"))
       this.closeDrawer()
-    },
-    navto() {
-      console.log("hallo")
     },
     hasKey() {
       return JSON.parse(localStorage.getItem('jwt'))
     },
     loggedIn() {
-      let text = "Fetza";
-      api.loggedIn().then((result) => {
+      let text = "";
+      api.loggedIn().then(result => {
         text = result.toString();
         this.session = text;
       });
@@ -69,12 +66,12 @@ export default {
     if (!this.hasKey() && this.$route.path !== "/login") {
       this.$router.push("/login")
     }
-   this.loggedIn();
+    this.loggedIn();
   },
   watch: {
     $route: function () {
       this.loggedIn();
-    }
+    },
   },
 }
 </script>
