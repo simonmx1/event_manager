@@ -21,6 +21,11 @@ const routes = [
         path: '/users',
         name: 'UserManagement',
         component: () => import('@/components/UserManagement.vue')
+    },
+    {
+        path: '/location',
+        name: 'LocationManagement',
+        component: () => import('@/components/LocationManagement.vue')
     }
 ]
 

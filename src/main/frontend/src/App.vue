@@ -1,9 +1,18 @@
 <template>
   <v-app app>
     <v-app-bar app clipped-left>
-      <v-app-bar-nav-icon v-if="sessionActive" @click="drawer = !drawer"/>
-      <v-img src="favicon.png" max-height="50" max-width="50" @click="navToHome()" style="cursor: pointer"/>
-      <div @click="navToHome()" style="cursor: pointer">
+      <v-app-bar-nav-icon
+          app
+          v-if="sessionActive"
+          @click="drawer = !drawer"/>
+      <v-img
+          src="favicon.png"
+          max-height="50"
+          max-width="50"
+          @click="navToHome()"
+          style="cursor: pointer"/>
+      <div @click="navToHome()"
+           style="cursor: pointer">
         <v-app-bar-title style="color: #ffffff; margin-left: 10px">
           Event Manager
         </v-app-bar-title>
@@ -37,14 +46,29 @@
         </v-list>
       </v-menu>
     </v-app-bar>
-    <v-navigation-drawer app clipped v-model="drawer">
-      <v-list>
-        <v-list-item>
-          <v-btn @click="closeDrawer()" to="/users">User Management</v-btn>
+    <v-navigation-drawer app clipped temporary v-model="drawer">
+      <v-list
+          dense
+          nav
+      >
+        <v-list-item
+            v-for="item in navBarItems"
+            :key="item.title"
+            link
+            @click="closeDrawer()"
+            :to="item.url"
+        >
+          <v-list-item-icon>
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item-content>
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-container @click="closeDrawer()" style="height: 100%">
+    <v-container style="height: 100%">
       <router-view/>
     </v-container>
   </v-app>
@@ -53,14 +77,15 @@
 <script>
 
 import api from "@/utils/api";
+import permissions from "@/utils/permissions";
 
 export default {
   name: 'App',
   data: () => ({
     drawer: false,
-    users: null,
     sessionActive: true,
     session: "Not logged in!",
+    navBarItems: []
   }),
   methods: {
     closeDrawer() {
@@ -71,12 +96,11 @@ export default {
       this.closeDrawer()
     },
     setLoggedInLabel() {
-      let text = "";
       api.loggedIn().then(result => {
-        text = result.toString();
-        this.session = text;
+        this.session = result.toString();
         this.sessionActive = result !== false;
       });
+      permissions.getNavBarItems().then(response => this.navBarItems = response)
     },
     navToHome() {
       (this.$route.path !== "/home") ? this.$router.push("/home") : null
@@ -85,8 +109,6 @@ export default {
   computed: {},
   mounted() {
     this.setLoggedInLabel();
-    //console.log(this.sessionActive)
-
     if (!this.sessionActive && this.$route.path !== "/login") {
       this.$router.push("/login")
     }
@@ -95,9 +117,6 @@ export default {
     $route: function () {
       this.setLoggedInLabel();
     },
-    sessionActive: function() {
-      //console.log(val)
-    }
   },
 }
 </script>
