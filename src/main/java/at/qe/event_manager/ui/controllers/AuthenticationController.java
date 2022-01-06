@@ -34,14 +34,17 @@ public class AuthenticationController {
 
     @PostMapping("/loggedIn")
     public ResponseEntity<?> loggedIn(@RequestBody LoggedInRequest loggedInRequest) {
-        System.out.println(loggedInRequest.getJwt());
-        if (loggedInRequest.getJwt() != null) {
-            String username = jwtTokenUtil.extractUsername(loggedInRequest.getJwt());
-            System.out.println(username);
-            String role = userService.loadUserByUsername(username).getRole().toString();
-            return new ResponseEntity<>(new String[]{username, role}, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("", HttpStatus.EXPECTATION_FAILED);
+        try {
+            if (loggedInRequest.getJwt() != null) {
+                String username = jwtTokenUtil.extractUsername(loggedInRequest.getJwt());
+                System.out.println(username);
+                String role = userService.loadUserByUsername(username).getRole().toString();
+                return new ResponseEntity<>(new String[]{username, role}, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("", HttpStatus.EXPECTATION_FAILED);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>("This Token is Expired!", HttpStatus.EXPECTATION_FAILED);
         }
     }
 

@@ -15,8 +15,13 @@ export default {
     },
     async register(user) {
         return await axios.post('/api/auth/register', {
-            'username': user.username, 'password': user.password, 'firstName': user.firstName, 'lastName': user.lastName,
-            'email': user.email, 'enabled': user.enabled, 'role': user.role
+                'username': user.username,
+                'password': user.password,
+                'firstName': user.firstName,
+                'lastName': user.lastName,
+                'email': user.email,
+                'enabled': user.enabled,
+                'role': user.role
             }
         ).then(response => {
             return response
@@ -31,8 +36,13 @@ export default {
     },
     async editUser(user) {
         return await axios.post('/api/users/edit', {
-                'username': user.username, 'password': user.password, 'firstName': user.firstName, 'lastName': user.lastName,
-                'email': user.email, 'enabled': user.enabled, 'role': user.role
+                'username': user.username,
+                'password': user.password,
+                'firstName': user.firstName,
+                'lastName': user.lastName,
+                'email': user.email,
+                'enabled': user.enabled,
+                'role': user.role
             },
             {
                 headers: {
@@ -58,12 +68,18 @@ export default {
     },
     async loggedIn() {
         if (JSON.parse(localStorage.getItem('jwt')) == null) {
-            return ""
+            return false
         } else {
             return await axios.post('/api/auth/loggedIn',
                 {'jwt': JSON.parse(localStorage.getItem('jwt'))},
                 {headers: {"Content-Type": "application/json"}}
-            ).then(response => response.data).catch(() => false)
+            ).then(response => response.data).catch(error => {
+                if (error.response.status === 417) {
+                    localStorage.removeItem('jwt')
+                    location.reload();
+                }
+                return false;
+            })
         }
 
     }

@@ -1,7 +1,7 @@
 <template>
   <v-app app>
     <v-app-bar app clipped-left>
-      <v-app-bar-nav-icon v-if="hasKey()" @click="drawer = !drawer"/>
+      <v-app-bar-nav-icon v-if="sessionActive" @click="drawer = !drawer"/>
       <v-img src="favicon.png" max-height="50" max-width="50" @click="navToHome()" style="cursor: pointer"/>
       <div @click="navToHome()" style="cursor: pointer">
         <v-app-bar-title style="color: #ffffff; margin-left: 10px">
@@ -9,11 +9,33 @@
         </v-app-bar-title>
       </div>
       <v-spacer/>
-      <span v-if="hasKey()" style="margin-right: 20px">Logged in: {{ session }}</span>
-      <v-btn v-if="hasKey()" color="primary" @click="logout();">
-        <v-icon>mdi-logout</v-icon>
-        Logout
-      </v-btn>
+      <v-menu v-if="sessionActive" offset-y>
+        <template v-slot:activator="{ on, attrs }">
+          <v-chip
+              color="primary"
+              dark
+              v-bind="attrs"
+              v-on="on"
+          >
+            <v-icon>mdi-account</v-icon>
+            {{ session }}
+          </v-chip>
+        </template>
+        <v-list>
+          <v-list-item>
+            <v-list-item-title @click="logout()">
+              <v-icon>mdi-logout</v-icon>
+              Logout
+            </v-list-item-title>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-title @click="logout()">
+              <v-icon>mdi-cog</v-icon>
+              Settings
+            </v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
     </v-app-bar>
     <v-navigation-drawer app clipped v-model="drawer">
       <v-list>
@@ -37,6 +59,7 @@ export default {
   data: () => ({
     drawer: false,
     users: null,
+    sessionActive: true,
     session: "Not logged in!",
   }),
   methods: {
@@ -47,14 +70,12 @@ export default {
       api.logout().then(() => this.$router.push("/login"))
       this.closeDrawer()
     },
-    hasKey() {
-      return JSON.parse(localStorage.getItem('jwt'))
-    },
-    loggedIn() {
+    setLoggedInLabel() {
       let text = "";
       api.loggedIn().then(result => {
         text = result.toString();
         this.session = text;
+        this.sessionActive = result !== false;
       });
     },
     navToHome() {
@@ -63,15 +84,20 @@ export default {
   },
   computed: {},
   mounted() {
-    if (!this.hasKey() && this.$route.path !== "/login") {
+    this.setLoggedInLabel();
+    //console.log(this.sessionActive)
+
+    if (!this.sessionActive && this.$route.path !== "/login") {
       this.$router.push("/login")
     }
-    this.loggedIn();
   },
   watch: {
     $route: function () {
-      this.loggedIn();
+      this.setLoggedInLabel();
     },
+    sessionActive: function() {
+      //console.log(val)
+    }
   },
 }
 </script>

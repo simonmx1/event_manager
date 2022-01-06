@@ -30,8 +30,12 @@ const router = new VueRouter({
     routes
 })
 
-router.beforeEach((to, from, next) => {
-    if (to.name !== 'Login' && !localStorage.getItem('jwt')) {
+router.beforeEach(async (to, from, next) => {
+    let session = null;
+    await api.loggedIn().then(response => {
+        session = response;
+    })
+    if (to.name !== 'Login' && session === false) {
         next({name: 'Login'})
     }
     if (to.name === 'UserManagement') {
@@ -39,8 +43,7 @@ router.beforeEach((to, from, next) => {
             if (to.name === 'UserManagement' && response !== false && response[1] === 'ADMIN') next()
             else next(false)
         })
-    }
-    else next()
+    } else next()
 })
 
 export default router
