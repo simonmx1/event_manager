@@ -20,9 +20,7 @@ let navBarItems = [
 export default {
     async getNavBarItems() {
         return await api.loggedIn().then(response => {
-            let role = response[1]
-            console.log(navBarItems.filter(item => item.roles.includes(role)))
-            return navBarItems.filter(item => item.roles.includes(role))
+            return navBarItems.filter(item => item.roles.includes(response[1]))
         })
     }
 }
