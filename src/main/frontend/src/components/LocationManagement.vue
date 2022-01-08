@@ -31,8 +31,12 @@
         </v-toolbar>
       </template>
       <template v-slot:item.tags="{ item }">
-        {{ formatTag(item.tags) }}
-
+        <v-combobox
+            v-model="item.tags"
+            multiple
+            chips
+            hide-selected
+        ></v-combobox>
       </template>
       <template v-slot:item.enabled="{ item }">
         <v-simple-checkbox
@@ -81,15 +85,12 @@ import api from "@/utils/api";
         {text: 'Enabled', align: 'left', value: 'enabled'},
         {text: 'Actions', value: 'actions'},
       ],
-      locations: []
+      locations: [],
+      select: [],
     }),
     methods: {
-      formatTag(tags) {
-        let tagsArray = []
-        for (let i = 0; i < tags.length; i++){
-          tagsArray = tagsArray + tags[i].tag + "\t"
-        }
-        return tagsArray;
+      formatTags() {
+        console.log(this.item)
       },
       openEditDialog(location){
         console.log(location)
