@@ -63,25 +63,53 @@
               @close="editDialog = false; currentLocation = null; getLocations()"
               :location="currentLocation"></edit-location>
         </v-dialog>
+        <v-dialog v-model="timeDialog" max-width="500px">
+          Test
+          @close="timeDialog = false;
+        </v-dialog>
       </template>
       <template v-slot:item.menu="{ item }">
         <a :href="'//' + item.menu" target="_blank">
           {{ item.menu }}
         </a>
       </template>
+      <template v-slot:item.openingTimes="{ item }">
+        <v-menu
+            transition="slide-y-transition"
+            bottom
+            offset-y
+        >
+          <template v-if="item.openingTimes.length > 0" v-slot:activator="{ on, attrs }">
+            <v-btn
+                dark
+                v-bind="attrs"
+                v-on="on"
+            >
+              ...
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-item
+
+                v-for="(openingTime,id) in item.openingTimes"
+                :key="id"
+            >
+              {{ formatWeekday(openingTime.weekday) }}: {{ formatTime(openingTime.start)}} - {{ formatTime(openingTime.end) }}
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </template>
       <template v-slot:item.tags="{ item }">
-        <v-item-group>
           <v-item
               v-for="(tag,id) in item.tags"
               :key="id"
           >
             <v-chip
-                style="margin-right: 5px"
+                style="margin: 5px"
                 :color="'#437505'">
               {{ tag.tag }}
             </v-chip>
           </v-item>
-        </v-item-group>
       </template>
       <template v-slot:item.enabled="{ item }">
         <v-simple-checkbox
@@ -118,6 +146,7 @@ export default {
   name: "LocationManagement",
   components: {CreateLocation, EditLocation},
   data: () => ({
+    timeDialog: false,
     createDialog: false,
     deleteDialog: false,
     editDialog: false,
@@ -128,12 +157,34 @@ export default {
       {text: 'Menu', align: 'left', value: 'menu'},
       {text: 'Geo Location', align: 'left', value: 'geolocation'},
       {text: 'Tags', align: 'left', value: 'tags'},
+      {text: 'Opening Times', align: 'left', value: 'openingTimes'},
       {text: 'Enabled', align: 'left', value: 'enabled'},
       {text: 'Actions', value: 'actions'},
     ],
     locations: []
   }),
   methods: {
+    formatWeekday(weekday) {
+      switch (weekday) {
+        case 0:
+          return 'Monday'
+        case 1:
+          return 'Tuesday'
+        case 2:
+          return 'Wednesday'
+        case 3:
+          return 'Thursday'
+        case 4:
+          return 'Friday'
+        case 5:
+          return 'Saturday'
+        case 6:
+          return 'Sunday'
+      }
+    },
+    formatTime(time){
+      return time
+    },
     openEditDialog(location) {
       this.currentLocation = location;
       this.editDialog = true;
