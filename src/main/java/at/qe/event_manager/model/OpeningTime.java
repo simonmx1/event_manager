@@ -3,11 +3,13 @@ package at.qe.event_manager.model;
 import java.io.Serializable;
 import java.sql.Time;
 import java.util.Date;
-import java.util.List;
-import java.util.Objects;
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import net.bytebuddy.build.ToStringPlugin;
 import org.springframework.data.domain.Persistable;
+
+import static org.eclipse.jdt.internal.compiler.codegen.ConstantPool.ToString;
 
 /**
  * Entity representing users.
@@ -24,14 +26,12 @@ public class OpeningTime implements Persistable<Integer>, Serializable, Comparab
 
     @Id
     @Column(length = 100)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer openingTimeId;
 
     private Time start;
     private Time end;
 
-    @ManyToOne
-    @JoinColumn(name = "location_location_id")
-    private Location location;
 
     private int weekday; //monday=0 to sunday=6
 
@@ -39,8 +39,17 @@ public class OpeningTime implements Persistable<Integer>, Serializable, Comparab
     @Temporal(TemporalType.TIMESTAMP)
     private Date createDate;
 
+    @ManyToOne
+    @JoinColumn(name = "location_id")
+    @JsonIgnore
+    private Location location;
+
     public Location getLocation() {
         return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
     }
 
     public Time getStart() {
@@ -73,10 +82,6 @@ public class OpeningTime implements Persistable<Integer>, Serializable, Comparab
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
     }
 
     public int getWeekday() {

@@ -38,6 +38,17 @@ public class Location implements Persistable<Integer>, Serializable, Comparable<
     @JoinTable(name = "location_tag")
     private Set<Tag> tags;
 
+    @OneToMany(mappedBy = "location")
+    private List<OpeningTime> openingTimes;
+
+    public List<OpeningTime> getOpeningTimes() {
+        return openingTimes;
+    }
+
+    public void setOpeningTimes(List<OpeningTime> openingTimes) {
+        this.openingTimes = openingTimes;
+    }
+
     public Integer getLocationId() {
         return locationId;
     }
