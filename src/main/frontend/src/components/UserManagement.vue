@@ -59,11 +59,7 @@
             </v-card>
           </v-dialog>
           <v-dialog v-model="editDialog" max-width="500px">
-            <edit-user
-                v-if="currentUser != null"
-                @close="editDialog = false; currentUser = null; getUsers()"
-                :user="currentUser"
-                :admin="loggedInUser !== currentUser.username"></edit-user>
+            <edit-user @close="editDialog = false" :user="user"/>
           </v-dialog>
         </v-toolbar>
       </template>
