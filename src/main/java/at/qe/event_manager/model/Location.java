@@ -33,8 +33,9 @@ public class Location implements Persistable<String>, Serializable, Comparable<L
 
     boolean enabled = true;
 
-    @OneToMany
-    private List<Tag> tags = new ArrayList<>();
+    @ManyToMany
+    @JoinTable(name = "location_tag")
+    private Set<Tag> tags;
 
     public void setLocationId(int locationId) {
         this.locationId = locationId;
