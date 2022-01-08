@@ -31,29 +31,18 @@
         </v-toolbar>
       </template>
       <template v-slot:item.tags="{ item }">
-        <v-menu
-            transition="slide-y-transition"
-            bottom
-            offset-y
-        >
-          <template v-if="item.tags.length > 0" v-slot:activator="{ on, attrs }">
-            <v-btn
-                dark
-                v-bind="attrs"
-                v-on="on"
-            >
-              ...
-            </v-btn>
-          </template>
-          <v-list>
-            <v-list-item
-                v-for="(tag) in item.tags"
-                :key="tag"
-            >
-              <v-list-item-title>{{ tag.tag }}</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
+        <v-chip-group>
+          <v-item
+              v-for="(tag) in item.tags"
+              :key="tag"
+          >
+            <v-chip
+                style="margin-right: 5px"
+                :color="'#437505'">
+              {{ tag.tag }}
+            </v-chip>
+          </v-item>
+        </v-chip-group>
       </template>
       <template v-slot:item.enabled="{ item }">
         <v-simple-checkbox
