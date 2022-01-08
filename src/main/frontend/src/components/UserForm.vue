@@ -6,7 +6,7 @@
       v-if="currentUser != null">
     <v-text-field
         v-model="currentUser.username"
-        :disabled="editMode"
+        :disabled="editMode || accountSettings"
         :rules="usernameRules"
         prepend-icon="mdi-account-box"
         name="username"
@@ -15,7 +15,7 @@
     ></v-text-field>
     <v-text-field
         v-model="currentUser.password"
-        :disabled="editMode"
+        :disabled="editMode || accountSettings"
         :rules="passwordRules"
         prepend-icon="mdi-lock"
         name="password"
@@ -25,6 +25,7 @@
     <v-divider></v-divider>
     <v-text-field
         v-model="currentUser.firstName"
+        :disabled="accountSettings"
         :rules="firstNameRules"
         prepend-icon="mdi-form-textbox"
         name="firstName"
@@ -34,6 +35,7 @@
     ></v-text-field>
     <v-text-field
         v-model="currentUser.lastName"
+        :disabled="accountSettings"
         :rules="lastNameRules"
         prepend-icon="mdi-form-textbox"
         name="lastName"
@@ -42,6 +44,7 @@
     ></v-text-field>
     <v-text-field
         v-model="currentUser.email"
+        :disabled="accountSettings"
         :rules="emailRules"
         prepend-icon="mdi-mail"
         name="email"
@@ -78,7 +81,8 @@ export default {
       })
     },
     edit: {type: Boolean, default: false},
-    admin: {type: Boolean, default: false}
+    admin: {type: Boolean, default: false},
+    accountSettings: {type: Boolean, default: false}
   },
   data: () => ({
     editMode: false,

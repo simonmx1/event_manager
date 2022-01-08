@@ -41,9 +41,7 @@ public class UserManagementController implements Serializable {
     @GetMapping("/get")
     @ResponseBody
     public User get(@RequestParam(name = "username") String username) {
-        User u = userService.loadUserByUsername(username);
-        u.setPassword("");
-        return u;
+        return userService.loadUserByUsername(username);
     }
 
     @PostMapping("/edit")
