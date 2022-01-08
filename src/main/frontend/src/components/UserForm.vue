@@ -82,7 +82,7 @@ export default {
     },
     edit: {type: Boolean, default: false},
     admin: {type: Boolean, default: false},
-    accountSettings: {type: Boolean, default: false}
+    accountSettings: {type: Boolean, default: false},
   },
   data: () => ({
     editMode: false,

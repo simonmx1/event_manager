@@ -2,10 +2,15 @@
   <v-main>
     <v-card class="pa-5">
       <v-card-title>Account Details</v-card-title>
+      <user-form
+        v-if="user != null"
+        :user="user"
+        :accountSettings="true"
+      ></user-form>
       <v-card-actions>
         <v-dialog v-model="editDialog" width="500" persistent>
           <template v-slot:activator="{ on, attrs }">
-            <v-btn color="red lighten-2" dark v-bind="attrs" v-on="on" @click="openEditDialog">
+            <v-btn color="red" dark v-bind="attrs" v-on="on" @click="openEditDialog">
               Edit
             </v-btn>
           </template>
@@ -16,11 +21,6 @@
         </v-dialog>
         <v-spacer></v-spacer>
       </v-card-actions>
-      <user-form
-        v-if="user != null"
-        :user="user"
-        :accountSettings="true"
-      ></user-form>
     </v-card>
   </v-main>
 </template>

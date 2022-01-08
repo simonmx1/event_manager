@@ -42,7 +42,7 @@ export default {
   components: {UserForm},
   props: {
     user: {type: Object, required: true},
-    admin: {type: Boolean, default: true}
+    admin: {type: Boolean, default: true},
   },
   data: () => ({
     response: '',
