@@ -88,6 +88,15 @@ export default {
                 return false;
             })
         }
+    },
 
+    //LOCATION
+    async getLocations() {
+        return await axios.get('/api/location/getAll',
+            {headers: {"Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt'))}}
+        ).then(response => {
+            return response.data;
+        }).catch(() => false);
     }
+
 }

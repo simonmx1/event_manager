@@ -4,13 +4,11 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 
-import at.qe.event_manager.exceptions.LocationNotFoundException;
 import at.qe.event_manager.model.Location;
 import at.qe.event_manager.model.User;
 import at.qe.event_manager.repositories.LocationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 /**

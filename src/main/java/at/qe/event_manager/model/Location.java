@@ -77,6 +77,18 @@ public class Location implements Persistable<String>, Serializable, Comparable<L
         this.geolocation = geolocation;
     }
 
+    public void setLocationId(Integer locationId) {
+        this.locationId = locationId;
+    }
+
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
+    }
+
     public boolean isEnabled() {
         return enabled;
     }
