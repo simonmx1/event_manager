@@ -110,6 +110,41 @@ export default {
         ).then(response => {
             return response;
         }).catch(() => false);
-    }
-
+    },
+    async createLocation(location) {
+        return await axios.post('/api/location/create', {
+                'name': location.name,
+                'menu': location.menu,
+                'geolocation': location.geolocation,
+                'enabled': location.enabled
+            },
+            {
+                headers: {
+                    "Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt')),
+                    "Content-Type": "application/json"
+                }
+            }
+        ).then(response => {
+            return response
+        }).catch(() => false);
+    },
+    async editLocation(location) {
+        console.log(location);
+        return await axios.post('/api/location/edit', {
+                'locationId': location.locationId,
+                'name': location.name,
+                'menu': location.menu,
+                'geolocation': location.geolocation,
+                'enabled': location.enabled
+            },
+            {
+                headers: {
+                    "Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt')),
+                    "Content-Type": "application/json"
+                }
+            }
+        ).then(response => {
+            return response
+        }).catch(() => false);
+    },
 }

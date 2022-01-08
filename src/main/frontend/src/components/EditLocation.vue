@@ -2,10 +2,16 @@
   <div class="text-center">
     <v-card class="elevation-12">
       <v-toolbar dark color="primary">
-        <v-toolbar-title> Create Location </v-toolbar-title>
+        <v-toolbar-title>Edit Location</v-toolbar-title>
       </v-toolbar>
       <v-card-text>
-        <location-form ref="form" :admin="admin" @validated="creation"/>
+        <location-form
+            v-if="location != null"
+            ref="form"
+            :admin="admin"
+            :location="location"
+            :edit="true"
+            @validated="edit"/>
         <v-alert
             v-if="typeof success !== 'undefined'"
             dense
@@ -20,8 +26,8 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="closeDialog()"> Cancel </v-btn>
-        <v-btn color="primary" text @click="tryCreation()"> Create Location </v-btn>
+        <v-btn color="blue darken-1" text @click="closeDialog()">Close</v-btn>
+        <v-btn color="primary" text @click="tryEdit()">Save Location</v-btn>
       </v-card-actions>
     </v-card>
   </div>
@@ -32,10 +38,11 @@ import api from "@/utils/api";
 import LocationForm from "@/components/LocationForm";
 
 export default {
-  name: 'CreateLocation',
+  name: 'EditLocation',
   components: {LocationForm},
   props: {
-    admin: {type: Boolean, default: false}
+    location: {type: Object, required: true},
+    admin: {type: Boolean, default: true}
   },
   data: () => ({
     response: '',
@@ -43,15 +50,16 @@ export default {
     success: undefined,
   }),
   methods: {
-    tryCreation() {
+    tryEdit() {
       this.$refs.form.validate()
     },
-    creation(event) {
-      api.createLocation(event)
+    edit(event) {
+      api.editLocation(event)
           .then(response => {
-            this.success = response.status === 201;
-            this.response = response.data
+            this.success = response.status === 200;
+            this.response = response.data.msg
           })
+
     },
     closeDialog() {
       this.$refs.form.clear()
