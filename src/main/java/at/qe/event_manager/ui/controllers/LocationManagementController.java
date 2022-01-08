@@ -9,6 +9,7 @@ import java.util.Collection;
 
 import org.primefaces.shaded.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +35,6 @@ public class LocationManagementController implements Serializable {
 
     @GetMapping("/getAll")
     public Collection<Location> getLocations() {
-        System.out.println(locationService.getAllLocations());
         return locationService.getAllLocations();
     }
 
@@ -59,6 +59,15 @@ public class LocationManagementController implements Serializable {
         Location location = locationService.loadLocationByLocationId(new JSONObject(locationId).getInt("locationId"));
         locationService.deleteLocation(location);
         return ResponseEntity.ok(new MessageResponse("Location deleted successfully!"));
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<?> createLocation(@RequestBody Location location) {
+        if (locationService.createLocation(location) == null) {
+            return new ResponseEntity<>("Error While creating the Location!", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Location created successfully!", HttpStatus.CREATED);
+        }
     }
 
 }

@@ -27,7 +27,11 @@
               hide-details
           ></v-text-field>
           <v-spacer/>
-          <v-dialog>
+          <v-dialog
+              v-model="createDialog"
+              width="500"
+              persistent
+          >
             <template v-slot:activator="{ on, attrs }">
               <v-btn
                   color="primary"
@@ -39,12 +43,12 @@
                 Create Location
               </v-btn>
             </template>
-            <register :admin="true" @close="userCreated()"/>
+            <create-location :admin="true" @close="locationCreated()"/>
           </v-dialog>
         </v-toolbar>
         <v-dialog v-model="deleteDialog" max-width="500px">
           <v-card>
-            <v-card-title style="width: 100%">Are you sure you want to delete this user?</v-card-title>
+            <v-card-title style="width: 100%">Are you sure you want to delete this location?</v-card-title>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn @click="deleteDialog = false; currentLocation = null" color="primary">Cancel</v-btn>
@@ -52,6 +56,12 @@
               <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
+        </v-dialog>
+        <v-dialog v-model="editDialog" max-width="500px">
+          <edit-location
+              v-if="currentLocation != null"
+              @close="editDialog = false; currentLocation = null; getLocations()"
+              :location="currentLocation"></edit-location>
         </v-dialog>
       </template>
       <template v-slot:item.menu="{ item }">
@@ -101,11 +111,12 @@
 <script>
 
 import api from "@/utils/api";
+import CreateLocation from "@/components/CreateLocation";
+import EditLocation from "@/components/EditLocation";
 
 export default {
-  currentLocation: null,
   name: "LocationManagement",
-  components: {},
+  components: {CreateLocation, EditLocation},
   data: () => ({
     createDialog: false,
     deleteDialog: false,
@@ -115,7 +126,7 @@ export default {
     headers: [
       {text: 'Name', align: 'left', value: 'name'},
       {text: 'Menu', align: 'left', value: 'menu'},
-      {text: 'Position', align: 'left', value: 'geolocation'},
+      {text: 'Geo Location', align: 'left', value: 'geolocation'},
       {text: 'Tags', align: 'left', value: 'tags'},
       {text: 'Enabled', align: 'left', value: 'enabled'},
       {text: 'Actions', value: 'actions'},
@@ -124,7 +135,8 @@ export default {
   }),
   methods: {
     openEditDialog(location) {
-      console.log(location)
+      this.currentLocation = location;
+      this.editDialog = true;
     },
     openDeleteDialog(location) {
       this.currentLocation = location;
@@ -133,6 +145,10 @@ export default {
     deleteLocationConfirm() {
       api.deleteLocation(this.currentLocation.locationId).then(() => this.getLocations())
       this.deleteDialog = false
+    },
+    locationCreated() {
+      this.getLocations()
+      this.createDialog = false
     },
     getLocations() {
       api.getLocations().then(response => this.locations = response);
