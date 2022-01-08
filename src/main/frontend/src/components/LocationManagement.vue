@@ -27,8 +27,32 @@
               hide-details
           ></v-text-field>
           <v-spacer/>
-
+          <v-dialog>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                  color="primary"
+                  dark
+                  class="mb-2"
+                  v-bind="attrs"
+                  v-on="on"
+              >
+                Create Location
+              </v-btn>
+            </template>
+            <register :admin="true" @close="userCreated()"/>
+          </v-dialog>
         </v-toolbar>
+        <v-dialog v-model="deleteDialog" max-width="500px">
+          <v-card>
+            <v-card-title style="width: 100%">Are you sure you want to delete this user?</v-card-title>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn @click="deleteDialog = false; currentLocation = null" color="primary">Cancel</v-btn>
+              <v-btn @click="deleteLocationConfirm()" color="red">Delete</v-btn>
+              <v-spacer></v-spacer>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </template>
       <template v-slot:item.menu="{ item }">
         <a :href="'//' + item.menu" target="_blank">
@@ -36,10 +60,10 @@
         </a>
       </template>
       <template v-slot:item.tags="{ item }">
-        <v-chip-group>
+        <v-item-group>
           <v-item
-              v-for="(tag) in item.tags"
-              :key="tag"
+              v-for="(tag,id) in item.tags"
+              :key="id"
           >
             <v-chip
                 style="margin-right: 5px"
@@ -47,7 +71,7 @@
               {{ tag.tag }}
             </v-chip>
           </v-item>
-        </v-chip-group>
+        </v-item-group>
       </template>
       <template v-slot:item.enabled="{ item }">
         <v-simple-checkbox
@@ -79,6 +103,7 @@
 import api from "@/utils/api";
 
 export default {
+  currentLocation: null,
   name: "LocationManagement",
   components: {},
   data: () => ({
@@ -98,21 +123,19 @@ export default {
     locations: []
   }),
   methods: {
-    formatTag(tags) {
-      let tagsArray = []
-      for (let i = 0; i < tags.length; i++) {
-        tagsArray = tagsArray + tags[i].tag + "\n"
-      }
-      return tagsArray;
-    },
     openEditDialog(location) {
       console.log(location)
     },
     openDeleteDialog(location) {
-      console.log(location)
+      this.currentLocation = location;
+      this.deleteDialog = true;
+    },
+    deleteLocationConfirm() {
+      api.deleteLocation(this.currentLocation.locationId).then(() => this.getLocations())
+      this.deleteDialog = false
     },
     getLocations() {
-      console.log(api.getLocations().then(response => this.locations = response));
+      api.getLocations().then(response => this.locations = response);
     }
   },
   mounted() {

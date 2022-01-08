@@ -97,6 +97,19 @@ export default {
         ).then(response => {
             return response.data;
         }).catch(() => false);
+    },
+
+    async deleteLocation(locationId) {
+        return await axios.post('/api/location/delete', {'locationId': locationId},
+            {
+                headers: {
+                    "Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt')),
+                    "Content-Type": "application/json"
+                }
+            }
+        ).then(response => {
+            return response;
+        }).catch(() => false);
     }
 
 }

@@ -3,6 +3,7 @@ package at.qe.event_manager.model;
 import java.io.Serializable;
 import java.util.*;
 import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
 
 import org.springframework.data.domain.Persistable;
 
@@ -14,7 +15,7 @@ import org.springframework.data.domain.Persistable;
  * University of Innsbruck.
  */
 @Entity
-public class Location implements Persistable<String>, Serializable, Comparable<Location> {
+public class Location implements Persistable<Integer>, Serializable, Comparable<Location> {
 
     private static final long serialVersionUID = 1L;
 
@@ -37,12 +38,12 @@ public class Location implements Persistable<String>, Serializable, Comparable<L
     @JoinTable(name = "location_tag")
     private Set<Tag> tags;
 
-    public void setLocationId(int locationId) {
-        this.locationId = locationId;
-    }
-
     public Integer getLocationId() {
         return locationId;
+    }
+
+    public void setLocationId(Integer locationId) {
+        this.locationId = locationId;
     }
 
     public String getName() {
@@ -77,10 +78,6 @@ public class Location implements Persistable<String>, Serializable, Comparable<L
         this.geolocation = geolocation;
     }
 
-    public void setLocationId(Integer locationId) {
-        this.locationId = locationId;
-    }
-
     public Set<Tag> getTags() {
         return tags;
     }
@@ -103,8 +100,8 @@ public class Location implements Persistable<String>, Serializable, Comparable<L
     }
 
     @Override
-    public String getId() {
-        return Integer.toString(getLocationId());
+    public Integer getId() {
+        return getLocationId();
     }
 
     @Override

@@ -16,6 +16,6 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface LocationRepository extends AbstractRepository<Location, Integer>, Serializable {
 
-    @Query("SELECT l FROM Location l WHERE :name = l.name")
-    Location findFirstByName(String name);
+    @Query("SELECT l FROM Location l WHERE :locationId = l.locationId")
+    Location findFirstByLocationId(Integer locationId);
 }
