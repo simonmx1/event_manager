@@ -97,6 +97,17 @@ export default {
         ).then(response => {
             return response.data;
         }).catch(() => false);
-    }
+    },
 
+
+    event: {
+        async createEvent() {
+            return await axios.post('/api/event/create', {
+
+                }
+            ).then(response => {
+                return response
+            }).catch(() => false);
+        }
+    }
 }
