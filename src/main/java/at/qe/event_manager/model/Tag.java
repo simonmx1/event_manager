@@ -17,7 +17,7 @@ import org.springframework.data.domain.Persistable;
  */
 
 @Entity
-public class Tag implements Persistable<String>, Serializable, Comparable<Tag> {
+public class Tag implements Persistable<Integer>, Serializable, Comparable<Tag> {
 
     private static final long serialVersionUID = 1L;
 
@@ -70,8 +70,8 @@ public class Tag implements Persistable<String>, Serializable, Comparable<Tag> {
     }
 
     @Override
-    public String getId() {
-        return Integer.toString(getTagId());
+    public Integer getId() {
+        return getTagId();
     }
 
     @Override

@@ -18,7 +18,7 @@ import org.springframework.data.domain.Persistable;
  */
 
 @Entity
-public class OpeningTime implements Persistable<String>, Serializable, Comparable<OpeningTime> {
+public class OpeningTime implements Persistable<Integer>, Serializable, Comparable<OpeningTime> {
 
     private static final long serialVersionUID = 1L;
 
@@ -93,8 +93,8 @@ public class OpeningTime implements Persistable<String>, Serializable, Comparabl
     }
 
     @Override
-    public String getId() {
-        return Integer.toString(getOpeningTimeId());
+    public Integer getId() {
+        return getOpeningTimeId();
     }
 
     @Override
