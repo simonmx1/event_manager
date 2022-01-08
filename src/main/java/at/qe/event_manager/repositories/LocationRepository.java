@@ -1,0 +1,22 @@
+package at.qe.event_manager.repositories;
+
+import java.io.Serializable;
+import java.util.List;
+
+import at.qe.event_manager.model.Location;
+
+/**
+ * Repository for managing {@link User} entities.
+ * <p>
+ * This class is part of the skeleton project provided for students of the
+ * courses "Software Architecture" and "Software Engineering" offered by the
+ * University of Innsbruck.
+ */
+
+public interface LocationRepository extends AbstractRepository<Location, Integer>, Serializable {
+
+    Location findFirstByName(String name);
+
+    List<Location> findByNameContaining(String name);
+
+}
