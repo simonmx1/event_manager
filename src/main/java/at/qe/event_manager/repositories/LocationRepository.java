@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import at.qe.event_manager.model.Location;
+import org.springframework.data.jpa.repository.Query;
 
 /**
  * Repository for managing {@link User} entities.
@@ -15,8 +16,6 @@ import at.qe.event_manager.model.Location;
 
 public interface LocationRepository extends AbstractRepository<Location, Integer>, Serializable {
 
+    @Query("SELECT l FROM Location l WHERE :name = l.name")
     Location findFirstByName(String name);
-
-    List<Location> findByNameContaining(String name);
-
 }

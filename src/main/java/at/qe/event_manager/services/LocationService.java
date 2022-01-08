@@ -4,7 +4,9 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 
+import at.qe.event_manager.exceptions.LocationNotFoundException;
 import at.qe.event_manager.model.Location;
+import at.qe.event_manager.model.User;
 import at.qe.event_manager.repositories.LocationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -30,7 +32,6 @@ public class LocationService implements Serializable {
      *
      * @return
      */
-    @PreAuthorize("hasAuthority('ADMIN')")
     public Collection<Location> getAllLocations() {
         return locationRepository.findAll();
     }
@@ -41,7 +42,6 @@ public class LocationService implements Serializable {
      * @param username the username to search for
      * @return the user with the given username
      */
-    @PreAuthorize("hasAuthority('ADMIN') or principal.username eq #username")
     public Location loadLocation(String name) {
         return locationRepository.findFirstByName(name);
     }
@@ -55,7 +55,6 @@ public class LocationService implements Serializable {
      * @param user the user to save
      * @return the updated user
      */
-    @PreAuthorize("hasAuthority('ADMIN')")
     public Location saveLocation(Location location) {
         if (location.isNew()) {
             location.setCreateDate(new Date());
@@ -81,10 +80,12 @@ public class LocationService implements Serializable {
      *
      * @param user the user to delete
      */
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public void deleteUser(Location location) {
+    public void deleteLocation(Location location) {
         locationRepository.delete(location);
         // :TODO: write some audit log stating who and when this user was permanently deleted.
     }
 
+    public Location loadLocationByLocationName(String name)  {
+        return locationRepository.findFirstByName(name);
+    }
 }
