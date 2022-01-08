@@ -14,6 +14,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.springframework.data.domain.Persistable;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 /**
@@ -112,7 +113,9 @@ public class User implements Persistable<String>, Serializable, Comparable<User>
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return new ArrayList<>();
+    	ArrayList<SimpleGrantedAuthority> a = new ArrayList<>();
+    	a.add(new SimpleGrantedAuthority("ROLE_"+getRole().toString()));
+        return a;
     }
 
     @Override
