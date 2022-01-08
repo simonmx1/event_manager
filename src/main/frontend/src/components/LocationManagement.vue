@@ -30,6 +30,11 @@
 
         </v-toolbar>
       </template>
+      <template v-slot:item.menu="{ item }">
+        <a :href="'//' + item.menu" target="_blank">
+          {{ item.menu }}
+        </a>
+      </template>
       <template v-slot:item.tags="{ item }">
         <v-chip-group>
           <v-item
@@ -73,48 +78,47 @@
 
 import api from "@/utils/api";
 
-  export default {
-    name: "LocationManagement",
-    components: {
-    },
-    data: () => ({
-      createDialog: false,
-      deleteDialog: false,
-      editDialog: false,
-      currentLocation: null,
-      search: '',
-      headers: [
-        {text: 'Name', align: 'left', value: 'name'},
-        {text: 'Menu', align: 'left', value: 'menu'},
-        {text: 'Position', align: 'left', value: 'geolocation'},
-        {text: 'Tags', align: 'left', value: 'tags'},
-        {text: 'Enabled', align: 'left', value: 'enabled'},
-        {text: 'Actions', value: 'actions'},
-      ],
-      locations: []
-    }),
-    methods: {
-      formatTag(tags) {
-        let tagsArray = []
-        for (let i = 0; i < tags.length; i++){
-          tagsArray = tagsArray + tags[i].tag + "\n"
-        }
-        return tagsArray;
-      },
-      openEditDialog(location){
-        console.log(location)
-      },
-      openDeleteDialog(location){
-        console.log(location)
-      },
-      getLocations() {
-        console.log(api.getLocations().then(response => this.locations = response));
+export default {
+  name: "LocationManagement",
+  components: {},
+  data: () => ({
+    createDialog: false,
+    deleteDialog: false,
+    editDialog: false,
+    currentLocation: null,
+    search: '',
+    headers: [
+      {text: 'Name', align: 'left', value: 'name'},
+      {text: 'Menu', align: 'left', value: 'menu'},
+      {text: 'Position', align: 'left', value: 'geolocation'},
+      {text: 'Tags', align: 'left', value: 'tags'},
+      {text: 'Enabled', align: 'left', value: 'enabled'},
+      {text: 'Actions', value: 'actions'},
+    ],
+    locations: []
+  }),
+  methods: {
+    formatTag(tags) {
+      let tagsArray = []
+      for (let i = 0; i < tags.length; i++) {
+        tagsArray = tagsArray + tags[i].tag + "\n"
       }
+      return tagsArray;
     },
-    mounted() {
-      this.getLocations()
+    openEditDialog(location) {
+      console.log(location)
+    },
+    openDeleteDialog(location) {
+      console.log(location)
+    },
+    getLocations() {
+      console.log(api.getLocations().then(response => this.locations = response));
     }
+  },
+  mounted() {
+    this.getLocations()
   }
+}
 </script>
 
 <style scoped>
