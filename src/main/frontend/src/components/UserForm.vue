@@ -130,6 +130,11 @@ export default {
     }
     this.currentUser = JSON.parse(JSON.stringify(this.user));
     this.editMode = this.edit
+  },
+  watch: {
+    user:function() {
+      this.currentUser = this.user
+    }
   }
 }
 </script>

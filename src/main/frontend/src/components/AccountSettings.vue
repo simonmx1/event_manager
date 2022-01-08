@@ -46,7 +46,6 @@ export default {
     },
     closeEditDialog() {
       this.editDialog = false;
-      this.user = null;
       this.getUser()
 
     },
