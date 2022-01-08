@@ -31,8 +31,29 @@
         </v-toolbar>
       </template>
       <template v-slot:item.tags="{ item }">
-        {{ formatTag(item.tags) }}
-
+        <v-menu
+            transition="slide-y-transition"
+            bottom
+            offset-y
+        >
+          <template v-if="item.tags.length > 0" v-slot:activator="{ on, attrs }">
+            <v-btn
+                dark
+                v-bind="attrs"
+                v-on="on"
+            >
+              ...
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-item
+                v-for="(tag) in item.tags"
+                :key="tag"
+            >
+              <v-list-item-title>{{ tag.tag }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
       </template>
       <template v-slot:item.enabled="{ item }">
         <v-simple-checkbox
@@ -87,7 +108,7 @@ import api from "@/utils/api";
       formatTag(tags) {
         let tagsArray = []
         for (let i = 0; i < tags.length; i++){
-          tagsArray = tagsArray + tags[i].tag + "\t"
+          tagsArray = tagsArray + tags[i].tag + "\n"
         }
         return tagsArray;
       },
