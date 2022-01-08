@@ -3,13 +3,16 @@
     <v-card class="pa-5">
       <v-card-title>Account Details</v-card-title>
       <v-card-actions>
-        <v-dialog v-model="dialog" width="500" persistent>
+        <v-dialog v-model="editDialog" width="500" persistent>
           <template v-slot:activator="{ on, attrs }">
             <v-btn color="red lighten-2" dark v-bind="attrs" v-on="on" @click="openEditDialog">
               Edit
             </v-btn>
           </template>
-          <edit-user @close="dialog = false; currentUser = null; this.user"/>
+          <edit-user @close="closeEditDialog"
+            :user="user"
+            :admin="false"
+          />
         </v-dialog>
         <v-spacer></v-spacer>
       </v-card-actions>
@@ -35,20 +38,29 @@ export default {
   },
   data: () => ({
     user: null,
-    dialog: false,
+    editDialog: false,
   }),
   methods: {
     openEditDialog() {
       this.editDialog = true;
     },
-  },
-  mounted() {
-    api.loggedIn().then((response) => {
+    closeEditDialog() {
+      this.editDialog = false;
+      this.user = null;
+      this.getUser()
+
+    },
+    getUser() {
+      api.loggedIn().then((response) => {
       if (response !== false)
         api.getUser(response[0]).then((user) => {
           if (user !== false) this.user = user;
         });
-    });
+      });
+    }
+  },
+  mounted() {
+    this.getUser()
   },
 };
 </script>
