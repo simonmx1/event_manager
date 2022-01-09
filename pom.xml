@@ -3,12 +3,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>at.qe</groupId>
-    <artifactId>skeleton</artifactId>
-    <version>1.0.5</version>
+    <artifactId>event_manager</artifactId>
+    <version>1.0.0</version>
     <packaging>war</packaging>
 
-    <name>skeleton</name>
-    <description>A skeleton project to be used as starting point for the courses
+    <name>eventManager</name>
+    <description>A eventManager project to be used as starting point for the courses
         "Software Architecture" and "Software Engineering" offered by the
         University of Innsbruck.
 
@@ -17,7 +17,7 @@
         for the web frontend. PrimeFaces (http://primefaces.org) is used as
         JSF component library to prettify the frontend.
 
-        Feel free to use this skeleton project as you see fit - but keept in
+        Feel free to use this eventManager project as you see fit - but keept in
         mind that this project is primarily provided to be used for educational
         purposes. Don't use it for production.
     </description>
@@ -34,6 +34,9 @@
         <duplicate-finder-maven-plugin.version>1.5.0</duplicate-finder-maven-plugin.version>
 		<sonar.projectKey>blabla</sonar.projectKey>
 		<sonar.qualitygate.wait>true</sonar.qualitygate.wait>
+        <java.version>11</java.version>
+        <node.version>v16.13.1</node.version>
+        <npm.version>7.21.1</npm.version>
     </properties>
 
     <dependencies>
@@ -42,6 +45,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
+
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
@@ -52,9 +56,17 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
         </dependency>
 
         <dependency>
@@ -68,13 +80,24 @@
             <artifactId>primefaces-spring-boot-starter</artifactId>
             <version>${joinfaces.version}</version>
         </dependency>
-        
+
         <dependency>
-            <groupId>org.joinfaces</groupId>
-            <artifactId>omnifaces3-spring-boot-starter</artifactId>
-            <version>${joinfaces.version}</version>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.9.1</version>
         </dependency>
-        
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
         <!-- special test dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -132,6 +155,78 @@
                         <goals>
                             <goal>report</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <version>1.12.0</version>
+
+                <executions>
+                    <execution>
+                        <id>Install node and npm</id>
+                        <goals>
+                            <goal>install-node-and-npm</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                        <configuration>
+                            <nodeVersion>${node.version}</nodeVersion>
+                            <npmVersion>${npm.version}</npmVersion>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>npm install</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                        <configuration>
+                            <arguments>install</arguments>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>npm build</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                        <configuration>
+                            <arguments>run build</arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+                <configuration>
+                    <nodeVersion>${node.version}</nodeVersion>
+                    <workingDirectory>src/main/frontend</workingDirectory>
+                </configuration>
+
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>Copy Vue frontend into Spring Boot target static folder</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>target/classes/static</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/frontend/dist</directory>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
