@@ -117,7 +117,7 @@
             <v-chip
                 style="margin: 5px"
                 :color="'#437505'">
-              {{ tag.tag }}
+              {{ tag.text }}
             </v-chip>
           </v-item>
         </v-item-group>
