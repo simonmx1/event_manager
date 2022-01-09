@@ -1,5 +1,6 @@
 package at.qe.event_manager.util;
 
+import at.qe.event_manager.model.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -51,8 +52,10 @@ public class JwtUtil {
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
     }
 
-    public Boolean validateToken(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);
-        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+    public Boolean validateToken(String token, User user) {
+        if (token != null) {
+            final String username = extractUsername(token);
+            return username != null && user != null && username.equals(user.getUsername()) && !isTokenExpired(token);
+        } else return false;
     }
 }

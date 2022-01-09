@@ -1,34 +1,44 @@
 package at.qe.event_manager.ui.controllers;
 
 import at.qe.event_manager.model.User;
+import at.qe.event_manager.model.UserRole;
 import at.qe.event_manager.payload.response.MessageResponse;
 import at.qe.event_manager.services.UserService;
 
 import java.io.Serializable;
 import java.util.Collection;
 
+import at.qe.event_manager.util.JwtUtil;
 import org.primefaces.shaded.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import javax.persistence.PreRemove;
 
 /**
  * Controller for the user list view.
- *
+ * <p>
  * This class is part of the skeleton project provided for students of the
  * courses "Software Architecture" and "Software Engineering" offered by the
  * University of Innsbruck.
  */
 @RestController
 @RequestMapping("/api/users")
-@PreAuthorize("hasRole('ADMIN')")
 public class UserManagementController implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-	
-	@Autowired
+    private static final long serialVersionUID = 1L;
+
+    @Autowired
     private UserService userService;
+
+    @Autowired
+    private JwtUtil jwtTokenUtil;
 
     /**
      * Returns a list of all users.
@@ -36,28 +46,45 @@ public class UserManagementController implements Serializable {
      * @return
      */
     @GetMapping("/getAll")
+    @PreAuthorize("hasRole('ADMIN')")
     public Collection<User> getUsers() {
         return userService.getAllUsers();
     }
 
+    private boolean isAuthorized(String username) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return auth.getName().equals(username) || auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"));
+    }
+
     @GetMapping("/get")
     @ResponseBody
-    public User get(@RequestParam(name = "username") String username) {
-        return userService.loadUserByUsername(username);
+    public ResponseEntity<?> get(@RequestParam(name = "username") String username) {
+        if (isAuthorized(username)) {
+            return new ResponseEntity<>(userService.loadUserByUsername(username), HttpStatus.OK);
+        }
+        return new ResponseEntity<>("You shall not pass!", HttpStatus.FORBIDDEN);
     }
 
     @PostMapping("/edit")
     public ResponseEntity<?> edit(@RequestBody User user) {
-        if(userService.saveUser(user) == null) {
-            return ResponseEntity.ok(new MessageResponse("Error: User does not exist!"));
+        if (isAuthorized(user.getUsername())) {
+            if (userService.saveUser(user) == null) {
+                return new ResponseEntity<>("User does not exist!", HttpStatus.BAD_REQUEST);
+            } else {
+                return new ResponseEntity<>("User edited successfully", HttpStatus.OK);
+            }
         } else {
-            return ResponseEntity.ok(new MessageResponse("User edited successfully!"));
+            return new ResponseEntity<>("You shall not pass!", HttpStatus.FORBIDDEN);
         }
     }
 
     @PostMapping("/delete")
     public ResponseEntity<?> delete(@RequestBody String username) {
-        userService.deleteUser(userService.loadUserByUsername(new JSONObject(username).getString("username")));
-        return ResponseEntity.ok(new MessageResponse("User deleted successfully!"));
+        if (isAuthorized(new JSONObject(username).getString("username"))) {
+            userService.deleteUser(userService.loadUserByUsername(new JSONObject(username).getString("username")));
+            return new ResponseEntity<>("User deleted successfully", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("You shall not pass!", HttpStatus.FORBIDDEN);
+        }
     }
 }
