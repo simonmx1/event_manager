@@ -73,6 +73,13 @@
           {{ item.menu }}
         </a>
       </template>
+      <template v-slot:item.geolocation="{ item }">
+        <a :href="'//' + item.geolocation" target="_blank" style="text-decoration: none">
+          <v-icon>
+            mdi-map-search
+          </v-icon>
+        </a>
+      </template>
       <template v-slot:item.openingTimes="{ item }">
         <v-menu
             transition="slide-y-transition"
@@ -159,7 +166,7 @@ export default {
     headers: [
       {text: 'Name', align: 'left', value: 'name'},
       {text: 'Menu', align: 'left', value: 'menu'},
-      {text: 'Geo Location', align: 'left', value: 'geolocation'},
+      {text: 'Geo Location', align: 'center', value: 'geolocation'},
       {text: 'Tags', align: 'left', value: 'tags'},
       {text: 'Opening Times', align: 'left', value: 'openingTimes'},
       {text: 'Enabled', align: 'left', value: 'enabled'},
@@ -190,7 +197,7 @@ export default {
       return time.substring(0, 5)
     },
     sortByWeekday(list) {
-      return list.sort((a, b) => (a.weekday !== b.weekday) ? a.weekday - b.weekday : (a.start > b.start ? 1 : -1) )
+      return list.sort((a, b) => (a.weekday !== b.weekday) ? a.weekday - b.weekday : (a.start > b.start ? 1 : -1))
     },
     openEditDialog(location) {
       this.currentLocation = location;
