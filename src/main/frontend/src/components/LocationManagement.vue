@@ -94,11 +94,9 @@
                 :key="id"
             >
               <v-list-item-title>
-                {{ formatWeekday(openingTime.weekday) }}
+                {{ formatWeekday(openingTime.weekday) }} <br>
+                {{ formatTime(openingTime.start) }} - {{ formatTime(openingTime.end) }}
               </v-list-item-title>
-              <v-list-item-content>
-                {{ formatTime(openingTime.start)}} - {{ formatTime(openingTime.end) }}
-              </v-list-item-content>
             </v-list-item>
           </v-list>
         </v-menu>
@@ -188,11 +186,11 @@ export default {
           return 'Sunday'
       }
     },
-    formatTime(time){
-      return time
+    formatTime(time) {
+      return time.substring(0, 5)
     },
-    sortByWeekday(list){
-      return list.sort((a, b) => a.weekday - b.weekday)
+    sortByWeekday(list) {
+      return list.sort((a, b) => (a.weekday !== b.weekday) ? a.weekday - b.weekday : (a.start > b.start ? 1 : -1) )
     },
     openEditDialog(location) {
       this.currentLocation = location;
