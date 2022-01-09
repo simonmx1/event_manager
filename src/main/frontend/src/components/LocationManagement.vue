@@ -73,6 +73,13 @@
           {{ item.menu }}
         </a>
       </template>
+      <template v-slot:item.geolocation="{ item }">
+        <a :href="'//' + item.geolocation" target="_blank" style="text-decoration: none">
+          <v-icon>
+            mdi-map-search
+          </v-icon>
+        </a>
+      </template>
       <template v-slot:item.openingTimes="{ item }">
         <v-menu
             transition="slide-y-transition"
@@ -90,16 +97,19 @@
           </template>
           <v-list>
             <v-list-item
-
                 v-for="(openingTime,id) in item.openingTimes"
                 :key="id"
             >
-              {{ formatWeekday(openingTime.weekday) }}: {{ formatTime(openingTime.start)}} - {{ formatTime(openingTime.end) }}
+              <v-list-item-title>
+                {{ formatWeekday(openingTime.weekday) }} <br>
+                {{ formatTime(openingTime.start) }} - {{ formatTime(openingTime.end) }}
+              </v-list-item-title>
             </v-list-item>
           </v-list>
         </v-menu>
       </template>
       <template v-slot:item.tags="{ item }">
+        <v-item-group>
           <v-item
               v-for="(tag,id) in item.tags"
               :key="id"
@@ -110,6 +120,7 @@
               {{ tag.tag }}
             </v-chip>
           </v-item>
+        </v-item-group>
       </template>
       <template v-slot:item.enabled="{ item }">
         <v-simple-checkbox
@@ -155,7 +166,7 @@ export default {
     headers: [
       {text: 'Name', align: 'left', value: 'name'},
       {text: 'Menu', align: 'left', value: 'menu'},
-      {text: 'Geo Location', align: 'left', value: 'geolocation'},
+      {text: 'Geo Location', align: 'center', value: 'geolocation'},
       {text: 'Tags', align: 'left', value: 'tags'},
       {text: 'Opening Times', align: 'left', value: 'openingTimes'},
       {text: 'Enabled', align: 'left', value: 'enabled'},
@@ -182,8 +193,11 @@ export default {
           return 'Sunday'
       }
     },
-    formatTime(time){
-      return time
+    formatTime(time) {
+      return time.substring(0, 5)
+    },
+    sortByWeekday(list) {
+      return list.sort((a, b) => (a.weekday !== b.weekday) ? a.weekday - b.weekday : (a.start > b.start ? 1 : -1))
     },
     openEditDialog(location) {
       this.currentLocation = location;
@@ -202,7 +216,10 @@ export default {
       this.createDialog = false
     },
     getLocations() {
-      api.getLocations().then(response => this.locations = response);
+      api.getLocations().then(response => {
+        this.locations = response
+        this.locations.forEach(item => this.sortByWeekday(item.openingTimes))
+      });
     }
   },
   mounted() {
