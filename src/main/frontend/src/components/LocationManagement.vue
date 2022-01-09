@@ -90,16 +90,21 @@
           </template>
           <v-list>
             <v-list-item
-
                 v-for="(openingTime,id) in item.openingTimes"
                 :key="id"
             >
-              {{ formatWeekday(openingTime.weekday) }}: {{ formatTime(openingTime.start)}} - {{ formatTime(openingTime.end) }}
+              <v-list-item-title>
+                {{ formatWeekday(openingTime.weekday) }}
+              </v-list-item-title>
+              <v-list-item-content>
+                {{ formatTime(openingTime.start)}} - {{ formatTime(openingTime.end) }}
+              </v-list-item-content>
             </v-list-item>
           </v-list>
         </v-menu>
       </template>
       <template v-slot:item.tags="{ item }">
+        <v-item-group>
           <v-item
               v-for="(tag,id) in item.tags"
               :key="id"
@@ -110,6 +115,7 @@
               {{ tag.tag }}
             </v-chip>
           </v-item>
+        </v-item-group>
       </template>
       <template v-slot:item.enabled="{ item }">
         <v-simple-checkbox
@@ -185,6 +191,9 @@ export default {
     formatTime(time){
       return time
     },
+    sortByWeekday(list){
+      return list.sort((a, b) => a.weekday - b.weekday)
+    },
     openEditDialog(location) {
       this.currentLocation = location;
       this.editDialog = true;
@@ -202,7 +211,10 @@ export default {
       this.createDialog = false
     },
     getLocations() {
-      api.getLocations().then(response => this.locations = response);
+      api.getLocations().then(response => {
+        this.locations = response
+        this.locations.forEach(item => this.sortByWeekday(item.openingTimes))
+      });
     }
   },
   mounted() {
