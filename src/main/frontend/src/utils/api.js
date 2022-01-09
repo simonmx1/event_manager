@@ -88,6 +88,78 @@ export default {
                 return false;
             })
         }
+    },
 
+    //LOCATION
+    async getLocations() {
+        return await axios.get('/api/location/getAll',
+            {headers: {"Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt'))}}
+        ).then(response => {
+            return response.data;
+        }).catch(() => false);
+    },
+
+    async deleteLocation(locationId) {
+        return await axios.post('/api/location/delete', {'locationId': locationId},
+            {
+                headers: {
+                    "Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt')),
+                    "Content-Type": "application/json"
+                }
+            }
+        ).then(response => {
+            return response;
+        }).catch(() => false);
+    },
+    async createLocation(location) {
+        return await axios.post('/api/location/create', {
+                'name': location.name,
+                'menu': location.menu,
+                'geolocation': location.geolocation,
+                'enabled': location.enabled
+            },
+            {
+                headers: {
+                    "Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt')),
+                    "Content-Type": "application/json"
+                }
+            }
+        ).then(response => {
+            return response
+        }).catch(() => false);
+    },
+    async editLocation(location) {
+        return await axios.post('/api/location/edit', {
+                'locationId': location.locationId,
+                'name': location.name,
+                'menu': location.menu,
+                'geolocation': location.geolocation,
+                'enabled': location.enabled
+            },
+            {
+                headers: {
+                    "Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt')),
+                    "Content-Type": "application/json"
+                }
+            }
+        ).then(response => {
+            return response
+        }).catch(() => false);
+    },
+    tags: {
+        async getAll() {
+            return await axios.get('/api/tag/getAll',
+                {headers: {"Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt'))}}
+            ).then(response => {
+                return response.data;
+            }).catch(() => false);
+        },
+        async get(tag) {
+            return await axios.get('/api/tag/get?tag=' + tag,
+                {headers: {"Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt'))}}
+            ).then(response => {
+                return response.data;
+            }).catch(() => false);
+        }
     }
 }
