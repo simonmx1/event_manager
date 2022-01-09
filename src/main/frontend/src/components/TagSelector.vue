@@ -16,7 +16,7 @@
             small
         >
           <span class="pr-2">
-            {{ item.tag }}
+            {{ item.text }}
           </span>
           <v-icon
               small
@@ -28,13 +28,13 @@
       </template>
       <template v-slot:item="{ index, item }">
         <v-chip
-            :key="item.tag"
+            :key="item.text"
             color="primary"
             dark
             label
             small
         >
-          {{ item.tag }}
+          {{ item.text }}
         </v-chip>
       </template>
     </v-combobox>
