@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Date;
 
 import at.qe.event_manager.model.Location;
+import at.qe.event_manager.model.Tag;
 import at.qe.event_manager.model.User;
 import at.qe.event_manager.repositories.LocationRepository;
 import org.springframework.beans.factory.annotation.Autowired;

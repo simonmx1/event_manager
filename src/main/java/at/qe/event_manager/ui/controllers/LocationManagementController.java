@@ -41,8 +41,7 @@ public class LocationManagementController implements Serializable {
     @GetMapping("/get")
     @ResponseBody
     public Location get(@RequestParam(name = "locationId") Integer locationId) {
-        Location l = locationService.loadLocationByLocationId(locationId);
-        return l;
+        return locationService.loadLocationByLocationId(locationId);
     }
 
     @PostMapping("/edit")

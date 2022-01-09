@@ -129,7 +129,6 @@ export default {
         }).catch(() => false);
     },
     async editLocation(location) {
-        console.log(location);
         return await axios.post('/api/location/edit', {
                 'locationId': location.locationId,
                 'name': location.name,
@@ -147,4 +146,20 @@ export default {
             return response
         }).catch(() => false);
     },
+    tags: {
+        async getAll() {
+            return await axios.get('/api/tag/getAll',
+                {headers: {"Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt'))}}
+            ).then(response => {
+                return response.data;
+            }).catch(() => false);
+        },
+        async get(tag) {
+            return await axios.get('/api/tag/get?tag=' + tag,
+                {headers: {"Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt'))}}
+            ).then(response => {
+                return response.data;
+            }).catch(() => false);
+        }
+    }
 }

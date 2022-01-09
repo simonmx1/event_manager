@@ -2,8 +2,6 @@ package at.qe.event_manager.model;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
-import java.util.Objects;
 import javax.persistence.*;
 
 import org.springframework.data.domain.Persistable;
@@ -17,16 +15,12 @@ import org.springframework.data.domain.Persistable;
  */
 
 @Entity
-public class Tag implements Persistable<Integer>, Serializable, Comparable<Tag> {
+public class Tag implements Persistable<String>, Serializable, Comparable<Tag> {
 
     private static final long serialVersionUID = 1L;
-
     @Id
     @Column(length = 100)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer tagId;
-    private String tag;
-    private String tagType;
+    private String text;
 
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -40,38 +34,22 @@ public class Tag implements Persistable<Integer>, Serializable, Comparable<Tag> 
         this.createDate = createDate;
     }
 
-    public Integer getTagId() {
-        return tagId;
+    public String getText() {
+        return text;
     }
 
-    public void setTagId(Integer tagId) {
-        this.tagId = tagId;
-    }
-
-    public String getTag() {
-        return tag;
-    }
-
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
-
-    public String getTagType() {
-        return tagType;
-    }
-
-    public void setTagType(String tagType) {
-        this.tagType = tagType;
+    public void setText(String text) {
+        this.text = text;
     }
 
     @Override
     public int compareTo(Tag o) {
-        return this.tagId.compareTo(o.getTagId());
+        return this.text.compareTo(o.text);
     }
 
     @Override
-    public Integer getId() {
-        return getTagId();
+    public String getId() {
+        return getText();
     }
 
     @Override
