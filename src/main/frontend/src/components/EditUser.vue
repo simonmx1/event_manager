@@ -57,7 +57,7 @@ export default {
       api.editUser(event)
           .then(response => {
             this.success = response.status === 200;
-            this.response = response.data.msg
+            this.response = response.data
           })
 
     },

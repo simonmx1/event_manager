@@ -58,7 +58,7 @@ export default {
                 }
             }
         ).then(response => {
-            return response;
+            return response
         }).catch(() => false);
     },
     async deleteUser(username) {
