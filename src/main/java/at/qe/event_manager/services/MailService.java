@@ -64,7 +64,7 @@ public class MailService {
 			
 			Multipart multipart = new MimeMultipart();
 			BodyPart msgBodyPart = new MimeBodyPart();
-			msgBodyPart.setText("Hello " + user.getFirstName() + ", " + user.getLastName() +
+			msgBodyPart.setText("Hello " + user.getFirstName() + user.getLastName() +
 					"!\n\n" + "You just created a User Account with the username \"" + user.getUsername()
 							+ "\" on \"Event Manager\" and used this Email for Registration!\n\n"
 							+ "If not, please contact us!\n\nYour Event Manager Team!");
@@ -85,7 +85,7 @@ public class MailService {
 			
 			Multipart multipart = new MimeMultipart();
 			BodyPart msgBodyPart = new MimeBodyPart();
-			msgBodyPart.setText("Hello " + user.getFirstName() + ", " + user.getLastName()
+			msgBodyPart.setText("Hello " + user.getFirstName() + user.getLastName()
 							+ "!\n\n" + "Your User Account with the username \"" + user.getUsername()
 							+ "\" on \"Event Manager\" has been deleted!\n\n"
 							+ "If this was a mistake, please contact us!\n\nYour Event Manager Team!");
