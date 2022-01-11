@@ -24,6 +24,8 @@ public class MailService {
 	private static final Properties PROPERTIES = new Properties();
 	private static final Session SESSION;
 	
+	private MailService() {}
+	
 	static {
 		PROPERTIES.put("mail.smtp.auth", "true");
 		PROPERTIES.put("mail.smtp.starttls.enable", "true");
