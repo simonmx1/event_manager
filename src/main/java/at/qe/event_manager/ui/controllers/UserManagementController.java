@@ -1,15 +1,12 @@
 package at.qe.event_manager.ui.controllers;
 
 import at.qe.event_manager.model.User;
-import at.qe.event_manager.model.UserRole;
-import at.qe.event_manager.payload.response.MessageResponse;
 import at.qe.event_manager.services.MailService;
 import at.qe.event_manager.services.UserService;
 
 import java.io.Serializable;
 import java.util.Collection;
 
-import at.qe.event_manager.util.JwtUtil;
 import org.primefaces.shaded.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,8 +16,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
-import javax.persistence.PreRemove;
 
 /**
  * Controller for the user list view.
@@ -37,9 +32,6 @@ public class UserManagementController implements Serializable {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private JwtUtil jwtTokenUtil;
 
     /**
      * Returns a list of all users.
