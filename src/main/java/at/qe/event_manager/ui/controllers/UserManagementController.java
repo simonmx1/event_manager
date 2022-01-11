@@ -3,6 +3,7 @@ package at.qe.event_manager.ui.controllers;
 import at.qe.event_manager.model.User;
 import at.qe.event_manager.model.UserRole;
 import at.qe.event_manager.payload.response.MessageResponse;
+import at.qe.event_manager.services.MailService;
 import at.qe.event_manager.services.UserService;
 
 import java.io.Serializable;
@@ -81,7 +82,9 @@ public class UserManagementController implements Serializable {
     @PostMapping("/delete")
     public ResponseEntity<?> delete(@RequestBody String username) {
         if (isAuthorized(new JSONObject(username).getString("username"))) {
-            userService.deleteUser(userService.loadUserByUsername(new JSONObject(username).getString("username")));
+        	User user = userService.loadUserByUsername(new JSONObject(username).getString("username"));
+            userService.deleteUser(user);
+            MailService.sendUserDeleteMessage(user);
             return new ResponseEntity<>("User deleted successfully", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("You shall not pass!", HttpStatus.FORBIDDEN);
