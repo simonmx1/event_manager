@@ -1,7 +1,6 @@
 package at.qe.event_manager.services;
 
 import java.util.Properties;
-
 import javax.mail.Authenticator;
 import javax.mail.BodyPart;
 import javax.mail.Message;
@@ -14,7 +13,6 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-
 import at.qe.event_manager.model.User;
 
 public class MailService {
@@ -47,13 +45,26 @@ public class MailService {
 	}
 	
 	private static void sendMessage(Message msg) {
-		try {
-			// We set our own email address here, so that we don't
-			// send any emails to third-party mail addresses.
-			msg.setRecipient(Message.RecipientType.TO, new InternetAddress("event.manager.g7t0@gmail.com"));
-			Transport.send(msg);
-		} catch (MessagingException e) {
-			e.printStackTrace();
+		new ThreadMailService(msg).start();
+	}
+	
+	private static class ThreadMailService extends Thread{
+		Message msg;
+		
+		public ThreadMailService(Message msg) {
+			this.msg = msg;
+		}
+		
+		@Override
+		public void run() {
+			try {
+				// We set our own email address here, so that we don't
+				// send any emails to third-party mail addresses.
+				msg.setRecipient(Message.RecipientType.TO, new InternetAddress("event.manager.g7t0@gmail.com"));
+				Transport.send(msg);
+			} catch (MessagingException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
