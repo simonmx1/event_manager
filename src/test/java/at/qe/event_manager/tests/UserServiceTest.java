@@ -75,16 +75,16 @@ public class UserServiceTest {
     @WithMockUser(username = "admin", authorities = {"ROLE_ADMIN"})
     public void testDeleteUser() {
 		String username = "user1";
-        User adminUser = userService.loadUser("admin");
+        User adminUser = userService.loadUserByUsername("admin");
         assertNotNull(adminUser, "Admin user could not be loaded from test data source");
-        User toBeDeletedUser = userService.loadUser(username);
+        User toBeDeletedUser = userService.loadUserByUsername(username);
         assertNotNull(toBeDeletedUser, "User \"" + username + "\" could not be loaded from test data source");
 
         userService.deleteUser(toBeDeletedUser);
 
         assertEquals(3, userService.getAllUsers().size(), "No user has been deleted after calling UserService.deleteUser");
-        User deletedUser = userService.loadUser(username);
-        assertNull(deletedUser, "Deleted User \"" + username + "\" could still be loaded from test data source via UserService.loadUser");
+        User deletedUser = userService.loadUserByUsername(username);
+        assertNull(deletedUser, "Deleted User \"" + username + "\" could still be loaded from test data source via UserService.loadUserByUsername");
 
         for (User remainingUser : userService.getAllUsers()) {
             assertNotEquals(toBeDeletedUser.getUsername(), remainingUser.getUsername(), "Deleted User \"" + username + "\" could still be loaded from test data source via UserService.getAllUsers");
@@ -96,15 +96,15 @@ public class UserServiceTest {
     @WithMockUser(username = "admin", authorities = {"ROLE_ADMIN"})
     public void testUpdateUser() {
         String username = "user1";
-        User adminUser = userService.loadUser("admin");
+        User adminUser = userService.loadUserByUsername("admin");
         assertNotNull(adminUser, "Admin user could not be loaded from test data source");
-        User toBeUpdatedUser = userService.loadUser(username);
+        User toBeUpdatedUser = userService.loadUserByUsername(username);
         assertNotNull(toBeUpdatedUser, "User \"" + username + "\" could not be loaded from test data source");
 
         toBeUpdatedUser.setEmail("changed-email@whatever.wherever");
         userService.saveUser(toBeUpdatedUser);
 
-        User freshlyLoadedUser = userService.loadUser("user1");
+        User freshlyLoadedUser = userService.loadUserByUsername("user1");
         assertEquals(4, userService.getAllUsers().size(), "Size of users did change in database. User was inserted, not updated");
         assertNotNull(freshlyLoadedUser, "User \"" + username + "\" could not be loaded from test data source after being saved");
         assertEquals("changed-email@whatever.wherever", freshlyLoadedUser.getEmail(), "User \"" + username + "\" does not have a the correct email attribute stored being saved");
@@ -114,7 +114,7 @@ public class UserServiceTest {
     @Test
     @WithMockUser(username = "admin", authorities = {"ROLE_ADMIN"})
     public void testCreateUser() {
-        User adminUser = userService.loadUser("admin");
+        User adminUser = userService.loadUserByUsername("admin");
         assertNotNull(adminUser, "Admin user could not be loaded from test data source");
 
         String username = "newuser";
@@ -132,7 +132,7 @@ public class UserServiceTest {
         toBeCreatedUser.setRole(UserRole.USER);
         userService.saveUser(toBeCreatedUser);
 
-        User freshlyCreatedUser = userService.loadUser(username);
+        User freshlyCreatedUser = userService.loadUserByUsername(username);
         assertEquals(5, userService.getAllUsers().size(), "No user has been added after calling UserService.saveUser");
         assertNotNull(freshlyCreatedUser, "New user could not be loaded from test data source after being saved");
         assertEquals(username, freshlyCreatedUser.getUsername(), "New user could not be loaded from test data source after being saved");
@@ -147,22 +147,36 @@ public class UserServiceTest {
 	@Test
     @WithMockUser(username = "admin", authorities = {"ROLE_ADMIN"})
     public void testExceptionForEmptyUsername() {
-		User adminUser = userService.loadUser("admin");
+		User adminUser = userService.loadUserByUsername("admin");
         assertNotNull(adminUser, "Admin user could not be loaded from test data source");
         User toBeCreatedUser = new User();
         assertThrows(JpaSystemException.class, () -> userService.saveUser(toBeCreatedUser));
     }
 	
 	@Test
-    public void testUnauthenticateddLoadUsers() {
+    public void testUnauthenticatedLoadUsers() {
         assertThrows(AuthenticationCredentialsNotFoundException.class, () -> 
-        	userService.getAllUsers().forEach(fail("Call to userService.getAllUsers should not work without proper authorization")));
+        userService.getAllUsers().forEach(fail("Call to userService.getAllUsers should not work without proper authorization")));
     }
 	
-	 @Test
-	 @WithMockUser(username = "user", authorities = {"ROLE_LOCATION_MANAGER"})
-	 public void testUnauthorizedLoadUsers() {
-		 assertThrows(AccessDeniedException.class, () -> 
-		 userService.getAllUsers().forEach(fail("Call to userService.getAllUsers should not work without proper authorization")));
-	    }
+	@Test
+	@WithMockUser(username = "user", authorities = {"ROLE_LOCATION_MANAGER"})
+	public void testUnauthorizedLoadUsers() {
+		assertThrows(AccessDeniedException.class, () ->
+		userService.getAllUsers().forEach(fail("Call to userService.getAllUsers should not work without proper authorization")));
+	}
+	
+	@Test
+	@WithMockUser(username = "user1", authorities = {"ROLE_LOCATION_MANAGER"})
+	public void testUnauthorizedSaveUser() {
+		assertThrows(AccessDeniedException.class, () -> userService.saveUser(userService.loadUserByUsername("user1")),
+			 "Call to userService.saveUser should not work without proper authorization");
+	}
+	
+	@Test
+    @WithMockUser(username = "user1", authorities = {"ROLE_LOCATION_MANAGER"})
+    public void testUnauthorizedDeleteUser() {
+		assertThrows(AccessDeniedException.class, () -> userService.deleteUser(userService.loadUserByUsername("admin")),
+				 "Call to userService.deleteUser should not work without proper authorization");
+    }
 }

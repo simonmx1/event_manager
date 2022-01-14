@@ -45,7 +45,8 @@ public class UserService implements Serializable, UserDetailsService {
      * @param username the username to search for
      * @return the user with the given username
      */
-    public User loadUser(String username) {
+    @Override
+    public User loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findFirstByUsername(username);
     }
 
@@ -58,6 +59,7 @@ public class UserService implements Serializable, UserDetailsService {
      * @param user the user to save
      * @return the updated user
      */
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public User saveUser(User user) {
         if (user.isNew()) {
             user.setCreateDate(new Date());
@@ -92,10 +94,4 @@ public class UserService implements Serializable, UserDetailsService {
         userRepository.delete(user);
         // :TODO: write some audit log stating who and when this user was permanently deleted.
     }
-
-    @Override
-    public User loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findFirstByUsername(username);
-    }
-
 }
