@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
@@ -33,6 +34,7 @@ public class UserService implements Serializable, UserDetailsService {
      *
      * @return
      */
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public Collection<User> getAllUsers() {
         return userRepository.findAll();
     }
@@ -85,6 +87,7 @@ public class UserService implements Serializable, UserDetailsService {
      *
      * @param user the user to delete
      */
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or principal.username eq #user.getUsername")
     public void deleteUser(User user) {
         userRepository.delete(user);
         // :TODO: write some audit log stating who and when this user was permanently deleted.
