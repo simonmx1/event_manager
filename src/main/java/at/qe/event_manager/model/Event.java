@@ -1,5 +1,6 @@
 package at.qe.event_manager.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.domain.Persistable;
 
 import javax.persistence.*;
@@ -19,7 +20,7 @@ public class Event implements Persistable<Integer>, Serializable, Comparable<Eve
 
     private String name;
     @ManyToOne
-    @JoinColumn(name = "timeslot_timeslot_ID")
+    @JoinColumn(name = "timeslot_timeslot_id")
     private Timeslot timeslot;
     @ManyToOne
     @JoinColumn(name = "location_location_id")
@@ -33,6 +34,7 @@ public class Event implements Persistable<Integer>, Serializable, Comparable<Eve
     private Set<User> participants;
 
     @OneToMany(mappedBy = "event", fetch=FetchType.EAGER)
+    @JsonIgnore
     private Set<Poll> polls;
 
     private Date pollEndDate;

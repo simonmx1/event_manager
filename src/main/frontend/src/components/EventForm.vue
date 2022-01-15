@@ -58,6 +58,7 @@
           </span>
       </template>
     </v-combobox>
+    <v-datetime-picker label="Select Datetime" v-model="datetime"> </v-datetime-picker>
   </v-form>
 </template>
 
@@ -82,6 +83,7 @@ export default {
     currentEvent: null,
     availableUsers: [],
     search: null,
+    datetime: null,
     nameRules: [
       v => !!v || 'Eventname is required'
     ]

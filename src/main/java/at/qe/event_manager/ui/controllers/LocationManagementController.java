@@ -40,8 +40,7 @@ public class LocationManagementController implements Serializable {
     @GetMapping("/get")
     @ResponseBody
     public Location get(@RequestParam(name = "name") String name) {
-        Location l = locationService.loadLocationByLocationName(name);
-        return l;
+        return locationService.loadLocationByLocationName(name);
     }
 
     @PostMapping("/edit")

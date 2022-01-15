@@ -31,7 +31,6 @@ public class Poll implements Persistable<Integer>, Serializable, Comparable<Poll
 
     @ManyToOne
     @JoinColumn(name = "event_event_id")
-    @JsonIgnore
     private Event event;
 
     @Column(nullable = false)
