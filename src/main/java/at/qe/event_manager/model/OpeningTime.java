@@ -3,8 +3,6 @@ package at.qe.event_manager.model;
 import java.io.Serializable;
 import java.sql.Time;
 import java.util.Date;
-import java.util.List;
-import java.util.Objects;
 import javax.persistence.*;
 
 import org.springframework.data.domain.Persistable;
@@ -64,7 +62,7 @@ public class OpeningTime implements Persistable<String>, Serializable, Comparabl
     }
 
     public void setOpeningTimeId(Integer openingTimeId) {
-        openingTimeId = openingTimeId;
+        this.openingTimeId = openingTimeId;
     }
 
     public Date getCreateDate() {

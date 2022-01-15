@@ -9,7 +9,10 @@ import java.util.Date;
 import java.util.Set;
 @Entity
 public class Poll implements Persistable<Integer>, Serializable, Comparable<Poll> {
-    @Id
+
+	private static final long serialVersionUID = 1L;
+
+	@Id
     @Column(name = "poll_id", nullable = false)
     private Integer pollId;
 

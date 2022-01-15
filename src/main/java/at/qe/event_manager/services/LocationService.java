@@ -22,7 +22,9 @@ import org.springframework.stereotype.Component;
 @Scope("application")
 public class LocationService implements Serializable {
 
-    @Autowired
+	private static final long serialVersionUID = 1L;
+	
+	@Autowired
     private LocationRepository locationRepository;
 
     /**

@@ -1,7 +1,8 @@
 package at.qe.event_manager.repositories;
 
 import java.io.Serializable;
-import at.qe.event_manager.model.Event;
+import at.qe.event_manager.model.Poll;
+
 import org.springframework.data.jpa.repository.Query;
 
 /**
@@ -12,8 +13,8 @@ import org.springframework.data.jpa.repository.Query;
  * University of Innsbruck.
  */
 
-public interface EventRepository extends AbstractRepository<Event, Integer>, Serializable {
+public interface PollRepository extends AbstractRepository<Poll, Integer>, Serializable {
 
-    @Query("SELECT e FROM Event e WHERE :id = e.id")
-    Event findFirstById(Integer id);
+    @Query("SELECT p FROM Poll p WHERE :id = p.id")
+    Poll findFirstById(Integer id);
 }

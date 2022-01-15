@@ -3,10 +3,10 @@ package at.qe.event_manager.services;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
-
 import at.qe.event_manager.model.Event;
+import at.qe.event_manager.model.Poll;
 import at.qe.event_manager.model.User;
-import at.qe.event_manager.repositories.EventRepository;
+import at.qe.event_manager.repositories.PollRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -20,20 +20,20 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Scope("application")
-public class EventService implements Serializable {
+public class PollService implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
 	@Autowired
-    private EventRepository eventRepository;
+    private PollRepository PollRepository;
 
     /**
      * Returns a collection of all users.
      *
      * @return
      */
-    public Collection<Event> getAllEvents() {
-        return eventRepository.findAll();
+    public Collection<Poll> getAllPolls() {
+        return PollRepository.findAll();
     }
 
     /**
@@ -42,8 +42,8 @@ public class EventService implements Serializable {
      * @param username the username to search for
      * @return the user with the given username
      */
-    public Event loadEvent(Integer id) {
-        return eventRepository.findById(id);
+    public Poll loadPoll(Integer id) {
+        return PollRepository.findById(id);
     }
 
     /**
@@ -55,11 +55,11 @@ public class EventService implements Serializable {
      * @param user the user to save
      * @return the updated user
      */
-    public Event saveEvent(Event event) {
-        if (event.isNew()) {
-            event.setCreateDate(new Date());
+    public Poll savePoll(Poll poll) {
+        if (poll.isNew()) {
+            poll.setCreateDate(new Date());
         }
-        return eventRepository.save(event);
+        return PollRepository.save(poll);
     }
 
     /**
@@ -71,8 +71,8 @@ public class EventService implements Serializable {
      * @param user the user to save
      * @return the updated user
      */
-    public Event createEvent(Event event) {
-        return saveEvent(event);
+    public Poll createPoll(Poll poll) {
+        return savePoll(poll);
     }
 
     /**
@@ -80,8 +80,8 @@ public class EventService implements Serializable {
      *
      * @param user the user to delete
      */
-    public void deleteEvent(Event event) {
-        eventRepository.delete(event);
+    public void deletePoll(Poll poll) {
+        PollRepository.delete(poll);
         // :TODO: write some audit log stating who and when this user was permanently deleted.
     }
 }

@@ -10,7 +10,10 @@ import java.util.Date;
 
 @Entity
 public class Timeslot implements Persistable<Integer>, Serializable, Comparable<Timeslot> {
-    @Id
+	
+	private static final long serialVersionUID = 1L;
+
+	@Id
     @Column(name = "timeslot_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer timeslotId;
