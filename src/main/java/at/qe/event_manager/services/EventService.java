@@ -48,15 +48,6 @@ public class EventService implements Serializable {
         return eventRepository.findById(id);
     }
 
-    /**
-     * Saves the user. This method will also set {@link User#createDate} for new
-     * entities or {@link User#updateDate} for updated entities. The user
-     * requesting this operation will also be stored as {@link User#createDate}
-     * or {@link User#updateUser} respectively.
-     *
-     * @param user the user to save
-     * @return the updated user
-     */
     public Event saveEvent(Event event) {
         if (event.isNew()) {
             event.setCreateDate(new Date());
@@ -64,15 +55,6 @@ public class EventService implements Serializable {
         return eventRepository.save(event);
     }
 
-    /**
-     * Saves the user. This method will also set {@link User#createDate} for new
-     * entities or {@link User#updateDate} for updated entities. The user
-     * requesting this operation will also be stored as {@link User#createDate}
-     * or {@link User#updateUser} respectively.
-     *
-     * @param user the user to save
-     * @return the updated user
-     */
     public Event createEvent(Event event) {
         return saveEvent(event);
     }
@@ -115,24 +97,21 @@ public class EventService implements Serializable {
     	}
         Comparator<Poll_Locations> poll_LocationsComparator = new Poll_LocationsComparator();
         Comparator<Poll_Timeslots> poll_timeslotsComparator = new Poll_TimsSlotsComparator();
-        Collections.sort(pollLocationsWinner, poll_LocationsComparator);
-        Collections.sort(pollTimeslotsWinner, poll_timeslotsComparator);
+        pollLocationsWinner.sort(poll_LocationsComparator);
+        pollTimeslotsWinner.sort(poll_timeslotsComparator);
         if (pollTimeslotsWinner.get(0).getPoints() == 0) {
             // :TODO: sent email to participants, event is evaluated but will not be held
             event.setEvaluated(true);
         } else {
-            if (pollLocationsWinner.get(0).getPoints() == pollLocationsWinner.get(1).getPoints()) {
+            if (pollLocationsWinner.get(0).getPoints().intValue() == pollLocationsWinner.get(1).getPoints().intValue()) {
                 ArrayList<Poll_Locations> temp = new ArrayList<>();
                 for (Poll_Locations poll_location : pollLocationsWinner) {
-                    if (poll_location.getPoints() == pollLocationsWinner.get(0).getPoints()) {
+                    if (poll_location.getPoints().intValue() == pollLocationsWinner.get(0).getPoints().intValue()) {
                         temp.add(poll_location);
                     }
                 }
                 if (event.isCreatorIsPreferred()) {
-                    ArrayList<Poll_Locations> tempCreator = new ArrayList<>();
-                    for (Poll_Locations poll_location : pollRepository.findFirstByUserUsername(event.getCreator().getUsername()).getPoll_locations()) {
-                        tempCreator.add(poll_location);
-                    }
+                    ArrayList<Poll_Locations> tempCreator = new ArrayList<>(pollRepository.findFirstByUserUsername(event.getCreator().getUsername()).getPoll_locations());
                     for (Poll_Locations pl : temp) {
                         for (Poll_Locations plCreator : tempCreator) {
                             if (pl.equals(plCreator)) {
@@ -140,7 +119,7 @@ public class EventService implements Serializable {
                             }
                         }
                     }
-                    Collections.sort(temp, poll_LocationsComparator);
+                    temp.sort(poll_LocationsComparator);
                     event.setLocation(temp.get(0).getLocation());
                 } else {
                     Random random = new Random();
@@ -149,18 +128,15 @@ public class EventService implements Serializable {
                     int index = random.nextInt(max + min) + min;
                     event.setLocation(temp.get(index).getLocation());
                 }
-            } if (pollTimeslotsWinner.get(0).getPoints() == pollTimeslotsWinner.get(1).getPoints()) {
+            } if (pollTimeslotsWinner.get(0).getPoints().intValue() == pollTimeslotsWinner.get(1).getPoints().intValue()) {
                 ArrayList<Poll_Timeslots> temp = new ArrayList<>();
                 for (Poll_Timeslots poll_timeslot : pollTimeslotsWinner) {
-                    if (poll_timeslot.getPoints() == pollTimeslotsWinner.get(0).getPoints()) {
+                    if (poll_timeslot.getPoints().intValue() == pollTimeslotsWinner.get(0).getPoints().intValue()) {
                         temp.add(poll_timeslot);
                     }
                 }
                 if (event.isCreatorIsPreferred()) {
-                    ArrayList<Poll_Timeslots> tempCreator = new ArrayList<>();
-                    for (Poll_Timeslots poll_timeslots: pollRepository.findFirstByUserUsername(event.getCreator().getUsername()).getPoll_timeslots()) {
-                        tempCreator.add(poll_timeslots);
-                    }
+                    ArrayList<Poll_Timeslots> tempCreator = new ArrayList<>(pollRepository.findFirstByUserUsername(event.getCreator().getUsername()).getPoll_timeslots());
                     for (Poll_Timeslots pt : temp) {
                         for (Poll_Timeslots ptCreator : tempCreator) {
                             if (pt.equals(ptCreator)) {
@@ -168,7 +144,7 @@ public class EventService implements Serializable {
                             }
                         }
                     }
-                    Collections.sort(temp, poll_timeslotsComparator);
+                    temp.sort(poll_timeslotsComparator);
                     event.setTimeslot(temp.get(0).getTimeslot());
                 } else {
                     Random random = new Random();
