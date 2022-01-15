@@ -5,6 +5,8 @@ import java.util.*;
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.domain.Persistable;
 
 /**
@@ -15,6 +17,7 @@ import org.springframework.data.domain.Persistable;
  * University of Innsbruck.
  */
 @Entity
+@OnDelete(action = OnDeleteAction.CASCADE)
 public class Location implements Persistable<Integer>, Serializable, Comparable<Location> {
 
     private static final long serialVersionUID = 1L;
@@ -38,7 +41,7 @@ public class Location implements Persistable<Integer>, Serializable, Comparable<
     @JoinTable(name = "location_tag")
     private Set<Tag> tags;
 
-    @OneToMany(mappedBy = "location")
+    @OneToMany(mappedBy = "location", cascade = CascadeType.ALL)
     private List<OpeningTime> openingTimes;
 
     public List<OpeningTime> getOpeningTimes() {
