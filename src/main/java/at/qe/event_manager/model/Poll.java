@@ -26,7 +26,7 @@ public class Poll implements Persistable<Integer>, Serializable, Comparable<Poll
     private Set<Poll_Locations> poll_locations;
 
     @ManyToOne
-    @JoinColumn(name = "user_username")
+    @JoinColumn(name = "userUsername")
     private User user;
 
     @ManyToOne

@@ -88,7 +88,6 @@ public class EventService implements Serializable {
     }
     
     public void evaluatePolls(Event event) {
-        //System.out.println(pollRepository.findFirstByUsername(event.getCreator().getUsername()));
     	Set<Poll> polls = event.getPolls();
     	ArrayList<Poll_Locations> pollLocationsWinner = new ArrayList<>();
     	ArrayList<Poll_Timeslots> pollTimeslotsWinner = new ArrayList<>();
@@ -131,9 +130,9 @@ public class EventService implements Serializable {
                 }
                 if (event.isCreatorIsPreferred()) {
                     ArrayList<Poll_Locations> tempCreator = new ArrayList<>();
-                    /*for (Poll_Locations poll_location : pollRepository.findByUsername(event.getCreator().getUsername()).getPoll_locations()) {
+                    for (Poll_Locations poll_location : pollRepository.findFirstByUserUsername(event.getCreator().getUsername()).getPoll_locations()) {
                         tempCreator.add(poll_location);
-                    }*/
+                    }
                     for (Poll_Locations pl : temp) {
                         for (Poll_Locations plCreator : tempCreator) {
                             if (pl.equals(plCreator)) {
@@ -150,7 +149,7 @@ public class EventService implements Serializable {
                     int index = random.nextInt(max + min) + min;
                     event.setLocation(temp.get(index).getLocation());
                 }
-            } else if (pollTimeslotsWinner.get(0).getPoints() == pollTimeslotsWinner.get(1).getPoints()) {
+            } if (pollTimeslotsWinner.get(0).getPoints() == pollTimeslotsWinner.get(1).getPoints()) {
                 ArrayList<Poll_Timeslots> temp = new ArrayList<>();
                 for (Poll_Timeslots poll_timeslot : pollTimeslotsWinner) {
                     if (poll_timeslot.getPoints() == pollTimeslotsWinner.get(0).getPoints()) {
@@ -178,12 +177,11 @@ public class EventService implements Serializable {
                     int index = random.nextInt(max + min) + min;
                     event.setTimeslot(temp.get(index).getTimeslot());
                 }
-            } else {
-                // :TODO: sent email to participants, event is evaluated
-                event.setLocation(pollLocationsWinner.get(0).getLocation());
-                event.setTimeslot(pollTimeslotsWinner.get(0).getTimeslot());
-                event.setEvaluated(true);
             }
+            // :TODO: sent email to participants, event is evaluated
+            event.setLocation(pollLocationsWinner.get(0).getLocation());
+            event.setTimeslot(pollTimeslotsWinner.get(0).getTimeslot());
+            event.setEvaluated(true);
         }
         eventRepository.save(event);
     }
