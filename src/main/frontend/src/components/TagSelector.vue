@@ -3,7 +3,7 @@
     <v-combobox
         v-model="model"
         :items="items"
-        label="Combobox"
+        label="Tags"
         multiple
         outlined
         dense
@@ -11,16 +11,15 @@
       <template v-slot:selection="{ attrs, item, parent }">
         <v-chip
             v-bind="attrs"
-            color="primary"
-            label
+            color="#437505"
             small
         >
           <span class="pr-2">
-            {{ item.tag }}
+            {{ item.text }}
           </span>
           <v-icon
               small
-              @click="parent.selectItem(item.tag)"
+              @click="parent.selectItem(item)"
           >
             $delete
           </v-icon>
@@ -28,13 +27,12 @@
       </template>
       <template v-slot:item="{ index, item }">
         <v-chip
-            :key="item.tag"
-            color="primary"
+            :key="item.text"
+            color="#437505"
             dark
-            label
             small
         >
-          {{ item.tag }}
+          {{ item.text }}
         </v-chip>
       </template>
     </v-combobox>
