@@ -7,6 +7,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 public class Timeslot implements Persistable<Integer>, Serializable, Comparable<Timeslot> {
@@ -17,6 +18,9 @@ public class Timeslot implements Persistable<Integer>, Serializable, Comparable<
 
     private Timestamp start;
     private Timestamp end;
+
+    @OneToMany (mappedBy = "timeslot")
+    private Set<Poll_Timeslots> poll_timeslots;
 
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)

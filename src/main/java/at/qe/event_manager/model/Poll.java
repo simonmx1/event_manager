@@ -1,5 +1,6 @@
 package at.qe.event_manager.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Persistable;
 
@@ -13,15 +14,21 @@ public class Poll implements Persistable<Integer>, Serializable, Comparable<Poll
     @Column(name = "poll_id", nullable = false)
     private Integer pollId;
 
-    @ManyToMany
-    private Set<Location> locations;
 
-    @ManyToMany
-    private Set<Timeslot> timeslots;
+    @OneToMany (mappedBy = "poll")
+    private Set<Poll_Timeslots> poll_timeslots;
+
+    @OneToMany (mappedBy = "poll")
+    private Set<Poll_Locations> poll_locations;
 
     @ManyToOne
     @JoinColumn(name = "user_username")
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "event_event_id")
+    @JsonIgnore
+    private Event event;
 
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -39,6 +46,46 @@ public class Poll implements Persistable<Integer>, Serializable, Comparable<Poll
         this.pollId = pollId;
     }
 
+    public Set<Poll_Timeslots> getPoll_timeslots() {
+        return poll_timeslots;
+    }
+
+    public void setPoll_timeslots(Set<Poll_Timeslots> poll_timeslots) {
+        this.poll_timeslots = poll_timeslots;
+    }
+
+    public Set<Poll_Locations> getPoll_locations() {
+        return poll_locations;
+    }
+
+    public void setPoll_locations(Set<Poll_Locations> poll_locations) {
+        this.poll_locations = poll_locations;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Event getEvent() {
+        return event;
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
     @Override
     public int compareTo(@NotNull Poll poll) {
         return this.pollId.compareTo(poll.pollId);
@@ -46,7 +93,7 @@ public class Poll implements Persistable<Integer>, Serializable, Comparable<Poll
 
     @Override
     public Integer getId() {
-        return null;
+        return pollId;
     }
 
     @Override
