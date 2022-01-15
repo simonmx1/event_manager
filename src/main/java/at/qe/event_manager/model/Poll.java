@@ -19,10 +19,10 @@ public class Poll implements Persistable<Integer>, Serializable, Comparable<Poll
     private Integer pollId;
 
 
-    @OneToMany (mappedBy = "poll")
+    @OneToMany (mappedBy = "poll", fetch=FetchType.EAGER)
     private Set<Poll_Timeslots> poll_timeslots;
 
-    @OneToMany (mappedBy = "poll")
+    @OneToMany (mappedBy = "poll", fetch=FetchType.EAGER)
     private Set<Poll_Locations> poll_locations;
 
     @ManyToOne

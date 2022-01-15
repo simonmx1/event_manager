@@ -38,7 +38,7 @@ public class Location implements Persistable<Integer>, Serializable, Comparable<
     private Set<Tag> tags;
 
 
-    @OneToMany (mappedBy = "location")
+    @OneToMany (mappedBy = "location", fetch=FetchType.EAGER)
     private Set<Poll_Locations> poll_locations;
 
     public void setLocationId(int locationId) {

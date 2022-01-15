@@ -32,7 +32,7 @@ public class Event implements Persistable<Integer>, Serializable, Comparable<Eve
     @ManyToMany
     private Set<User> participants;
 
-    @OneToMany(mappedBy = "event")
+    @OneToMany(mappedBy = "event", fetch=FetchType.EAGER)
     private Set<Poll> polls;
 
     private Date pollEndDate;
