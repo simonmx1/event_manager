@@ -48,15 +48,6 @@ public class EventService implements Serializable {
         return eventRepository.findById(id);
     }
 
-    /**
-     * Saves the user. This method will also set {@link User#createDate} for new
-     * entities or {@link User#updateDate} for updated entities. The user
-     * requesting this operation will also be stored as {@link User#createDate}
-     * or {@link User#updateUser} respectively.
-     *
-     * @param user the user to save
-     * @return the updated user
-     */
     public Event saveEvent(Event event) {
         if (event.isNew()) {
             event.setCreateDate(new Date());
@@ -64,15 +55,6 @@ public class EventService implements Serializable {
         return eventRepository.save(event);
     }
 
-    /**
-     * Saves the user. This method will also set {@link User#createDate} for new
-     * entities or {@link User#updateDate} for updated entities. The user
-     * requesting this operation will also be stored as {@link User#createDate}
-     * or {@link User#updateUser} respectively.
-     *
-     * @param user the user to save
-     * @return the updated user
-     */
     public Event createEvent(Event event) {
         return saveEvent(event);
     }
@@ -115,8 +97,8 @@ public class EventService implements Serializable {
     	}
         Comparator<Poll_Locations> poll_LocationsComparator = new Poll_LocationsComparator();
         Comparator<Poll_Timeslots> poll_timeslotsComparator = new Poll_TimsSlotsComparator();
-        Collections.sort(pollLocationsWinner, poll_LocationsComparator);
-        Collections.sort(pollTimeslotsWinner, poll_timeslotsComparator);
+        pollLocationsWinner.sort(poll_LocationsComparator);
+        pollTimeslotsWinner.sort(poll_timeslotsComparator);
         if (pollTimeslotsWinner.get(0).getPoints() == 0) {
             // :TODO: sent email to participants, event is evaluated but will not be held
             event.setEvaluated(true);
@@ -149,7 +131,6 @@ public class EventService implements Serializable {
             } else {
                 event.setLocation(pollLocationsWinner.get(0).getLocation());
             }
-
             if (pollTimeslotsWinner.get(0).getPoints().intValue() == pollTimeslotsWinner.get(1).getPoints().intValue()) {
                 ArrayList<Poll_Timeslots> temp = new ArrayList<>();
                 for (Poll_Timeslots poll_timeslot : pollTimeslotsWinner) {
