@@ -158,9 +158,9 @@ public class EventService implements Serializable {
                 }
                 if (event.isCreatorIsPreferred()) {
                     ArrayList<Poll_Timeslots> tempCreator = new ArrayList<>();
-                    /*for (Poll_Timeslots poll_timeslots: pollRepository.findByUsername(event.getCreator().getUsername()).getPoll_timeslots()) {
+                    for (Poll_Timeslots poll_timeslots: pollRepository.findFirstByUserUsername(event.getCreator().getUsername()).getPoll_timeslots()) {
                         tempCreator.add(poll_timeslots);
-                    }*/
+                    }
                     for (Poll_Timeslots pt : temp) {
                         for (Poll_Timeslots ptCreator : tempCreator) {
                             if (pt.equals(ptCreator)) {
