@@ -45,10 +45,6 @@ public class Timeslot implements Persistable<Integer>, Serializable, Comparable<
         this.end = end;
     }
 
-    public Integer getTimeslotId() {
-        return timeslotId;
-    }
-
     public void setTimeslotId(Integer timeslotId) {
         this.timeslotId = timeslotId;
     }

@@ -1,10 +1,15 @@
 package at.qe.event_manager.services;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Set;
 
 import at.qe.event_manager.model.Event;
+import at.qe.event_manager.model.Poll;
+import at.qe.event_manager.model.Poll_Locations;
+import at.qe.event_manager.model.Poll_Timeslots;
 import at.qe.event_manager.model.User;
 import at.qe.event_manager.repositories.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,5 +88,33 @@ public class EventService implements Serializable {
     public void deleteEvent(Event event) {
         eventRepository.delete(event);
         // :TODO: write some audit log stating who and when this user was permanently deleted.
+    }
+    
+    public void evaluatePolls(Event event) {
+    	Set<Poll> polls = event.getPolls();
+    	ArrayList<Poll_Locations> pollLocationsWinner = new ArrayList<>();
+    	ArrayList<Poll_Timeslots> pollTimeslotsWinner = new ArrayList<>();
+    	
+    	for(Poll poll : polls) {
+    		for(Poll_Locations pollLocation : poll.getPoll_locations()) {
+    			if(!pollLocationsWinner.contains(pollLocation)) {
+    				pollLocationsWinner.add(pollLocation);
+    			}
+    			else {
+    				pollLocationsWinner.get(pollLocationsWinner.indexOf(pollLocation)).addPoints(pollLocation);;
+    			}
+    		}
+    		for(Poll_Timeslots pollTimeslot : poll.getPoll_timeslots()) {
+    			if(!pollTimeslotsWinner.contains(pollTimeslot)) {
+    				pollTimeslotsWinner.add(pollTimeslot);
+    			}
+    			else {
+    				pollTimeslotsWinner.get(pollTimeslotsWinner.indexOf(pollTimeslot)).addPoints(pollTimeslot);;
+    			}
+    		}
+    	}
+    	System.out.println(pollLocationsWinner);
+    	System.out.println(pollTimeslotsWinner);
+    	
     }
 }

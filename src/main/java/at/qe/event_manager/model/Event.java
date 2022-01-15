@@ -4,7 +4,6 @@ import org.springframework.data.domain.Persistable;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.security.Timestamp;
 import java.util.Date;
 import java.util.Set;
 
@@ -36,11 +35,13 @@ public class Event implements Persistable<Integer>, Serializable, Comparable<Eve
     @OneToMany(mappedBy = "event")
     private Set<Poll> polls;
 
-    private Timestamp pollEndDate;
+    private Date pollEndDate;
 
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createDate;
+    
+    private boolean creatorIsPreferred;
 
     public Location getLocation() {
         return location;
@@ -98,11 +99,11 @@ public class Event implements Persistable<Integer>, Serializable, Comparable<Eve
         return polls;
     }
 
-    public Timestamp getPollEndDate() {
+    public Date getPollEndDate() {
         return pollEndDate;
     }
 
-    public void setPollEndDate(Timestamp pollEndDate) {
+    public void setPollEndDate(Date pollEndDate) {
         this.pollEndDate = pollEndDate;
     }
 
@@ -127,4 +128,12 @@ public class Event implements Persistable<Integer>, Serializable, Comparable<Eve
     public boolean isNew() {
         return (createDate == null);
     }
+
+	public boolean isCreatorIsPreferred() {
+		return creatorIsPreferred;
+	}
+
+	public void setCreatorIsPreferred(boolean creatorIsPreferred) {
+		this.creatorIsPreferred = creatorIsPreferred;
+	}
 }

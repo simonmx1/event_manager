@@ -15,6 +15,7 @@ public class Poll implements Persistable<Integer>, Serializable, Comparable<Poll
 
 	@Id
     @Column(name = "poll_id", nullable = false)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer pollId;
 
 

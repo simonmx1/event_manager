@@ -15,7 +15,7 @@ public class Poll_Timeslots {
     @ManyToOne
     private Timeslot timeslot;
 
-    private Integer rankWeight;
+    private Integer points;
 
     public Poll getPoll() {
         return poll;
@@ -33,11 +33,24 @@ public class Poll_Timeslots {
         this.timeslot = timeslot;
     }
 
-    public Integer getRankWeight() {
-        return rankWeight;
+    public Integer getPoints() {
+        return points;
     }
 
-    public void setRankWeight(Integer rankWeight) {
-        this.rankWeight = rankWeight;
+    public void setPoints(Integer points) {
+        this.points = points;
+    }
+    
+    public void addPoints(Poll_Timeslots poll_timeslot) {
+        this.points += poll_timeslot.getPoints();
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+    	if(o == null || !(o instanceof Poll_Timeslots)) {
+    		return false;
+    	}
+    	Poll_Timeslots pl = (Poll_Timeslots) o;
+    	return this.poll.getId() == pl.getPoll().getId() && this.timeslot.getId() == pl.getTimeslot().getId();
     }
 }
