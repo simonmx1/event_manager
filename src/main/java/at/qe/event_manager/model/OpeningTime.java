@@ -6,10 +6,10 @@ import java.util.Date;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import net.bytebuddy.build.ToStringPlugin;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.domain.Persistable;
 
-import static org.eclipse.jdt.internal.compiler.codegen.ConstantPool.ToString;
 
 /**
  * Entity representing users.
@@ -20,6 +20,7 @@ import static org.eclipse.jdt.internal.compiler.codegen.ConstantPool.ToString;
  */
 
 @Entity
+@OnDelete(action = OnDeleteAction.CASCADE)
 public class OpeningTime implements Persistable<Integer>, Serializable, Comparable<OpeningTime> {
 
     private static final long serialVersionUID = 1L;

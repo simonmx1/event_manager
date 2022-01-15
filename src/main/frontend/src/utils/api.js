@@ -160,6 +160,18 @@ export default {
             ).then(response => {
                 return response.data;
             }).catch(() => false);
+        },
+        async delete(text) {
+            return await axios.post('/api/tag/delete', {'text': text},
+                {
+                    headers: {
+                        "Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt')),
+                        "Content-Type": "application/json"
+                    }
+                }
+            ).then(response => {
+                return response;
+            }).catch(() => false);
         }
     }
 }

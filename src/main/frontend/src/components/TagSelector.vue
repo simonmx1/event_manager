@@ -4,10 +4,22 @@
         v-model="model"
         :items="items"
         label="Tags"
+        :search-input.sync="search"
         multiple
         outlined
         dense
     >
+      <template v-slot:no-data>
+        <v-list-item>
+          <span class="subheading">Create</span>
+          <v-chip style="margin-left: 10px"
+              color="#437505"
+              small
+          >
+            {{ search }}
+          </v-chip>
+        </v-list-item>
+      </template>
       <template v-slot:selection="{ attrs, item, parent }">
         <v-chip
             v-bind="attrs"
@@ -34,6 +46,16 @@
         >
           {{ item.text }}
         </v-chip>
+        <v-spacer></v-spacer>
+        <v-btn
+            icon
+            @click.stop.prevent = "deleteItem(item)"
+        >
+          <v-icon
+          small>
+            mdi-delete
+          </v-icon>
+        </v-btn>
       </template>
     </v-combobox>
   </v-container>
@@ -89,12 +111,18 @@ export default {
           .toLowerCase()
           .indexOf(query.toString().toLowerCase()) > -1
     },
+    deleteItem(item) {
+      console.log(item.text)
+      api.tags.delete(item.text).then(() => this.getTags())
+    },
+    getTags(){
+      api.tags.getAll().then(response => {
+        this.items = response
+      })
+    }
   },
   mounted() {
-    api.tags.getAll().then(response => {
-      console.log(response)
-      this.items = response
-    })
+    this.getTags()
   }
 }
 </script>
