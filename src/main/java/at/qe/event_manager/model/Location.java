@@ -14,7 +14,7 @@ import org.springframework.data.domain.Persistable;
  * University of Innsbruck.
  */
 @Entity
-public class Location implements Persistable<String>, Serializable, Comparable<Location> {
+public class Location implements Persistable<Integer>, Serializable, Comparable<Location> {
 
     private static final long serialVersionUID = 1L;
 
@@ -34,19 +34,15 @@ public class Location implements Persistable<String>, Serializable, Comparable<L
     boolean enabled = true;
 
     @ManyToMany
-    @JoinTable(name = "location_tag")
+    @JoinTable(name = "location_tags")
     private Set<Tag> tags;
 
 
-    @OneToMany (mappedBy = "location")
+    @OneToMany (mappedBy = "location", fetch=FetchType.EAGER)
     private Set<Poll_Locations> poll_locations;
 
     public void setLocationId(int locationId) {
         this.locationId = locationId;
-    }
-
-    public Integer getLocationId() {
-        return locationId;
     }
 
     public String getName() {
@@ -103,12 +99,12 @@ public class Location implements Persistable<String>, Serializable, Comparable<L
 
     @Override
     public int compareTo(Location o) {
-        return this.locationId.compareTo(o.getLocationId());
+        return this.locationId.compareTo(o.getId());
     }
 
     @Override
-    public String getId() {
-        return Integer.toString(getLocationId());
+    public Integer getId() {
+        return locationId;
     }
 
     @Override

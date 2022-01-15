@@ -1,8 +1,6 @@
 package at.qe.event_manager.repositories;
 
 import java.io.Serializable;
-import java.util.List;
-
 import at.qe.event_manager.model.Location;
 import org.springframework.data.jpa.repository.Query;
 

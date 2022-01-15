@@ -3,7 +3,10 @@ package at.qe.event_manager.model;
 import java.io.Serializable;
 
 public class Poll_Timeslots_Id implements Serializable {
-    Integer poll;
+
+	private static final long serialVersionUID = 1L;
+	
+	Integer poll;
     Integer timeslot;
 
     public Integer getPoll() {

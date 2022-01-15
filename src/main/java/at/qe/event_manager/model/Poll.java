@@ -15,13 +15,14 @@ public class Poll implements Persistable<Integer>, Serializable, Comparable<Poll
 
 	@Id
     @Column(name = "poll_id", nullable = false)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer pollId;
 
 
-    @OneToMany (mappedBy = "poll")
+    @OneToMany (mappedBy = "poll", fetch=FetchType.EAGER)
     private Set<Poll_Timeslots> poll_timeslots;
 
-    @OneToMany (mappedBy = "poll")
+    @OneToMany (mappedBy = "poll", fetch=FetchType.EAGER)
     private Set<Poll_Locations> poll_locations;
 
     @ManyToOne
