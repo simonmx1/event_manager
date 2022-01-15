@@ -1,6 +1,7 @@
 package at.qe.event_manager.model;
 
 import javax.persistence.*;
+import java.util.Comparator;
 
 @Entity
 @Table(name = "poll_locations")

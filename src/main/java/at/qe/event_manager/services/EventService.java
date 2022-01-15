@@ -1,19 +1,14 @@
 package at.qe.event_manager.services;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Set;
+import java.util.*;
 
-import at.qe.event_manager.model.Event;
-import at.qe.event_manager.model.Poll;
-import at.qe.event_manager.model.Poll_Locations;
-import at.qe.event_manager.model.Poll_Timeslots;
-import at.qe.event_manager.model.User;
+import at.qe.event_manager.model.*;
 import at.qe.event_manager.repositories.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
@@ -31,6 +26,7 @@ public class EventService implements Serializable {
 	
 	@Autowired
     private EventRepository eventRepository;
+
 
     /**
      * Returns a collection of all users.
@@ -101,20 +97,37 @@ public class EventService implements Serializable {
     				pollLocationsWinner.add(pollLocation);
     			}
     			else {
-    				pollLocationsWinner.get(pollLocationsWinner.indexOf(pollLocation)).addPoints(pollLocation);;
+    				pollLocationsWinner.get(pollLocationsWinner.indexOf(pollLocation)).addPoints(pollLocation);
     			}
     		}
     		for(Poll_Timeslots pollTimeslot : poll.getPoll_timeslots()) {
     			if(!pollTimeslotsWinner.contains(pollTimeslot)) {
-    				pollTimeslotsWinner.add(pollTimeslot);
+                    pollTimeslotsWinner.add(pollTimeslot);
     			}
+                else if (pollTimeslotsWinner.get(pollLocationsWinner.indexOf(pollTimeslot)).getPoints() == 0 || pollTimeslot.getPoints() == 0){
+                    pollTimeslotsWinner.get(pollLocationsWinner.indexOf(pollTimeslot)).setPoints(0);
+                }
     			else {
     				pollTimeslotsWinner.get(pollTimeslotsWinner.indexOf(pollTimeslot)).addPoints(pollTimeslot);;
     			}
     		}
     	}
+        Collections.sort(pollLocationsWinner, new Comparator(){
+            public int compare(Object o1, Object o2) {
+                Poll_Locations pl1 = (Poll_Locations) o1;
+                Poll_Locations pl2 = (Poll_Locations) o2;
+                return pl1.getPoints().compareTo(pl2.getPoints());
+            }
+        });
+        Collections.sort(pollTimeslotsWinner, new Comparator(){
+            public int compare(Object o1, Object o2) {
+                Poll_Timeslots pt1 = (Poll_Timeslots) o1;
+                Poll_Timeslots pt2 = (Poll_Timeslots) o2;
+                return pt1.getPoints().compareTo(pt2.getPoints());
+            }
+        });
     	System.out.println(pollLocationsWinner);
     	System.out.println(pollTimeslotsWinner);
-    	
+        System.out.println(pollLocationsWinner.get(0).getPoints());
     }
 }
