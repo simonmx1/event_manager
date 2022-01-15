@@ -3,7 +3,6 @@ package at.qe.event_manager.services;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
-import at.qe.event_manager.model.Event;
 import at.qe.event_manager.model.Poll;
 import at.qe.event_manager.model.User;
 import at.qe.event_manager.repositories.PollRepository;
