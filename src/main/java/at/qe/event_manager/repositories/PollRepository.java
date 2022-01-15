@@ -17,4 +17,7 @@ public interface PollRepository extends AbstractRepository<Poll, Integer>, Seria
 
     @Query("SELECT p FROM Poll p WHERE :id = p.id")
     Poll findFirstById(Integer id);
+
+    @Query("SELECT p FROM Poll p WHERE p.user_username = :user_username")
+    Poll findFirstByUsername(String user_username);
 }

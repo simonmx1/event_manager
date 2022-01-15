@@ -5,10 +5,9 @@ import java.util.*;
 
 import at.qe.event_manager.model.*;
 import at.qe.event_manager.repositories.EventRepository;
+import at.qe.event_manager.repositories.PollRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,6 +25,8 @@ public class EventService implements Serializable {
 	
 	@Autowired
     private EventRepository eventRepository;
+    @Autowired
+    private PollRepository pollRepository;
 
 
     /**
@@ -87,6 +88,7 @@ public class EventService implements Serializable {
     }
     
     public void evaluatePolls(Event event) {
+        //System.out.println(pollRepository.findFirstByUsername(event.getCreator().getUsername()));
     	Set<Poll> polls = event.getPolls();
     	ArrayList<Poll_Locations> pollLocationsWinner = new ArrayList<>();
     	ArrayList<Poll_Timeslots> pollTimeslotsWinner = new ArrayList<>();
@@ -104,30 +106,85 @@ public class EventService implements Serializable {
     			if(!pollTimeslotsWinner.contains(pollTimeslot)) {
                     pollTimeslotsWinner.add(pollTimeslot);
     			}
-                else if (pollTimeslotsWinner.get(pollLocationsWinner.indexOf(pollTimeslot)).getPoints() == 0 || pollTimeslot.getPoints() == 0){
-                    pollTimeslotsWinner.get(pollLocationsWinner.indexOf(pollTimeslot)).setPoints(0);
+                else if (pollTimeslotsWinner.get(pollTimeslotsWinner.indexOf(pollTimeslot)).getPoints() == 0 || pollTimeslot.getPoints() == 0){
+                    pollTimeslotsWinner.get(pollTimeslotsWinner.indexOf(pollTimeslot)).setPoints(0);
                 }
     			else {
     				pollTimeslotsWinner.get(pollTimeslotsWinner.indexOf(pollTimeslot)).addPoints(pollTimeslot);;
     			}
     		}
     	}
-        Collections.sort(pollLocationsWinner, new Comparator(){
-            public int compare(Object o1, Object o2) {
-                Poll_Locations pl1 = (Poll_Locations) o1;
-                Poll_Locations pl2 = (Poll_Locations) o2;
-                return pl1.getPoints().compareTo(pl2.getPoints());
+        Comparator<Poll_Locations> poll_LocationsComparator = new Poll_LocationsComparator();
+        Comparator<Poll_Timeslots> poll_timeslotsComparator = new Poll_TimsSlotsComparator();
+        Collections.sort(pollLocationsWinner, poll_LocationsComparator);
+        Collections.sort(pollTimeslotsWinner, poll_timeslotsComparator);
+        if (pollTimeslotsWinner.get(0).getPoints() == 0) {
+            // :TODO: sent email to participants, event is evaluated but will not be held
+            event.setEvaluated(true);
+        } else {
+            if (pollLocationsWinner.get(0).getPoints() == pollLocationsWinner.get(1).getPoints()) {
+                ArrayList<Poll_Locations> temp = new ArrayList<>();
+                for (Poll_Locations poll_location : pollLocationsWinner) {
+                    if (poll_location.getPoints() == pollLocationsWinner.get(0).getPoints()) {
+                        temp.add(poll_location);
+                    }
+                }
+                if (event.isCreatorIsPreferred()) {
+                    ArrayList<Poll_Locations> tempCreator = new ArrayList<>();
+                    /*for (Poll_Locations poll_location : pollRepository.findByUsername(event.getCreator().getUsername()).getPoll_locations()) {
+                        tempCreator.add(poll_location);
+                    }*/
+                    for (Poll_Locations pl : temp) {
+                        for (Poll_Locations plCreator : tempCreator) {
+                            if (pl.equals(plCreator)) {
+                                temp.set(temp.indexOf(pl), plCreator);
+                            }
+                        }
+                    }
+                    Collections.sort(temp, poll_LocationsComparator);
+                    event.setLocation(temp.get(0).getLocation());
+                } else {
+                    Random random = new Random();
+                    int min = 0;
+                    int max = temp.size() - 1;
+                    int index = random.nextInt(max + min) + min;
+                    event.setLocation(temp.get(index).getLocation());
+                }
+            } else if (pollTimeslotsWinner.get(0).getPoints() == pollTimeslotsWinner.get(1).getPoints()) {
+                ArrayList<Poll_Timeslots> temp = new ArrayList<>();
+                for (Poll_Timeslots poll_timeslot : pollTimeslotsWinner) {
+                    if (poll_timeslot.getPoints() == pollTimeslotsWinner.get(0).getPoints()) {
+                        temp.add(poll_timeslot);
+                    }
+                }
+                if (event.isCreatorIsPreferred()) {
+                    ArrayList<Poll_Timeslots> tempCreator = new ArrayList<>();
+                    /*for (Poll_Timeslots poll_timeslots: pollRepository.findByUsername(event.getCreator().getUsername()).getPoll_timeslots()) {
+                        tempCreator.add(poll_timeslots);
+                    }*/
+                    for (Poll_Timeslots pt : temp) {
+                        for (Poll_Timeslots ptCreator : tempCreator) {
+                            if (pt.equals(ptCreator)) {
+                                temp.set(temp.indexOf(pt), ptCreator);
+                            }
+                        }
+                    }
+                    Collections.sort(temp, poll_timeslotsComparator);
+                    event.setTimeslot(temp.get(0).getTimeslot());
+                } else {
+                    Random random = new Random();
+                    int min = 0;
+                    int max = temp.size() - 1;
+                    int index = random.nextInt(max + min) + min;
+                    event.setTimeslot(temp.get(index).getTimeslot());
+                }
+            } else {
+                // :TODO: sent email to participants, event is evaluated
+                event.setLocation(pollLocationsWinner.get(0).getLocation());
+                event.setTimeslot(pollTimeslotsWinner.get(0).getTimeslot());
+                event.setEvaluated(true);
             }
-        });
-        Collections.sort(pollTimeslotsWinner, new Comparator(){
-            public int compare(Object o1, Object o2) {
-                Poll_Timeslots pt1 = (Poll_Timeslots) o1;
-                Poll_Timeslots pt2 = (Poll_Timeslots) o2;
-                return pt1.getPoints().compareTo(pt2.getPoints());
-            }
-        });
-    	System.out.println(pollLocationsWinner);
-    	System.out.println(pollTimeslotsWinner);
-        System.out.println(pollLocationsWinner.get(0).getPoints());
+        }
+        eventRepository.save(event);
     }
 }

@@ -52,14 +52,6 @@ public class Poll_Timeslots {
     		return false;
     	}
     	Poll_Timeslots pl = (Poll_Timeslots) o;
-    	return this.poll.getId() == pl.getPoll().getId() && this.timeslot.getId() == pl.getTimeslot().getId();
-    }
-}
-
-class SortPollTimeslotsByPoints implements Comparator<Poll_Timeslots> {
-
-    @Override
-    public int compare(Poll_Timeslots pt1, Poll_Timeslots pt2) {
-        return pt1.getPoints().compareTo(pt2.getPoints());
+        return this.timeslot.getId() == pl.getTimeslot().getId();
     }
 }

@@ -20,10 +20,12 @@ public class SchedulerEventService {
 	@Async
 	public void cronJobSch() throws Exception {
 		for(Event event : eventService.getAllEvents()) {
-			LocalDateTime currentDateTime = LocalDateTime.now();
-			LocalDateTime pollEndDate = LocalDateTime.ofInstant(event.getPollEndDate().toInstant(), ZoneId.systemDefault());
-			if(currentDateTime.compareTo(pollEndDate) > 0) {
-				eventService.evaluatePolls(event);
+			if (!event.isEvaluated()) {
+				LocalDateTime currentDateTime = LocalDateTime.now();
+				LocalDateTime pollEndDate = LocalDateTime.ofInstant(event.getPollEndDate().toInstant(), ZoneId.systemDefault());
+				if (currentDateTime.compareTo(pollEndDate) > 0) {
+					eventService.evaluatePolls(event);
+				}
 			}
 		}
 	}

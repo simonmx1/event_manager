@@ -52,6 +52,7 @@ public class Poll_Locations {
     		return false;
     	}
     	Poll_Locations pl = (Poll_Locations) o;
-    	return this.poll.getId() == pl.getPoll().getId() && this.location.getId() == pl.getLocation().getId();
+    	return this.location.getId() == pl.getLocation().getId();
     }
 }
+

@@ -41,7 +41,8 @@ public class Event implements Persistable<Integer>, Serializable, Comparable<Eve
     @Temporal(TemporalType.TIMESTAMP)
     private Date createDate;
     
-    private boolean creatorIsPreferred;
+    boolean creatorIsPreferred = false;
+    boolean isEvaluated = false;
 
     public Location getLocation() {
         return location;
@@ -119,6 +120,22 @@ public class Event implements Persistable<Integer>, Serializable, Comparable<Eve
         this.createDate = createDate;
     }
 
+    public boolean isCreatorIsPreferred() {
+        return creatorIsPreferred;
+    }
+
+    public void setCreatorIsPreferred(boolean creatorIsPreferred) {
+        this.creatorIsPreferred = creatorIsPreferred;
+    }
+
+    public boolean isEvaluated() {
+        return isEvaluated;
+    }
+
+    public void setEvaluated(boolean evaluated) {
+        isEvaluated = evaluated;
+    }
+
     @Override
     public int compareTo(Event event) {
         return this.eventId.compareTo(event.eventId);
@@ -129,11 +146,4 @@ public class Event implements Persistable<Integer>, Serializable, Comparable<Eve
         return (createDate == null);
     }
 
-	public boolean isCreatorIsPreferred() {
-		return creatorIsPreferred;
-	}
-
-	public void setCreatorIsPreferred(boolean creatorIsPreferred) {
-		this.creatorIsPreferred = creatorIsPreferred;
-	}
 }
