@@ -36,7 +36,7 @@
         </a>
       </template>
       <template v-slot:item.tags="{ item }">
-        <v-chip-group>
+        <v-item-group>
           <v-item
               v-for="(tag) in item.tags"
               :key="tag"
@@ -47,7 +47,7 @@
               {{ tag.tag }}
             </v-chip>
           </v-item>
-        </v-chip-group>
+        </v-item-group>
       </template>
       <template v-slot:item.enabled="{ item }">
         <v-simple-checkbox

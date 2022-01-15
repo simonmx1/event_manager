@@ -52,11 +52,9 @@ router.beforeEach(async (to, from, next) => {
     })
     if (to.name !== 'Login' && session === false) {
         next({name: 'Login'})
-    }
+    } else next()
     if (to.name === 'UserManagement' && session !== false && session[1] === 'ADMIN')
         next()
-
-
     if (to.name === 'LocationManagement' && session !== false && (session[1] === 'LOCATION_MANAGER' || session[1] === 'ADMIN'))
         next()
     else
