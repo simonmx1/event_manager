@@ -37,7 +37,6 @@ public class Location implements Persistable<Integer>, Serializable, Comparable<
     @JoinTable(name = "locationTags")
     private Set<Tag> tags;
 
-
     @OneToMany (mappedBy = "location", fetch=FetchType.EAGER)
     private Set<PollLocations> poll_locations;
 
