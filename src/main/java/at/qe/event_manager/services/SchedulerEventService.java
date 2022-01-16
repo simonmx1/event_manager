@@ -18,7 +18,7 @@ public class SchedulerEventService {
 	
 	@Scheduled(fixedRate = 5000*60)
 	@Async
-	public void cronJobSch() throws Exception {
+	public void scheduleEventEvaluation() throws Exception {
 		for(Event event : eventService.getAllEvents()) {
 			if (!event.isEvaluated()) {
 				LocalDateTime currentDateTime = LocalDateTime.now();

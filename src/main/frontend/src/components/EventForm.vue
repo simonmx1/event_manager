@@ -18,7 +18,7 @@
         :items="availableUsers"
         :search-input.sync="search"
         :filter="filter"
-        label="Participant"
+        label="Participants"
         item-text="id"
         multiple
         outlined
@@ -58,6 +58,9 @@
         <v-chip>{{ item.email }}, {{ item.username }}</v-chip>
       </template>
     </v-combobox>
+    <template>
+    <location-selector/>
+    </template>
     <div v-if="loadTimeslots">
       <v-row v-for="(timeslot, index) in event.timeslots" :key="index" ref="timeslots">
         <v-col class=".col-auto">
@@ -83,9 +86,11 @@
 
 <script>
 import api from "@/utils/api";
+import LocationSelector from './LocationSelector.vue';
 
 export default {
   name: "EventForm",
+  components: { LocationSelector },
   props: {
     event: {
       type: Object, default: () => ({
@@ -141,11 +146,11 @@ export default {
         this.loadTimeslots = true;
       });
 
-    }
+    },
   },
   mounted() {
     this.currentEvent = this.event;
-    api.getUsers().then(response => this.availableUsers = response).then(() => console.log(this.availableUsers))
+    api.getUsers().then(response => this.availableUsers = response)
   }
 }
 </script>

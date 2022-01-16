@@ -31,7 +31,7 @@
           <v-spacer/>
 
 
-          <v-dialog v-model="createDialog">
+          <v-dialog v-model="createDialog" persistent>
             <template v-slot:activator="{ on, attrs }">
               <v-btn
                   color="primary"
