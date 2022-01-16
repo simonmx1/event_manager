@@ -1,7 +1,8 @@
 package at.qe.event_manager.repositories;
 
 import java.io.Serializable;
-import at.qe.event_manager.model.Location;
+import at.qe.event_manager.model.Poll;
+
 import org.springframework.data.jpa.repository.Query;
 
 /**
@@ -12,8 +13,10 @@ import org.springframework.data.jpa.repository.Query;
  * University of Innsbruck.
  */
 
-public interface LocationRepository extends AbstractRepository<Location, Integer>, Serializable {
+public interface PollRepository extends AbstractRepository<Poll, Integer>, Serializable {
 
-    @Query("SELECT l FROM Location l WHERE :locationId = l.locationId")
-    Location findFirstByLocationId(Integer locationId);
+    @Query("SELECT p FROM Poll p WHERE :id = p.id")
+    Poll findFirstById(Integer id);
+
+    Poll findFirstByUserUsername(String user_username);
 }

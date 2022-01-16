@@ -197,5 +197,22 @@ export default {
                 return response;
             }).catch(() => false);
         }
+    },
+    event: {
+        async create() {
+            return await axios.post('/api/event/create', {
+
+                }
+            ).then(response => {
+                return response
+            }).catch(() => false);
+        },
+        async getAll() {
+            return await axios.get('/api/event/getAll',
+                {headers: {"Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt'))}}
+            ).then(response => {
+                return response.data;
+            }).catch(() => false);
+        }
     }
 }

@@ -1,0 +1,12 @@
+package at.qe.event_manager.services;
+
+import at.qe.event_manager.model.PollLocations;
+
+import java.util.Comparator;
+
+public class PollLocationsComparator implements Comparator<PollLocations> {
+    @Override
+    public int compare(PollLocations pl1, PollLocations pl2) {
+            return pl1.getPoints().compareTo(pl2.getPoints()) * (-1);
+    }
+}

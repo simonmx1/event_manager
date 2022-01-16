@@ -38,11 +38,14 @@ public class Location implements Persistable<Integer>, Serializable, Comparable<
     boolean enabled = true;
 
     @ManyToMany
-    @JoinTable(name = "location_tag")
+    @JoinTable(name = "locationTags")
     private Set<Tag> tags;
 
     @OneToMany(mappedBy = "location", cascade = CascadeType.ALL)
     private List<OpeningTime> openingTimes;
+
+    @OneToMany (mappedBy = "location", fetch=FetchType.EAGER)
+    private Set<PollLocations> poll_locations;
 
     public List<OpeningTime> getOpeningTimes() {
         return openingTimes;
@@ -110,7 +113,7 @@ public class Location implements Persistable<Integer>, Serializable, Comparable<
 
     @Override
     public int compareTo(Location o) {
-        return this.locationId.compareTo(o.getLocationId());
+        return this.locationId.compareTo(o.getId());
     }
 
     @Override

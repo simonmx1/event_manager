@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 
 /**
@@ -16,6 +17,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
  * University of Innsbruck.
  */
 @SpringBootApplication
+@EnableScheduling
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 /*
  * Prevent spring from trying to autowire the websocket-infrastructure: Exclude

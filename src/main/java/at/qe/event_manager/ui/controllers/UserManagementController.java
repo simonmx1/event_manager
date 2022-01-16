@@ -19,10 +19,6 @@ import org.springframework.web.bind.annotation.*;
 
 /**
  * Controller for the user list view.
- * <p>
- * This class is part of the skeleton project provided for students of the
- * courses "Software Architecture" and "Software Engineering" offered by the
- * University of Innsbruck.
  */
 @RestController
 @RequestMapping("/api/users")
@@ -39,8 +35,8 @@ public class UserManagementController implements Serializable {
      * @return
      */
     @GetMapping("/getAll")
-    @PreAuthorize("hasRole('ADMIN')")
     public Collection<User> getUsers() {
+        // TODO: Addition non admin method for event creation
         return userService.getAllUsers();
     }
 

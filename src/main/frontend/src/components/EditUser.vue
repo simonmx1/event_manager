@@ -38,7 +38,7 @@ import api from "@/utils/api";
 import UserForm from "@/components/UserForm";
 
 export default {
-  name: 'Edit',
+  name: 'EditUser',
   components: {UserForm},
   props: {
     user: {type: Object, required: true},

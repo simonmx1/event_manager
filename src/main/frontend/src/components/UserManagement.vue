@@ -48,7 +48,7 @@
             <register :admin="true" @close="userCreated()"/>
           </v-dialog>
           <v-dialog v-model="deleteDialog" max-width="500px">
-            <v-card >
+            <v-card>
               <v-card-title style="width: 100%">Are you sure you want to delete this user?</v-card-title>
               <v-card-actions>
                 <v-spacer></v-spacer>

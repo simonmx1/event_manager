@@ -23,9 +23,14 @@ const routes = [
         component: () => import('@/components/UserManagement.vue')
     },
     {
-        path: '/location',
+        path: '/locations',
         name: 'LocationManagement',
         component: () => import('@/components/LocationManagement.vue')
+    },
+    {
+        path: '/events',
+        name: 'EventManagement',
+        component: () => import('@/components/EventManagement.vue')
     },
     {
         path: '/accountSettings',
@@ -47,13 +52,15 @@ router.beforeEach(async (to, from, next) => {
     })
     if (to.name !== 'Login' && session === false) {
         next({name: 'Login'})
-    }
-    if (to.name === 'UserManagement') {
-        api.user.loggedIn().then(response => {
-            if (to.name === 'UserManagement' && response !== false && response[1] === 'ADMIN') next()
-            else next(false)
-        })
     } else next()
+
+    if (to.name === 'UserManagement' && (session === false || session[1] !== 'ADMIN'))
+        next(false)
+
+    if (to.name === 'LocationManagement' && (session === false || (session[1] !== 'LOCATION_MANAGER' || session[1] !== 'ADMIN')))
+        next(false)
+
+    next()
 })
 
 export default router

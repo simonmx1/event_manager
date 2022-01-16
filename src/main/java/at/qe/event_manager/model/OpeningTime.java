@@ -33,17 +33,22 @@ public class OpeningTime implements Persistable<Integer>, Serializable, Comparab
     private Time start;
     private Time end;
 
+    @ManyToOne
+    @JoinColumn(name = "locationLocationId")
+    private Location location;
+
+    /*
+     @ManyToOne
+    @JoinColumn(name = "location_id")
+    @JsonIgnore
+    private Location location;
+     */
 
     private int weekday; //monday=0 to sunday=6
 
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createDate;
-
-    @ManyToOne
-    @JoinColumn(name = "location_id")
-    @JsonIgnore
-    private Location location;
 
     public Location getLocation() {
         return location;
@@ -74,7 +79,7 @@ public class OpeningTime implements Persistable<Integer>, Serializable, Comparab
     }
 
     public void setOpeningTimeId(Integer openingTimeId) {
-        openingTimeId = openingTimeId;
+        this.openingTimeId = openingTimeId;
     }
 
     public Date getCreateDate() {
