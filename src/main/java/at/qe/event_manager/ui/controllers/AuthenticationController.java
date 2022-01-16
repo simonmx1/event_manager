@@ -4,6 +4,7 @@ import at.qe.event_manager.model.User;
 import at.qe.event_manager.payload.request.LoggedInRequest;
 import at.qe.event_manager.payload.request.LoginRequest;
 import at.qe.event_manager.payload.response.MessageResponse;
+import at.qe.event_manager.services.MailService;
 import at.qe.event_manager.services.UserService;
 import at.qe.event_manager.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +62,7 @@ public class AuthenticationController {
         if (userService.createUser(user) == null) {
             return new ResponseEntity<>("Error: Username is already taken!", HttpStatus.OK);
         } else {
+        	MailService.sendUserRegisterMessage(user);
             return new ResponseEntity<>("User registered successfully!", HttpStatus.CREATED);
         }
     }
