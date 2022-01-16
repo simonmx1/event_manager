@@ -199,9 +199,9 @@ export default {
         }
     },
     event: {
-        async create() {
+        async create(event) {
             return await axios.post('/api/event/create', {
-
+                    'event': event
                 }
             ).then(response => {
                 return response

@@ -53,7 +53,7 @@
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn @click="createDialog = false" color="primary">Cancel</v-btn>
-                <v-btn @click="deleteEventConfirm()" color="green">Create</v-btn>
+                <v-btn @click="tryCreate()" color="green">Create</v-btn>
                 <v-spacer></v-spacer>
               </v-card-actions>
             </v-card>
@@ -124,14 +124,11 @@
               {{formatTimeSlot(item.timeslot)}}
         </span>
       </template>
+      <template v-slot:item.evaluated="{ item }">
+        <v-checkbox disabled v-model="item.evaluated"/>
+      </template>
       <template v-slot:item.createDate="{ item }">
         {{ formatDate(item.createDate) }}
-      </template>
-      <template v-slot:item.enabled="{ item }">
-        <v-simple-checkbox
-            v-model="item.enabled"
-            disabled
-        ></v-simple-checkbox>
       </template>
       <template v-slot:item.actions="{ item }">
         <v-icon
@@ -173,6 +170,7 @@ export default {
       {text: 'Participants', align: 'left', value: 'participants'},
       {text: 'Location', align: 'left', value: 'location'},
       {text: 'Timeslot', align: 'left', value: 'timeslot'},
+      {text: 'Poll ended', align: 'left', value: 'evaluated'},
       {text: 'Created', align: 'left', value: 'createDate'},
       {text: 'Actions', value: 'actions'},
     ],
@@ -208,7 +206,10 @@ export default {
       this.deleteDialog = false
     },
     getEvents() {
-      api.event.getAll().then(response => this.events = response)
+      api.event.getAll().then(response => this.events = response).then(() => console.log(this.events))
+    },
+    tryCreate(){
+
     }
   },
   mounted() {

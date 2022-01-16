@@ -1,6 +1,7 @@
 package at.qe.event_manager.ui.controllers;
 
 import at.qe.event_manager.model.Event;
+import at.qe.event_manager.payload.request.EventCreationRequest;
 import at.qe.event_manager.payload.response.MessageResponse;
 import at.qe.event_manager.services.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,11 @@ public class EventManagementController {
     @ResponseBody
     public Event get(@RequestParam(name = "id") Integer id) {
         return eventService.loadEvent(id);
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<?> create(@RequestBody EventCreationRequest eventCreationRequest) {
+        System.out.println(eventCreationRequest.toString());
     }
 
     @PostMapping("/edit")
