@@ -162,17 +162,17 @@ export default {
       this.deleteDialog = true;
     },
     deleteUserConfirm() {
-      api.deleteUser(this.currentUser.username).then(() => this.getUsers())
+      api.user.delete(this.currentUser.username).then(() => this.getUsers())
       this.currentUser = null;
       this.deleteDialog = false
     },
     getUsers() {
-      api.getUsers().then(response => this.users = response)
+      api.user.getAll().then(response => this.users = response)
     }
   },
   mounted() {
     this.getUsers()
-    api.loggedIn().then(response => {if (response !== false) {this.loggedInUser = response[0]}})
+    api.user.loggedIn2().then(response => {if (response !== false) {this.loggedInUser = response[0]}})
   }
 }
 </script>

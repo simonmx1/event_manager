@@ -47,7 +47,7 @@ export default {
       this.$refs.form.validate()
     },
     register(event) {
-      api.register(event)
+      api.user.register(event)
           .then(response => {
             this.success = response.status === 201;
             this.response = response.data
