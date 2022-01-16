@@ -46,7 +46,7 @@
             <v-card>
               <v-toolbar color="primary">
                 <v-card-title>
-                Create Event
+                  Create Event
                 </v-card-title>
               </v-toolbar>
               <event-form class="pa-5"/>
@@ -75,13 +75,54 @@
         </v-toolbar>
       </template>
 
-      <template v-slot:item.role="{ item }">
-        <v-chip
-            :color="getColor(item.role)"
-            dark
+      <template v-slot:item.participants="{ item }">
+        <v-menu
+            transition="slide-y-transition"
+            bottom
+            offset-y
         >
-          {{ item.role }}
-        </v-chip>
+          <template v-if="item.participants.length > 0" v-slot:activator="{ on, attrs }">
+            <v-btn
+                dark
+                v-bind="attrs"
+                v-on="on"
+                icon
+            >
+              <v-icon>
+                mdi-account-multiple
+              </v-icon>
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-item
+                v-for="(participants,id) in item.participants"
+                :key="id"
+            >
+              <v-chip
+                  color="#437505">
+                {{ participants.email }}
+              </v-chip>
+              <v-chip
+                  style="margin-left: 5px"
+                  color="#054375">
+                {{ participants.username }}
+              </v-chip>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </template>
+      <template v-slot:item.location="{ item }">
+        <span v-if="item.location">
+              {{item.location.name}}
+          <template>
+            <location-info-dialog :current-location="item.location"></location-info-dialog>
+          </template>
+        </span>
+      </template>
+      <template v-slot:item.timeslot="{ item }">
+        <span v-if="item.timeslot">
+              {{formatTimeSlot(item.timeslot)}}
+        </span>
       </template>
       <template v-slot:item.createDate="{ item }">
         {{ formatDate(item.createDate) }}
@@ -115,10 +156,11 @@
 <script>
 import EventForm from "@/components/EventForm";
 import api from "@/utils/api";
+import LocationInfoDialog from "@/components/LocationInfoDialog";
 
 export default {
   name: "EventManagement",
-  components: {EventForm},
+  components: {LocationInfoDialog, EventForm},
   data: () => ({
     createDialog: false,
     deleteDialog: false,
@@ -138,6 +180,15 @@ export default {
   methods: {
     formatDate(date) {
       return new Date(date).toISOString().slice(0, 10);
+    },
+    formatTimeSlot(timeslot){
+      return this.formatTimeStamp(timeslot.start) + " - "  + this.formatTimeStamp(timeslot.end)
+    },
+    formatTimeStamp(timestamp){
+      //2023-01-02T19:15:00.000+00:00
+      const date = new Date(timestamp).toISOString().slice(0, 10)
+      const time = new Date(timestamp).toISOString().slice(11, 16)
+      return time + " " + date
     },
     eventCreated() {
       this.getEvents()

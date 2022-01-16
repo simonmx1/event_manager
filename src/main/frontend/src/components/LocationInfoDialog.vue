@@ -32,7 +32,7 @@
               Location
             </th>
             <th class="text-right">
-              <a :href="'//' + currentLocation.menu" target="_blank">
+              <a :href="'//' + currentLocation.location" target="_blank" style="text-decoration: none">
                 <v-icon>
                   mdi-map-search
                 </v-icon>
