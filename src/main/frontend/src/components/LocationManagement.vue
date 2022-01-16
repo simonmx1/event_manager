@@ -29,7 +29,7 @@
           <v-spacer/>
           <v-dialog
               v-model="createDialog"
-              width="500"
+              width="1000"
               persistent
           >
             <template v-slot:activator="{ on, attrs }">
@@ -91,8 +91,11 @@
                 dark
                 v-bind="attrs"
                 v-on="on"
+                icon
             >
-              ...
+              <v-icon>
+                mdi-clock-time-four
+              </v-icon>
             </v-btn>
           </template>
           <v-list>
@@ -208,7 +211,7 @@ export default {
       this.deleteDialog = true;
     },
     deleteLocationConfirm() {
-      api.deleteLocation(this.currentLocation.locationId).then(() => this.getLocations())
+      api.location.delete(this.currentLocation.locationId).then(() => this.getLocations())
       this.deleteDialog = false
     },
     locationCreated() {
@@ -216,7 +219,7 @@ export default {
       this.createDialog = false
     },
     getLocations() {
-      api.getLocations().then(response => {
+      api.location.getAll().then(response => {
         this.locations = response
         this.locations.forEach(item => this.sortByWeekday(item.openingTimes))
       });

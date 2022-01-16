@@ -3,7 +3,8 @@
     <v-combobox
         v-model="model"
         :items="items"
-        label="Combobox"
+        label="Tags"
+        :search-input.sync="search"
         multiple
         outlined
         dense
@@ -11,8 +12,7 @@
       <template v-slot:selection="{ attrs, item, parent }">
         <v-chip
             v-bind="attrs"
-            color="primary"
-            label
+            color="#437505"
             small
         >
           <span class="pr-2">
@@ -20,7 +20,7 @@
           </span>
           <v-icon
               small
-              @click="parent.selectItem(item.tag)"
+              @click="parent.selectItem(item)"
           >
             $delete
           </v-icon>
@@ -29,13 +29,22 @@
       <template v-slot:item="{ index, item }">
         <v-chip
             :key="item.text"
-            color="primary"
+            color="#437505"
             dark
-            label
             small
         >
           {{ item.text }}
         </v-chip>
+        <v-spacer></v-spacer>
+        <v-btn
+            icon
+            @click.stop.prevent="deleteItem(item)"
+        >
+          <v-icon
+              small>
+            mdi-delete
+          </v-icon>
+        </v-btn>
       </template>
     </v-combobox>
   </v-container>
@@ -46,11 +55,15 @@ import api from "@/utils/api";
 
 export default {
   name: "TagSelector",
+  props: {
+    confirm: {type: Boolean, required: true},
+    tags: {type: Array, default: () => []}
+  },
   data: () => ({
     activator: null,
     attach: null,
     items: [
-      {header: 'Select a tag or create one'},
+      {header: 'Select a tag'},
     ],
     nonce: 1,
     menu: false,
@@ -61,21 +74,27 @@ export default {
   }),
 
   watch: {
-    /*model(val, prev) {
+    model(val, prev) {
       if (val.length === prev.length) return
 
       this.model = val.map(v => {
         if (typeof v === 'string') {
           v = {
-            tag: v
+            text: v
           }
 
+          this.createItem(v)
           this.items.push(v)
           this.nonce++
         }
         return v
       })
-    },*/
+    },
+    confirm(val) {
+      if (val) {
+        this.$emit("confirmed", this.model)
+      }
+    }
   },
 
   methods: {
@@ -91,12 +110,25 @@ export default {
           .toLowerCase()
           .indexOf(query.toString().toLowerCase()) > -1
     },
+    createItem(item) {
+      api.tag.create(item.text).then(() => this.getTags())
+    },
+    deleteItem(item) {
+      this.model.splice(this.model.indexOf(item), 1)
+      api.tag.delete(item.text).then(() => this.getTags())
+    },
+    getTags() {
+      api.tag.getAll().then(response => {
+        this.items = response
+      })
+    },
+    clear() {
+      this.model = []
+    }
   },
   mounted() {
-    api.tags.getAll().then(response => {
-      console.log(response)
-      this.items = response
-    })
+    this.getTags()
+    this.model = this.tags
   }
 }
 </script>

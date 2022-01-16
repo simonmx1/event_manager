@@ -92,14 +92,14 @@ export default {
       this.drawer = false;
     },
     logout() {
-      api.logout().then(() => this.$router.push("/login"))
+      api.user.logout().then(() => this.$router.push("/login"))
       this.closeDrawer()
     },
     settings() {
       this.$router.push("/accountSettings")
     },
     setLoggedInLabel() {
-      api.loggedIn().then(result => {
+      api.user.loggedIn().then(result => {
         this.session = result.toString();
         this.sessionActive = result !== false;
       });

@@ -6,10 +6,10 @@ import java.util.Date;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import net.bytebuddy.build.ToStringPlugin;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.domain.Persistable;
 
-import static org.eclipse.jdt.internal.compiler.codegen.ConstantPool.ToString;
 
 /**
  * Entity representing users.
@@ -20,17 +20,29 @@ import static org.eclipse.jdt.internal.compiler.codegen.ConstantPool.ToString;
  */
 
 @Entity
+@OnDelete(action = OnDeleteAction.CASCADE)
 public class OpeningTime implements Persistable<Integer>, Serializable, Comparable<OpeningTime> {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    @Column(length = 100)
+    @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer openingTimeId;
 
     private Time start;
     private Time end;
+
+    @ManyToOne
+    @JoinColumn(name = "locationId")
+    @JsonIgnore
+    private Location location;
+
+/*
+    @ManyToOne
+    @JoinColumn(name = "location_id")
+    @JsonIgnore
+    private Location location;*/
 
 
     private int weekday; //monday=0 to sunday=6
@@ -38,11 +50,6 @@ public class OpeningTime implements Persistable<Integer>, Serializable, Comparab
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createDate;
-
-    @ManyToOne
-    @JoinColumn(name = "location_id")
-    @JsonIgnore
-    private Location location;
 
     public Location getLocation() {
         return location;
@@ -73,7 +80,7 @@ public class OpeningTime implements Persistable<Integer>, Serializable, Comparab
     }
 
     public void setOpeningTimeId(Integer openingTimeId) {
-        openingTimeId = openingTimeId;
+        this.openingTimeId = openingTimeId;
     }
 
     public Date getCreateDate() {

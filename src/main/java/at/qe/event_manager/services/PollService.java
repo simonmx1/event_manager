@@ -3,11 +3,9 @@ package at.qe.event_manager.services;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
-
-import at.qe.event_manager.model.Location;
-import at.qe.event_manager.model.Tag;
+import at.qe.event_manager.model.Poll;
 import at.qe.event_manager.model.User;
-import at.qe.event_manager.repositories.LocationRepository;
+import at.qe.event_manager.repositories.PollRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -21,20 +19,20 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Scope("application")
-public class LocationService implements Serializable {
+public class PollService implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-
+	
 	@Autowired
-    private LocationRepository locationRepository;
+    private PollRepository PollRepository;
 
     /**
      * Returns a collection of all users.
      *
      * @return
      */
-    public Collection<Location> getAllLocations() {
-        return locationRepository.findAll();
+    public Collection<Poll> getAllPolls() {
+        return PollRepository.findAll();
     }
 
     /**
@@ -43,8 +41,8 @@ public class LocationService implements Serializable {
      * @param username the username to search for
      * @return the user with the given username
      */
-    public Location loadLocation(Integer locationId) {
-        return locationRepository.findFirstByLocationId(locationId);
+    public Poll loadPoll(Integer id) {
+        return PollRepository.findById(id);
     }
 
     /**
@@ -56,11 +54,11 @@ public class LocationService implements Serializable {
      * @param user the user to save
      * @return the updated user
      */
-    public Location saveLocation(Location location) {
-        if (location.isNew()) {
-            location.setCreateDate(new Date());
+    public Poll savePoll(Poll poll) {
+        if (poll.isNew()) {
+            poll.setCreateDate(new Date());
         }
-        return locationRepository.save(location);
+        return PollRepository.save(poll);
     }
 
     /**
@@ -72,8 +70,8 @@ public class LocationService implements Serializable {
      * @param user the user to save
      * @return the updated user
      */
-    public Location createLocation(Location location) {
-        return saveLocation(location);
+    public Poll createPoll(Poll poll) {
+        return savePoll(poll);
     }
 
     /**
@@ -81,12 +79,8 @@ public class LocationService implements Serializable {
      *
      * @param user the user to delete
      */
-    public void deleteLocation(Location location) {
-        locationRepository.delete(location);
+    public void deletePoll(Poll poll) {
+        PollRepository.delete(poll);
         // :TODO: write some audit log stating who and when this user was permanently deleted.
-    }
-
-    public Location loadLocationByLocationId(Integer locationId) {
-        return locationRepository.findFirstByLocationId(locationId);
     }
 }

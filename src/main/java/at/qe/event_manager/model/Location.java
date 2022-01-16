@@ -5,6 +5,8 @@ import java.util.*;
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.domain.Persistable;
 
 /**
@@ -15,14 +17,16 @@ import org.springframework.data.domain.Persistable;
  * University of Innsbruck.
  */
 @Entity
+@OnDelete(action = OnDeleteAction.CASCADE)
 public class Location implements Persistable<Integer>, Serializable, Comparable<Location> {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    @Column(length = 100)
+    @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer locationId;
+
     private String name;
     private String menu;
 
@@ -35,11 +39,14 @@ public class Location implements Persistable<Integer>, Serializable, Comparable<
     boolean enabled = true;
 
     @ManyToMany
-    @JoinTable(name = "location_tag")
+    @JoinTable(name = "locationTags")
     private Set<Tag> tags;
 
-    @OneToMany(mappedBy = "location")
+    @OneToMany(mappedBy = "location", cascade = CascadeType.ALL)
     private List<OpeningTime> openingTimes;
+
+    @OneToMany (mappedBy = "location", fetch=FetchType.EAGER)
+    private Set<PollLocations> poll_locations;
 
     public List<OpeningTime> getOpeningTimes() {
         return openingTimes;
@@ -107,7 +114,7 @@ public class Location implements Persistable<Integer>, Serializable, Comparable<
 
     @Override
     public int compareTo(Location o) {
-        return this.locationId.compareTo(o.getLocationId());
+        return this.locationId.compareTo(o.getId());
     }
 
     @Override

@@ -3,10 +3,8 @@ package at.qe.event_manager.ui.controllers;
 import at.qe.event_manager.model.Location;
 import at.qe.event_manager.payload.response.MessageResponse;
 import at.qe.event_manager.services.LocationService;
-
 import java.io.Serializable;
 import java.util.Collection;
-
 import org.primefaces.shaded.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,16 +13,14 @@ import org.springframework.web.bind.annotation.*;
 
 /**
  * Controller for the user list view.
- * <p>
- * This class is part of the skeleton project provided for students of the
- * courses "Software Architecture" and "Software Engineering" offered by the
- * University of Innsbruck.
  */
 @RestController
 @RequestMapping("/api/location")
 public class LocationManagementController implements Serializable {
 
-    @Autowired
+	private static final long serialVersionUID = 1L;
+
+	@Autowired
     private LocationService locationService;
 
     /**
@@ -43,6 +39,13 @@ public class LocationManagementController implements Serializable {
     public Location get(@RequestParam(name = "locationId") Integer locationId) {
         return locationService.loadLocationByLocationId(locationId);
     }
+    /*
+        @GetMapping("/get")
+    @ResponseBody
+    public Location get(@RequestParam(name = "name") String name) {
+        return locationService.loadLocationByLocationId(Integer.parseInt(name));
+    }
+    */
 
     @PostMapping("/edit")
     public ResponseEntity<?> edit(@RequestBody Location location) {
@@ -59,6 +62,15 @@ public class LocationManagementController implements Serializable {
         locationService.deleteLocation(location);
         return ResponseEntity.ok(new MessageResponse("Location deleted successfully!"));
     }
+
+    /*
+    @PostMapping("/delete")
+    public ResponseEntity<?> delete(@RequestBody String name) {
+    	Integer id = Integer.parseInt(new JSONObject(name).getString("name"));
+        locationService.deleteLocation(locationService.loadLocationByLocationId(id));
+        return ResponseEntity.ok(new MessageResponse("Location deleted successfully!"));
+    }
+     */
 
     @PostMapping("/create")
     public ResponseEntity<?> createLocation(@RequestBody Location location) {

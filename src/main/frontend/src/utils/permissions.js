@@ -10,8 +10,14 @@ let navBarItems = [
     {
         title: "Location Management",
         icon: "mdi-earth",
-        url: "/location",
+        url: "/locations",
         roles: ['ADMIN', 'LOCATION_MANAGER']
+    },
+    {
+        title: "Event Management",
+        icon: "mdi-calendar",
+        url: "/events",
+        roles: ['ADMIN', 'LOCATION_MANAGER', 'USER']
     }
 ]
 
@@ -19,7 +25,7 @@ let navBarItems = [
 
 export default {
     async getNavBarItems() {
-        return await api.loggedIn().then(response => {
+        return await api.user.loggedIn().then(response => {
             return navBarItems.filter(item => item.roles.includes(response[1]))
         })
     }

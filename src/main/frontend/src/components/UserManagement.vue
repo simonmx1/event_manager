@@ -48,7 +48,7 @@
             <register :admin="true" @close="userCreated()"/>
           </v-dialog>
           <v-dialog v-model="deleteDialog" max-width="500px">
-            <v-card >
+            <v-card>
               <v-card-title style="width: 100%">Are you sure you want to delete this user?</v-card-title>
               <v-card-actions>
                 <v-spacer></v-spacer>
@@ -162,17 +162,17 @@ export default {
       this.deleteDialog = true;
     },
     deleteUserConfirm() {
-      api.deleteUser(this.currentUser.username).then(() => this.getUsers())
+      api.user.delete(this.currentUser.username).then(() => this.getUsers())
       this.currentUser = null;
       this.deleteDialog = false
     },
     getUsers() {
-      api.getUsers().then(response => this.users = response)
+      api.user.getAll().then(response => this.users = response)
     }
   },
   mounted() {
     this.getUsers()
-    api.loggedIn().then(response => {if (response !== false) {this.loggedInUser = response[0]}})
+    api.user.loggedIn().then(response => {if (response !== false) {this.loggedInUser = response[0]}})
   }
 }
 </script>

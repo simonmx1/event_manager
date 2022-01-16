@@ -1,7 +1,7 @@
 package at.qe.event_manager.repositories;
 
 import java.io.Serializable;
-import at.qe.event_manager.model.Location;
+import at.qe.event_manager.model.Event;
 import org.springframework.data.jpa.repository.Query;
 
 /**
@@ -12,8 +12,8 @@ import org.springframework.data.jpa.repository.Query;
  * University of Innsbruck.
  */
 
-public interface LocationRepository extends AbstractRepository<Location, Integer>, Serializable {
+public interface EventRepository extends AbstractRepository<Event, Integer>, Serializable {
 
-    @Query("SELECT l FROM Location l WHERE :locationId = l.locationId")
-    Location findFirstByLocationId(Integer locationId);
+    @Query("SELECT e FROM Event e WHERE :id = e.id")
+    Event findFirstById(Integer id);
 }

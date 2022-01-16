@@ -1,14 +1,12 @@
 package at.qe.event_manager.ui.controllers;
 
 import at.qe.event_manager.model.Tag;
-import at.qe.event_manager.model.Tag;
 import at.qe.event_manager.payload.response.MessageResponse;
 import at.qe.event_manager.services.TagService;
 import org.primefaces.shaded.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -21,7 +19,7 @@ public class TagManagementController {
     private TagService tagService;
 
     @GetMapping("/getAll")
-    public Collection<Tag> getTags() {
+    public Collection<Tag> getAll() {
         return tagService.getAllTags();
     }
 
@@ -33,12 +31,12 @@ public class TagManagementController {
 
     @PostMapping("/delete")
     public ResponseEntity<?> delete(@RequestBody String tag) {
-        tagService.deleteTag(tagService.loadTag(new JSONObject(tag).getString("tag")));
+        tagService.deleteTag(tagService.loadTag(new JSONObject(tag).getString("text")));
         return ResponseEntity.ok(new MessageResponse("Tag deleted successfully!"));
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createTag(@RequestBody Tag tag) {
+    public ResponseEntity<?> create(@RequestBody Tag tag) {
         if (tagService.createTag(tag) == null) {
             return new ResponseEntity<>("Error While creating the Tag!", HttpStatus.OK);
         } else {

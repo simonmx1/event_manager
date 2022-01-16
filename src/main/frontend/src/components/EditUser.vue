@@ -38,7 +38,7 @@ import api from "@/utils/api";
 import UserForm from "@/components/UserForm";
 
 export default {
-  name: 'Edit',
+  name: 'EditUser',
   components: {UserForm},
   props: {
     user: {type: Object, required: true},
@@ -54,10 +54,10 @@ export default {
       this.$refs.form.validate()
     },
     edit(event) {
-      api.editUser(event)
+      api.user.edit(event)
           .then(response => {
             this.success = response.status === 200;
-            this.response = response.data.msg
+            this.response = response.data
           })
 
     },

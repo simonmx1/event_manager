@@ -64,7 +64,7 @@ export default {
     },
     deleteUserConfirm() {
       this.deleteDialog = false
-      api.deleteUser(this.user.username).then(response => {
+      api.user.delete(this.user.username).then(response => {
         if (response !== false) {
           localStorage.removeItem('jwt')
           this.$router.push("/login")
@@ -72,9 +72,9 @@ export default {
       })
     },
     getUser() {
-      api.loggedIn().then((response) => {
+      api.user.loggedIn().then((response) => {
         if (response !== false)
-          api.getUser(response[0]).then((user) => {
+          api.user.get(response[0]).then((user) => {
             if (user !== false) this.user = user;
           });
       });
