@@ -18,9 +18,9 @@ export default {
     user: null
   }),
   mounted() {
-    api.loggedIn().then(response => {
+    api.user.loggedIn2().then(response => {
       if (response !== false)
-        api.getUser(response[0]).then(user => {
+        api.user.get(response[0]).then(user => {
               if (user !== false)
                 this.user = user
             }
