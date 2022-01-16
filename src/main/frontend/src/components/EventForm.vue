@@ -70,10 +70,10 @@
     <div v-if="loadTimeslots">
       <v-row v-for="(timeslot, index) in currentEvent.timeslots" :key="index" ref="timeslots">
         <v-col class=".col-auto">
-          <v-datetime-picker :time-picker-props="{format:'24hr'}" label="Select Starttime" v-model="timeslot.start"></v-datetime-picker>
+          <v-datetime-picker :time-picker-props="{format:'24hr', allowedMinutes:allowedStepTimeSlot}" label="Select Starttime" v-model="timeslot.start"></v-datetime-picker>
         </v-col>
         <v-col class=".col-auto">
-          <v-datetime-picker :time-picker-props="{format:'24hr'}" label="Select Endtime" v-model="timeslot.end"></v-datetime-picker>
+          <v-datetime-picker :time-picker-props="{format:'24hr', allowedMinutes:allowedStepTimeSlot}" label="Select Endtime" v-model="timeslot.end"></v-datetime-picker>
         </v-col>
         <v-col v-if="index + 1 === currentEvent.timeslots.length" cols="auto" style="margin-top: 10px">
           <v-btn icon @click="addTimeslotInput()">
@@ -88,7 +88,7 @@
       </v-row>
     </div>
     <v-checkbox v-model="currentEvent.creatorIsPreferred" label="Creator decides on poll tie"/>
-    <v-datetime-picker :time-picker-props="{format:'24hr'}" label="Select poll end date" v-model="currentEvent.pollEndDate"></v-datetime-picker>
+    <v-datetime-picker :time-picker-props="{format:'24hr', allowedMinutes:allowedStepTimeEnd}" label="Select poll end date" v-model="currentEvent.pollEndDate"></v-datetime-picker>
   </v-form>
 </template>
 
@@ -157,6 +157,8 @@ export default {
       });
 
     },
+    allowedStepTimeSlot: m => m % 15 === 0,
+    allowedStepTimeEnd: m => m % 5 === 0
   },
   mounted() {
     this.currentEvent = this.event;
