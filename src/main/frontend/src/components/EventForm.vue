@@ -19,6 +19,7 @@
         :search-input.sync="search"
         :filter="filter"
         label="Participant"
+        item-text="id"
         multiple
         outlined
         dense
@@ -53,12 +54,30 @@
         </v-chip>
       </template>
       <template v-slot:item="{ index, item }">
-          <span :key="item.username">{{ item.firstName }} {{ item.lastName }}
-            <v-chip>{{ item.email }}</v-chip>
-          </span>
+        <span :key="item.id">{{ item.firstName }} {{ item.lastName }}</span>
+        <v-chip>{{ item.email }}, {{ item.username }}</v-chip>
       </template>
     </v-combobox>
-    <v-datetime-picker label="Select Datetime" v-model="datetime"> </v-datetime-picker>
+    <div v-if="loadTimeslots">
+      <v-row v-for="(timeslot, index) in event.timeslots" :key="index" ref="timeslots">
+        <v-col class=".col-auto">
+          <v-datetime-picker label="Select Starttime" v-model="timeslot.start"></v-datetime-picker>
+        </v-col>
+        <v-col class=".col-auto">
+          <v-datetime-picker label="Select Endtime" v-model="timeslot.end"></v-datetime-picker>
+        </v-col>
+        <v-col v-if="index + 1 === event.timeslots.length" cols="auto" style="margin-top: 10px">
+          <v-btn icon @click="addTimeslotInput()">
+            <v-icon>mdi-calendar-plus</v-icon>
+          </v-btn>
+        </v-col>
+        <v-col v-if="index + 1 !== event.timeslots.length" cols="auto" style="margin-top: 10px">
+          <v-btn icon @click="removeTimeslotInput(index)">
+            <v-icon>mdi-calendar-minus</v-icon>
+          </v-btn>
+        </v-col>
+      </v-row>
+    </div>
   </v-form>
 </template>
 
@@ -72,7 +91,9 @@ export default {
       type: Object, default: () => ({
         name: '',
         location: null,
-        timestamp: null,
+        timeslots: [
+          {start: null, end: null}
+        ],
         participants: [],
         enabled: true,
       })
@@ -80,6 +101,7 @@ export default {
   },
   data: () => ({
     valid: false,
+    loadTimeslots: true,
     currentEvent: null,
     availableUsers: [],
     search: null,
@@ -100,13 +122,30 @@ export default {
           || item.firstName.toString().toLowerCase().indexOf(query.toString().toLowerCase()) > -1
           || item.lastName.toString().toLowerCase().indexOf(query.toString().toLowerCase()) > -1
           || text.toString().toLowerCase().indexOf(query.toString().toLowerCase()) > -1;
-
-
     },
+    addTimeslotInput() {
+      this.event.timeslots.push({start: null, end: null})
+    },
+    removeTimeslotInput(index) {
+      console.log(this.event.timeslots);
+      console.log(index);
+      this.event.timeslots.splice(index, 1)
+      this.forceRerender()
+    },
+    forceRerender() {
+      // Removing my-component from the DOM
+      this.loadTimeslots = false;
+
+      this.$nextTick(() => {
+        // Adding the component back in
+        this.loadTimeslots = true;
+      });
+
+    }
   },
   mounted() {
     this.currentEvent = this.event;
-    api.getUsers().then(response => this.availableUsers = response)
+    api.getUsers().then(response => this.availableUsers = response).then(() => console.log(this.availableUsers))
   }
 }
 </script>

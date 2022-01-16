@@ -70,7 +70,7 @@
             </v-card>
           </v-dialog>
           <v-dialog v-model="editDialog" max-width="500px">
-            <edit-user v-if="currentEvent" @close="editDialog = false" :user="currentEvent"/>
+            <edit-event v-if="currentEvent" @close="editDialog = false" :user="currentEvent"/>
           </v-dialog>
         </v-toolbar>
       </template>
@@ -139,7 +139,7 @@ export default {
     formatDate(date) {
       return new Date(date).toISOString().slice(0, 10);
     },
-    userCreated() {
+    eventCreated() {
       this.getEvents()
       this.createDialog = false
     },

@@ -1,6 +1,6 @@
 package at.qe.event_manager.model;
 
-import org.jetbrains.annotations.NotNull;
+import com.sun.istack.NotNull;
 import org.springframework.data.domain.Persistable;
 
 import javax.persistence.*;
