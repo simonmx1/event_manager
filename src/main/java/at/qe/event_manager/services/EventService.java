@@ -96,7 +96,7 @@ public class EventService implements Serializable {
     		}
     	}
         Comparator<PollLocations> poll_LocationsComparator = new PollLocationsComparator();
-        Comparator<PollTimeslots> poll_timeslotsComparator = new PollTimeSlotsComparator();
+        Comparator<PollTimeslots> poll_timeslotsComparator = new PollTimeslotsComparator();
         pollLocationsWinner.sort(poll_LocationsComparator);
         pollTimeslotsWinner.sort(poll_timeslotsComparator);
         if (pollTimeslotsWinner.get(0).getPoints() == 0) {
