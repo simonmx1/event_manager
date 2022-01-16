@@ -111,14 +111,14 @@ export default {
           .indexOf(query.toString().toLowerCase()) > -1
     },
     createItem(item) {
-      api.tags.create(item.text).then(() => this.getTags())
+      api.tag.create(item.text).then(() => this.getTags())
     },
     deleteItem(item) {
       this.model.splice(this.model.indexOf(item), 1)
-      api.tags.delete(item.text).then(() => this.getTags())
+      api.tag.delete(item.text).then(() => this.getTags())
     },
     getTags() {
-      api.tags.getAll().then(response => {
+      api.tag.getAll().then(response => {
         this.items = response
       })
     },

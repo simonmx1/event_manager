@@ -74,7 +74,7 @@ export default {
                 return response;
             }).catch(() => false);
         },
-        async loggedIn2() {
+        async loggedIn() {
             if (JSON.parse(localStorage.getItem('jwt')) == null) {
                 return false
             } else {
@@ -156,7 +156,7 @@ export default {
             }).catch(() => false);
         },
     },
-    tags: {
+    tag: {
         async getAll() {
             return await axios.get('/api/tag/getAll',
                 {headers: {"Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt'))}}

@@ -172,7 +172,7 @@ export default {
   },
   mounted() {
     this.getUsers()
-    api.user.loggedIn2().then(response => {if (response !== false) {this.loggedInUser = response[0]}})
+    api.user.loggedIn().then(response => {if (response !== false) {this.loggedInUser = response[0]}})
   }
 }
 </script>

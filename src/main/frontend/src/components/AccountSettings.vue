@@ -72,7 +72,7 @@ export default {
       })
     },
     getUser() {
-      api.user.loggedIn2().then((response) => {
+      api.user.loggedIn().then((response) => {
         if (response !== false)
           api.user.get(response[0]).then((user) => {
             if (user !== false) this.user = user;

@@ -99,7 +99,7 @@ export default {
       this.$router.push("/accountSettings")
     },
     setLoggedInLabel() {
-      api.user.loggedIn2().then(result => {
+      api.user.loggedIn().then(result => {
         this.session = result.toString();
         this.sessionActive = result !== false;
       });

@@ -42,14 +42,14 @@ const router = new VueRouter({
 
 router.beforeEach(async (to, from, next) => {
     let session = null;
-    await api.user.loggedIn2().then(response => {
+    await api.user.loggedIn().then(response => {
         session = response;
     })
     if (to.name !== 'Login' && session === false) {
         next({name: 'Login'})
     }
     if (to.name === 'UserManagement') {
-        api.user.loggedIn2().then(response => {
+        api.user.loggedIn().then(response => {
             if (to.name === 'UserManagement' && response !== false && response[1] === 'ADMIN') next()
             else next(false)
         })
