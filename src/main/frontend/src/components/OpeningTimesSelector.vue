@@ -32,6 +32,7 @@
                           format="24hr"
                           v-model="time.start"
                           :max="time.end"
+                          :allowed-minutes="allowedStep"
                       ></v-time-picker>
                     </v-col>
                     <v-col cols="6">
@@ -41,6 +42,7 @@
                           format="24hr"
                           v-model="time.end"
                           :min="time.start"
+                          :allowed-minutes="allowedStep"
                       ></v-time-picker>
                     </v-col>
                   </v-row>
@@ -108,7 +110,8 @@ export default {
       }
       this.timepicker[dayIndex][timeIndex] = false
       this.$forceUpdate()
-    }
+    },
+    allowedStep: m => m % 30 === 0
   }
 }
 </script>
