@@ -29,7 +29,7 @@
           <v-spacer/>
           <v-dialog
               v-model="createDialog"
-              width="500"
+              width="1000"
               persistent
           >
             <template v-slot:activator="{ on, attrs }">

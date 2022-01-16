@@ -4,52 +4,65 @@
       v-model="valid"
       lazy-validation
       v-if="currentLocation != null">
-    <v-text-field
-        v-model="currentLocation.name"
-        :rules="nameRules"
-        prepend-icon="mdi-account-box"
-        name="name"
-        label="Name"
-        type="text"
-    ></v-text-field>
-    <v-text-field
-        v-model="currentLocation.menu"
-        :rules="menuRules"
-        prepend-icon="mdi-lock"
-        name="menu"
-        label="Menu Link"
-        type="text"
-    ></v-text-field>
-    <v-divider></v-divider>
-    <v-text-field
-        v-model="currentLocation.geolocation"
-        :rules="geolocationRules"
-        prepend-icon="mdi-form-textbox"
-        name="geolocation"
-        label="Geo Location"
-        type="text"
-    ></v-text-field>
-    <main>
-      <tag-selector
-          :confirm="confirmTags"
-          :tags="currentLocation.tags"
-          @confirmed="getTags"
-          ref="tagSelector"
-      />
-    </main>
-    <v-checkbox
-        v-model="currentLocation.enabled"
-        label="Enable Location"
-    ></v-checkbox>
+    <v-row>
+      <v-col cols="6">
+        <v-text-field
+            v-model="currentLocation.name"
+            :rules="nameRules"
+            prepend-icon="mdi-account-box"
+            name="name"
+            label="Name"
+            type="text"
+        ></v-text-field>
+        <v-text-field
+            v-model="currentLocation.menu"
+            :rules="menuRules"
+            prepend-icon="mdi-lock"
+            name="menu"
+            label="Menu Link"
+            type="text"
+        ></v-text-field>
+        <v-divider></v-divider>
+        <v-text-field
+            v-model="currentLocation.geolocation"
+            :rules="geolocationRules"
+            prepend-icon="mdi-form-textbox"
+            name="geolocation"
+            label="Geo Location"
+            type="text"
+        ></v-text-field>
+        <tag-selector
+            :confirm="confirmTags"
+            :tags="currentLocation.tags"
+            prepend-icon="mdi-tag-multiple"
+            @confirmed="getTags"
+            ref="tagSelector"
+        />
+        <v-checkbox
+            v-model="currentLocation.enabled"
+            label="Enable Location"
+        ></v-checkbox>
+      </v-col>
+      <v-divider
+          vertical
+      ></v-divider>
+      <v-col cols="6">
+        <opening-times-selector
+            prepend-icon="mdi-clock"
+        />
+      </v-col>
+    </v-row>
+
   </v-form>
 </template>
 
 <script>
 import TagSelector from "@/components/TagSelector";
+import OpeningTimesSelector from "@/components/OpeningTimesSelector";
 
 export default {
   name: "LocationForm",
-  components: {TagSelector},
+  components: {OpeningTimesSelector, TagSelector},
   props: {
     location: {
       type: Object, default: () => ({
@@ -86,7 +99,7 @@ export default {
       this.$refs.tagSelector.clear()
       this.currentLocation = JSON.parse(JSON.stringify(this.location));
     },
-    getTags(tags){
+    getTags(tags) {
       this.currentLocation.tags = tags;
       this.$emit('validated', this.currentLocation)
     }
