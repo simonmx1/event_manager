@@ -19,7 +19,7 @@ public class TagManagementController {
     private TagService tagService;
 
     @GetMapping("/getAll")
-    public Collection<Tag> getTags() {
+    public Collection<Tag> getAll() {
         return tagService.getAllTags();
     }
 
@@ -36,7 +36,7 @@ public class TagManagementController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createTag(@RequestBody Tag tag) {
+    public ResponseEntity<?> create(@RequestBody Tag tag) {
         if (tagService.createTag(tag) == null) {
             return new ResponseEntity<>("Error While creating the Tag!", HttpStatus.OK);
         } else {

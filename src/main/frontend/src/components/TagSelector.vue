@@ -9,17 +9,6 @@
         outlined
         dense
     >
-      <template v-slot:no-data>
-        <v-list-item>
-          <span class="subheading">Create</span>
-          <v-chip style="margin-left: 10px"
-              color="#437505"
-              small
-          >
-            {{ search }}
-          </v-chip>
-        </v-list-item>
-      </template>
       <template v-slot:selection="{ attrs, item, parent }">
         <v-chip
             v-bind="attrs"
@@ -49,10 +38,10 @@
         <v-spacer></v-spacer>
         <v-btn
             icon
-            @click.stop.prevent = "deleteItem(item)"
+            @click.stop.prevent="deleteItem(item)"
         >
           <v-icon
-          small>
+              small>
             mdi-delete
           </v-icon>
         </v-btn>
@@ -66,11 +55,14 @@ import api from "@/utils/api";
 
 export default {
   name: "TagSelector",
+  props: {
+    confirm: {type: Boolean, required: true}
+  },
   data: () => ({
     activator: null,
     attach: null,
     items: [
-      {header: 'Select a tag or create one'},
+      {header: 'Select a tag'},
     ],
     nonce: 1,
     menu: false,
@@ -81,21 +73,27 @@ export default {
   }),
 
   watch: {
-    /*model(val, prev) {
+    model(val, prev) {
       if (val.length === prev.length) return
 
       this.model = val.map(v => {
         if (typeof v === 'string') {
           v = {
-            tag: v
+            text: v
           }
 
+          this.createItem(v)
           this.items.push(v)
           this.nonce++
         }
         return v
       })
-    },*/
+    },
+    confirm(val) {
+      if (val) {
+        this.$emit("confirmed", this.model)
+      }
+    }
   },
 
   methods: {
@@ -111,14 +109,20 @@ export default {
           .toLowerCase()
           .indexOf(query.toString().toLowerCase()) > -1
     },
+    createItem(item) {
+      api.tags.create(item.text).then(() => this.getTags())
+    },
     deleteItem(item) {
-      console.log(item.text)
+      this.model.splice(this.model.indexOf(item), 1)
       api.tags.delete(item.text).then(() => this.getTags())
     },
-    getTags(){
+    getTags() {
       api.tags.getAll().then(response => {
         this.items = response
       })
+    },
+    clear(){
+      this.model = []
     }
   },
   mounted() {

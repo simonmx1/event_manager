@@ -29,6 +29,13 @@
         label="Geo Location"
         type="text"
     ></v-text-field>
+    <main>
+      <tag-selector
+          :confirm="confirmTags"
+          @confirmed="getTags"
+          ref="tagSelector"
+      />
+    </main>
     <v-checkbox
         v-model="currentLocation.enabled"
         label="Enable Location"
@@ -37,14 +44,18 @@
 </template>
 
 <script>
+import TagSelector from "@/components/TagSelector";
+
 export default {
   name: "LocationForm",
+  components: {TagSelector},
   props: {
     location: {
       type: Object, default: () => ({
         name: '',
         menu: '',
         geolocation: '',
+        tags: null,
         enabled: true,
       })
     },
@@ -61,22 +72,28 @@ export default {
     geolocationRules: [
       v => !!v || 'Position is required',
     ],
+    confirmTags: false
   }),
   methods: {
     validate() {
       if (this.$refs.form.validate()) {
-        this.$emit('validated', this.currentLocation)
+        this.confirmTags = true
       }
     },
     clear() {
       this.$refs.form.resetValidation()
-      this.currentLocation = this.location;
+      this.$refs.tagSelector.clear()
+      this.currentLocation = JSON.parse(JSON.stringify(this.location));
+    },
+    getTags(tags){
+      this.currentLocation.tags = tags;
+      this.$emit('validated', this.currentLocation)
     }
   },
   mounted() {
-    this.currentLocation = this.location;
     this.editMode = this.edit
-  }
+    this.currentLocation = JSON.parse(JSON.stringify(this.location));
+  },
 }
 </script>
 

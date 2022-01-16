@@ -123,6 +123,7 @@ export default {
                     'name': location.name,
                     'menu': location.menu,
                     'geolocation': location.geolocation,
+                    'tags': location.tags,
                     'enabled': location.enabled
                 },
                 {
@@ -171,6 +172,20 @@ export default {
         },
         async delete(text) {
             return await axios.post('/api/tag/delete', {'text': text},
+                {
+                    headers: {
+                        "Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt')),
+                        "Content-Type": "application/json"
+                    }
+                }
+            ).then(response => {
+                return response;
+            }).catch(() => false);
+        },
+        async create(text) {
+            return await axios.post('/api/tag/create', {
+                    'text': text,
+                },
                 {
                     headers: {
                         "Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt')),
