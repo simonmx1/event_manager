@@ -15,7 +15,7 @@ public class Timeslot implements Persistable<Integer>, Serializable, Comparable<
 	private static final long serialVersionUID = 1L;
 
 	@Id
-    @Column(name = "timeslot_id", nullable = false)
+    @Column(name = "timeslotId", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer timeslotId;
 
@@ -23,7 +23,7 @@ public class Timeslot implements Persistable<Integer>, Serializable, Comparable<
     private Timestamp end;
 
     @OneToMany (mappedBy = "timeslot")
-    private Set<Poll_Timeslots> poll_timeslots;
+    private Set<PollTimeslots> poll_timeslots;
 
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)

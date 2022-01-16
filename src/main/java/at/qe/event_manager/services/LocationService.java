@@ -42,8 +42,8 @@ public class LocationService implements Serializable {
      * @param username the username to search for
      * @return the user with the given username
      */
-    public Location loadLocation(String name) {
-        return locationRepository.findFirstByName(name);
+    public Location loadLocation(Integer id) {
+        return locationRepository.findFirstById(id);
     }
 
     /**
@@ -85,7 +85,7 @@ public class LocationService implements Serializable {
         // :TODO: write some audit log stating who and when this user was permanently deleted.
     }
 
-    public Location loadLocationByLocationName(String name)  {
-        return locationRepository.findFirstByName(name);
+    public Location loadLocationByLocationId(Integer id)  {
+        return locationRepository.findFirstById(id);
     }
 }

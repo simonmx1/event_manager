@@ -1,18 +1,13 @@
 package at.qe.event_manager.ui.controllers;
 
 import at.qe.event_manager.model.Location;
-import at.qe.event_manager.model.User;
 import at.qe.event_manager.payload.response.MessageResponse;
 import at.qe.event_manager.services.LocationService;
-
 import java.io.Serializable;
 import java.util.Collection;
-
 import org.primefaces.shaded.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -22,7 +17,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/location")
 public class LocationManagementController implements Serializable {
 
-    @Autowired
+	private static final long serialVersionUID = 1L;
+	
+	@Autowired
     private LocationService locationService;
 
     /**
@@ -40,7 +37,7 @@ public class LocationManagementController implements Serializable {
     @GetMapping("/get")
     @ResponseBody
     public Location get(@RequestParam(name = "name") String name) {
-        return locationService.loadLocationByLocationName(name);
+        return locationService.loadLocationByLocationId(Integer.parseInt(name));
     }
 
     @PostMapping("/edit")
@@ -54,7 +51,8 @@ public class LocationManagementController implements Serializable {
 
     @PostMapping("/delete")
     public ResponseEntity<?> delete(@RequestBody String name) {
-        locationService.deleteLocation(locationService.loadLocationByLocationName(new JSONObject(name).getString("name")));
+    	Integer id = Integer.parseInt(new JSONObject(name).getString("name"));
+        locationService.deleteLocation(locationService.loadLocationByLocationId(id));
         return ResponseEntity.ok(new MessageResponse("Location deleted successfully!"));
     }
 

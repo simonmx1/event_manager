@@ -28,7 +28,7 @@ public class OpeningTime implements Persistable<String>, Serializable, Comparabl
     private Time end;
 
     @ManyToOne
-    @JoinColumn(name = "location_location_id")
+    @JoinColumn(name = "locationLocationId")
     private Location location;
 
     private int weekday; //monday=0 to sunday=6

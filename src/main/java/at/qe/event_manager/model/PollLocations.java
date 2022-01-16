@@ -1,12 +1,11 @@
 package at.qe.event_manager.model;
 
 import javax.persistence.*;
-import java.util.Comparator;
 
 @Entity
-@Table(name = "poll_locations")
-@IdClass(Poll_Locations_Id.class)
-public class Poll_Locations {
+@Table(name = "pollLocations")
+@IdClass(PollLocationsId.class)
+public class PollLocations {
 
     @Id
     @ManyToOne
@@ -42,16 +41,16 @@ public class Poll_Locations {
         this.points = points;
     }
     
-    public void addPoints(Poll_Locations poll_location) {
+    public void addPoints(PollLocations poll_location) {
         this.points += poll_location.getPoints();
     }
     
     @Override
     public boolean equals(Object o) {
-    	if(o == null || !(o instanceof Poll_Locations)) {
+    	if(o == null || !(o instanceof PollLocations)) {
     		return false;
     	}
-    	Poll_Locations pl = (Poll_Locations) o;
+    	PollLocations pl = (PollLocations) o;
     	return this.location.getId() == pl.getLocation().getId();
     }
 }

@@ -1,9 +1,7 @@
 package at.qe.event_manager.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Persistable;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -14,23 +12,23 @@ public class Poll implements Persistable<Integer>, Serializable, Comparable<Poll
 	private static final long serialVersionUID = 1L;
 
 	@Id
-    @Column(name = "poll_id", nullable = false)
+    @Column(name = "pollId", nullable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer pollId;
 
 
     @OneToMany (mappedBy = "poll", fetch=FetchType.EAGER)
-    private Set<Poll_Timeslots> poll_timeslots;
+    private Set<PollTimeslots> poll_timeslots;
 
     @OneToMany (mappedBy = "poll", fetch=FetchType.EAGER)
-    private Set<Poll_Locations> poll_locations;
+    private Set<PollLocations> poll_locations;
 
     @ManyToOne
     @JoinColumn(name = "userUsername")
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "event_event_id")
+    @JoinColumn(name = "eventEventId")
     private Event event;
 
     @Column(nullable = false)
@@ -49,19 +47,19 @@ public class Poll implements Persistable<Integer>, Serializable, Comparable<Poll
         this.pollId = pollId;
     }
 
-    public Set<Poll_Timeslots> getPoll_timeslots() {
+    public Set<PollTimeslots> getPoll_timeslots() {
         return poll_timeslots;
     }
 
-    public void setPoll_timeslots(Set<Poll_Timeslots> poll_timeslots) {
+    public void setPoll_timeslots(Set<PollTimeslots> poll_timeslots) {
         this.poll_timeslots = poll_timeslots;
     }
 
-    public Set<Poll_Locations> getPoll_locations() {
+    public Set<PollLocations> getPoll_locations() {
         return poll_locations;
     }
 
-    public void setPoll_locations(Set<Poll_Locations> poll_locations) {
+    public void setPoll_locations(Set<PollLocations> poll_locations) {
         this.poll_locations = poll_locations;
     }
 

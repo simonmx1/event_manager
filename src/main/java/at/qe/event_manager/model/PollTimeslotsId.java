@@ -2,7 +2,7 @@ package at.qe.event_manager.model;
 
 import java.io.Serializable;
 
-public class Poll_Timeslots_Id implements Serializable {
+public class PollTimeslotsId implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	

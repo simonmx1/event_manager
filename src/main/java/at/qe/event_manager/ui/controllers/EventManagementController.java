@@ -2,9 +2,7 @@ package at.qe.event_manager.ui.controllers;
 
 import at.qe.event_manager.model.Event;
 import at.qe.event_manager.payload.response.MessageResponse;
-import at.qe.event_manager.repositories.EventRepository;
 import at.qe.event_manager.services.EventService;
-import org.primefaces.shaded.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

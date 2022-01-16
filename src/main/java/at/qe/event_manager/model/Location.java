@@ -34,12 +34,12 @@ public class Location implements Persistable<Integer>, Serializable, Comparable<
     boolean enabled = true;
 
     @ManyToMany
-    @JoinTable(name = "location_tags")
+    @JoinTable(name = "locationTags")
     private Set<Tag> tags;
 
 
     @OneToMany (mappedBy = "location", fetch=FetchType.EAGER)
-    private Set<Poll_Locations> poll_locations;
+    private Set<PollLocations> poll_locations;
 
     public void setLocationId(int locationId) {
         this.locationId = locationId;
