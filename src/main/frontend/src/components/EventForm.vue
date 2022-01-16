@@ -65,7 +65,7 @@
       </template>
     </v-combobox>
     <template>
-      <location-selector/>
+      <location-selector ref="locationSelector" @confirm="confirmLocations"/>
     </template>
     <div v-if="loadTimeslots">
       <v-row v-for="(timeslot, index) in currentEvent.timeslots" :key="index" ref="timeslots">
@@ -155,8 +155,14 @@ export default {
         // Adding the component back in
         this.loadTimeslots = true;
       });
-
     },
+    sendData() {
+      this.$refs.locationSelector.sendData()
+    },
+    confirmLocations(locations) {
+      this.currentEvent.location = locations
+      this.$emit('confirm', this.currentEvent)
+    }
   },
   mounted() {
     this.currentEvent = this.event;

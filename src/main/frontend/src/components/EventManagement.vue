@@ -49,10 +49,13 @@
                   Create Event
                 </v-card-title>
               </v-toolbar>
-              <event-form class="pa-5"/>
+              <event-form
+                  ref="eventForm"
+                  class="pa-5"
+                  @confirm="confirmCreate"/>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn @click="createDialog = false" color="primary">Cancel</v-btn>
+                <v-btn @click="closeCreateDialog()" color="primary">Cancel</v-btn>
                 <v-btn @click="tryCreate()" color="green">Create</v-btn>
                 <v-spacer></v-spacer>
               </v-card-actions>
@@ -188,7 +191,7 @@ export default {
       const time = new Date(timestamp).toISOString().slice(11, 16)
       return time + " " + date
     },
-    eventCreated() {
+    closeCreateDialog() {
       this.getEvents()
       this.createDialog = false
     },
@@ -209,7 +212,16 @@ export default {
       api.event.getAll().then(response => this.events = response).then(() => console.log(this.events))
     },
     tryCreate(){
-
+      this.$refs.eventForm.sendData();
+    },
+    confirmCreate(event) {
+      event.participants.forEach((user, index) => event.participants[index] = user.username)
+      console.error(event);
+      event.location.forEach((location, index) => event.location[index] = location.id)
+      console.error(event);
+      api.user.loggedIn().then(response => {
+        event.creatorUsername = response[0]
+      }).then(() => api.event.create(event))
     }
   },
   mounted() {

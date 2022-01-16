@@ -50,11 +50,12 @@ export default {
     filter: null,
   }),
   methods: {
-
+    sendData() {
+      this.$emit("confirm", this.model)
+    }
   },
   mounted() {
     api.location.getAll().then((response) => (this.availableLocations = response));
-    // .then(() => this.availableLocations.forEach(() => this.showLocationInfoDialog.push(false)));
   },
 };
 </script>

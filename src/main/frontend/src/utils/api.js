@@ -199,19 +199,27 @@ export default {
         }
     },
     event: {
-        async create(event) {
-            return await axios.post('/api/event/create', {
-                    'event': event
-                }
-            ).then(response => {
-                return response
-            }).catch(() => false);
-        },
         async getAll() {
             return await axios.get('/api/event/getAll',
                 {headers: {"Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt'))}}
             ).then(response => {
                 return response.data;
+            }).catch(() => false);
+        },
+        async create(event) {
+            console.log(event);
+            return await axios.post('/api/event/create', {
+                'name': event.name,
+                'creatorUsername': event.creatorUsername,
+                'participants': JSON.stringify(event.participants),
+                'locations': JSON.stringify(event.location),
+                'timeslots': JSON.stringify(event.timeslots),
+                'creatorIsPreferred': event.creatorIsPreferred,
+                'pollEndDate': event.pollEndDate
+                },
+                {headers: {"Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt'))}}
+            ).then(response => {
+                return response
             }).catch(() => false);
         }
     }
