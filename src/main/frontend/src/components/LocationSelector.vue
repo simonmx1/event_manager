@@ -53,7 +53,7 @@ export default {
 
   },
   mounted() {
-    api.getLocations().then((response) => (this.availableLocations = response));
+    api.location.getAll().then((response) => (this.availableLocations = response));
     // .then(() => this.availableLocations.forEach(() => this.showLocationInfoDialog.push(false)));
   },
 };

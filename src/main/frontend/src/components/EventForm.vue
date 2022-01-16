@@ -156,7 +156,7 @@ export default {
   },
   mounted() {
     this.currentEvent = this.event;
-    api.getUsers().then(response => this.availableUsers = response)
+    api.user.getAll().then(response => this.availableUsers = response)
   }
 }
 </script>
