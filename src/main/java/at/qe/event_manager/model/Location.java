@@ -23,9 +23,10 @@ public class Location implements Persistable<Integer>, Serializable, Comparable<
     private static final long serialVersionUID = 1L;
 
     @Id
-    @Column(length = 100)
+    @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer locationId;
+
     private String name;
     private String menu;
 

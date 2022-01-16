@@ -12,7 +12,7 @@ public class Poll implements Persistable<Integer>, Serializable, Comparable<Poll
 	private static final long serialVersionUID = 1L;
 
 	@Id
-    @Column(name = "pollId", nullable = false)
+    @Column(name = "id", nullable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer pollId;
 
@@ -24,11 +24,9 @@ public class Poll implements Persistable<Integer>, Serializable, Comparable<Poll
     private Set<PollLocations> poll_locations;
 
     @ManyToOne
-    @JoinColumn(name = "userUsername")
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "eventEventId")
     private Event event;
 
     @Column(nullable = false)
@@ -36,7 +34,6 @@ public class Poll implements Persistable<Integer>, Serializable, Comparable<Poll
     private Date createDate;
 
     public Poll() {
-
     }
 
     public Integer getPollId() {

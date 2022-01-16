@@ -26,7 +26,7 @@ public class OpeningTime implements Persistable<Integer>, Serializable, Comparab
     private static final long serialVersionUID = 1L;
 
     @Id
-    @Column(length = 100)
+    @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer openingTimeId;
 
@@ -34,7 +34,7 @@ public class OpeningTime implements Persistable<Integer>, Serializable, Comparab
     private Time end;
 
     @ManyToOne
-    @JoinColumn(name = "locationLocationId")
+    @JoinColumn(name = "locationId")
     @JsonIgnore
     private Location location;
 

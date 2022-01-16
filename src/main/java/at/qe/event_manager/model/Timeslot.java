@@ -15,7 +15,7 @@ public class Timeslot implements Persistable<Integer>, Serializable, Comparable<
 	private static final long serialVersionUID = 1L;
 
 	@Id
-    @Column(name = "timeslotId", nullable = false)
+    @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer timeslotId;
 

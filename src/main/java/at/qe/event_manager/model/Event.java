@@ -20,10 +20,8 @@ public class Event implements Persistable<Integer>, Serializable, Comparable<Eve
 
     private String name;
     @ManyToOne
-    @JoinColumn(name = "timeslotTimeslotId")
     private Timeslot timeslot;
     @ManyToOne
-    @JoinColumn(name = "locationLocationId")
     private Location location;
 
     @ManyToOne
