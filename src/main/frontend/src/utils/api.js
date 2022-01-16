@@ -142,6 +142,7 @@ export default {
                     'name': location.name,
                     'menu': location.menu,
                     'geolocation': location.geolocation,
+                    'tags': location.tags,
                     'enabled': location.enabled
                 },
                 {

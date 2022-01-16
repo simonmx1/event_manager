@@ -34,6 +34,7 @@
 </template>
 
 <script>
+
 import api from "@/utils/api";
 import LocationForm from "@/components/LocationForm";
 

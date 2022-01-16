@@ -56,7 +56,8 @@ import api from "@/utils/api";
 export default {
   name: "TagSelector",
   props: {
-    confirm: {type: Boolean, required: true}
+    confirm: {type: Boolean, required: true},
+    tags: {type: Array, default: () => []}
   },
   data: () => ({
     activator: null,
@@ -71,7 +72,6 @@ export default {
     search: null,
     y: 0,
   }),
-
   watch: {
     model(val, prev) {
       if (val.length === prev.length) return
@@ -95,7 +95,6 @@ export default {
       }
     }
   },
-
   methods: {
     filter(item, queryText) {
       if (item.header) return false
@@ -121,12 +120,13 @@ export default {
         this.items = response
       })
     },
-    clear(){
+    clear() {
       this.model = []
     }
   },
   mounted() {
     this.getTags()
+    this.model = this.tags
   }
 }
 </script>

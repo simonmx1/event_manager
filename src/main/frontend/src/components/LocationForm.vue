@@ -32,6 +32,7 @@
     <main>
       <tag-selector
           :confirm="confirmTags"
+          :tags="currentLocation.tags"
           @confirmed="getTags"
           ref="tagSelector"
       />
@@ -55,7 +56,7 @@ export default {
         name: '',
         menu: '',
         geolocation: '',
-        tags: null,
+        tags: [],
         enabled: true,
       })
     },
