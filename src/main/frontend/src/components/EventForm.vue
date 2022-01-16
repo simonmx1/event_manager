@@ -39,8 +39,9 @@
       <template v-slot:selection="{ attrs, item, parent }">
         <v-chip
             v-bind="attrs"
-            color="primary"
+            color="#437505"
             small
+            style="margin: 5px"
         >
           <span class="pr-2">
             {{ item.email }}
@@ -55,11 +56,16 @@
       </template>
       <template v-slot:item="{ index, item }">
         <span :key="item.id">{{ item.firstName }} {{ item.lastName }}</span>
-        <v-chip>{{ item.email }}, {{ item.username }}</v-chip>
+        <v-chip
+            small
+            style="margin-left: 5px"
+            color="#437505">
+          {{ item.email }}, {{ item.username }}
+        </v-chip>
       </template>
     </v-combobox>
     <template>
-    <location-selector/>
+      <location-selector/>
     </template>
     <div v-if="loadTimeslots">
       <v-row v-for="(timeslot, index) in event.timeslots" :key="index" ref="timeslots">
@@ -71,12 +77,12 @@
         </v-col>
         <v-col v-if="index + 1 === event.timeslots.length" cols="auto" style="margin-top: 10px">
           <v-btn icon @click="addTimeslotInput()">
-            <v-icon>mdi-calendar-plus</v-icon>
+            <v-icon>mdi-plus</v-icon>
           </v-btn>
         </v-col>
         <v-col v-if="index + 1 !== event.timeslots.length" cols="auto" style="margin-top: 10px">
           <v-btn icon @click="removeTimeslotInput(index)">
-            <v-icon>mdi-calendar-minus</v-icon>
+            <v-icon>mdi-minus</v-icon>
           </v-btn>
         </v-col>
       </v-row>
@@ -90,7 +96,7 @@ import LocationSelector from './LocationSelector.vue';
 
 export default {
   name: "EventForm",
-  components: { LocationSelector },
+  components: {LocationSelector},
   props: {
     event: {
       type: Object, default: () => ({

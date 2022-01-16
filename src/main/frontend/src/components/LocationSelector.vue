@@ -1,6 +1,6 @@
 <template>
   <v-combobox
-    prepend-icon="mdi-account-multiple-plus"
+    prepend-icon="mdi-map-marker-plus"
     v-model="model"
     :items="availableLocations"
     :search-input.sync="search"
@@ -21,7 +21,7 @@
     </template>
 
     <template v-slot:selection="{ attrs, item, parent }">
-      <v-chip v-bind="attrs" color="primary" small>
+      <v-chip v-bind="attrs" color="#437505" small>
         <span class="pr-2">
           {{ item.name }}
         </span>
