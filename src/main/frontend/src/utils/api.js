@@ -207,6 +207,7 @@ export default {
             }).catch(() => false);
         },
         async create(event) {
+            console.log(event);
             return await axios.post('/api/event/create', {
                 'name': event.name,
                 'creatorUsername': event.creatorUsername,

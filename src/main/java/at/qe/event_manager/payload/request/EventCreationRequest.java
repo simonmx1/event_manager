@@ -1,136 +1,98 @@
 package at.qe.event_manager.payload.request;
 
 import at.qe.event_manager.model.Location;
+import at.qe.event_manager.model.Timeslot;
 import at.qe.event_manager.model.User;
-import at.qe.event_manager.services.LocationService;
-import at.qe.event_manager.services.UserService;
 import org.primefaces.shaded.json.JSONArray;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RestController;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
-@RestController
 public class EventCreationRequest {
-	
-	@Autowired
-    private UserService userService;
 
-    @Autowired
-    private LocationService locationService;
-    
     private String name;
-    private User creator;
-    private Set<User> participants = new HashSet<>();
-    private Set<Location> locations = new HashSet<>();
-    private Set<Date> timeslots = new HashSet<>();
+    private String creatorUsername;
+    private List<String> participants = new ArrayList<>();
+    private List<Integer> locations = new ArrayList<>();
+    private List<String> timeslots = new ArrayList<>();
     private Boolean creatorIsPreferred;
-    private Date pollEndDate;
+    private String pollEndDate;
 
     public EventCreationRequest(String name, String creatorUsername, JSONArray participants, JSONArray locations,
                                 JSONArray timeslots, Boolean creatorIsPreferred, String pollEndDate) {
-    		
-    		this.name = name;
-    		System.out.println(userService);
-            this.creator = userService.loadUserByUsername(creatorUsername);
-            System.out.println("Hello1!");
-            participants.forEach(username -> this.participants.add(userService.loadUserByUsername(username.toString())));
-            System.out.println("Hello2!");
-            locations.forEach(location -> this.locations.add(locationService.loadLocationByLocationId(Integer.valueOf(location.toString()))));
-            System.out.println("Hello3!");
-            timeslots.forEach(timeslot -> this.timeslots.add(convertStringDateToDate(timeslot.toString())));
-            System.out.println("Hello4!");
+            this.name = name;
+            this.creatorUsername = creatorUsername;
+            participants.forEach(System.out::println);
+            locations.forEach(System.out::println);
+            timeslots.forEach(System.out::println);
+            participants.forEach(user -> this.participants.add(user.toString()));
+            locations.forEach(location -> this.locations.add(Integer.valueOf(location.toString())));
+            timeslots.forEach(timeslot -> this.timeslots.add(timeslot.toString()));
             this.creatorIsPreferred = creatorIsPreferred;
-            this.pollEndDate = convertStringDateToDate(pollEndDate);
+            this.pollEndDate = pollEndDate;
     }
 
-    private Date convertStringDateToDate(String date) {
-    	return(Timestamp.valueOf(LocalDateTime.parse(date.substring(0, 19))));
+    public String getName() {
+        return name;
     }
-    
-    public UserService getUserService() {
-		return userService;
-	}
 
-	public void setUserService(UserService userService) {
-		this.userService = userService;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public LocationService getLocationService() {
-		return locationService;
-	}
+    public String getCreatorUsername() {
+        return creatorUsername;
+    }
 
-	public void setLocationService(LocationService locationService) {
-		this.locationService = locationService;
-	}
+    public void setCreatorUsername(String creatorUsername) {
+        this.creatorUsername = creatorUsername;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public List<String> getParticipants() {
+        return participants;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setParticipants(List<String> participants) {
+        this.participants = participants;
+    }
 
-	public User getCreator() {
-		return creator;
-	}
+    public List<Integer> getLocations() {
+        return locations;
+    }
 
-	public void setCreator(User creator) {
-		this.creator = creator;
-	}
+    public void setLocations(List<Integer> locations) {
+        this.locations = locations;
+    }
 
-	public Set<User> getParticipants() {
-		return participants;
-	}
+    public List<String> getTimeslots() {
+        return timeslots;
+    }
 
-	public void setParticipants(Set<User> participants) {
-		this.participants = participants;
-	}
+    public void setTimeslots(List<String> timeslots) {
+        this.timeslots = timeslots;
+    }
 
-	public Set<Location> getLocations() {
-		return locations;
-	}
+    public Boolean getCreatorIsPreferred() {
+        return creatorIsPreferred;
+    }
 
-	public void setLocations(Set<Location> locations) {
-		this.locations = locations;
-	}
+    public void setCreatorIsPreferred(Boolean creatorIsPreferred) {
+        this.creatorIsPreferred = creatorIsPreferred;
+    }
 
-	public Set<Date> getTimeslots() {
-		return timeslots;
-	}
+    public String getPollEndDate() {
+        return pollEndDate;
+    }
 
-	public void setTimeslots(Set<Date> timeslots) {
-		this.timeslots = timeslots;
-	}
+    public void setPollEndDate(String pollEndDate) {
+        this.pollEndDate = pollEndDate;
+    }
 
-	public Boolean getCreatorIsPreferred() {
-		return creatorIsPreferred;
-	}
-
-	public void setCreatorIsPreferred(Boolean creatorIsPreferred) {
-		this.creatorIsPreferred = creatorIsPreferred;
-	}
-
-	public Date getPollEndDate() {
-		return pollEndDate;
-	}
-
-	public void setPollEndDate(Date pollEndDate) {
-		this.pollEndDate = pollEndDate;
-	}
-
-	@Override
+    @Override
     public String toString() {
         return "EventCreationRequest{" +
                 "name='" + name + '\'' +
-                ", creatorUsername='" + creator + '\'' +
+                ", creatorUsername='" + creatorUsername + '\'' +
                 ", participants=" + participants +
                 ", locations=" + locations +
                 ", timeslots=" + timeslots +
