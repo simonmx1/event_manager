@@ -2,9 +2,7 @@ package at.qe.event_manager.services;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.Date;
 import at.qe.event_manager.model.PollLocations;
-import at.qe.event_manager.model.User;
 import at.qe.event_manager.repositories.PollLocationsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;

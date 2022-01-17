@@ -3,15 +3,12 @@ package at.qe.event_manager.ui.controllers;
 import at.qe.event_manager.model.User;
 import at.qe.event_manager.services.MailService;
 import at.qe.event_manager.services.UserService;
-
 import java.io.Serializable;
 import java.util.Collection;
-
 import org.primefaces.shaded.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
