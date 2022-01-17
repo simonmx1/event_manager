@@ -85,21 +85,25 @@ public class MailService {
 		}
 	}
 	
+	private static String generateContentString(User user, String content) {
+		StringBuilder contentBuilder = new StringBuilder();
+		contentBuilder.append(String.format("Hello %s %s!\n\n", user.getFirstName(), user.getLastName()));
+		contentBuilder.append(content);
+		contentBuilder.append("\n\nYour Event Manager Team");
+		return contentBuilder.toString();
+	}
+	
 	public static void sendUserRegisterMessage(User user){
 		String subject = "Event Manager: New User Registration";
-		String content = "Hello " + user.getFirstName() + " " + user.getLastName() +
-				"!\n\n" + "You just created a User Account with the username \"" + user.getUsername()
-				+ "\" on \"Event Manager\" and used this Email for Registration!\n\n"
-				+ "If not, please contact us!\n\nYour Event Manager Team!";
-		sendMessage(buildMessage(user, subject, content));
+		String content =  String.format("You just created a User Account with the username \"%s\" on \"Event Manager\" "
+				+ "and used this Email for Registration.\n\nIf not, please contact us!", user.getUsername());
+		sendMessage(buildMessage(user, subject, generateContentString(user, content)));
 	}
 	
 	public static void sendUserDeleteMessage(User user){
 		String subject = "Event Manager: Your User has been deleted";
-		String content = "Hello " + user.getFirstName() + " " + user.getLastName()
-		+ "!\n\n" + "Your User Account with the username \"" + user.getUsername()
-		+ "\" on \"Event Manager\" has been deleted!\n\n"
-		+ "If this was a mistake, please contact us!\n\nYour Event Manager Team!";
-		sendMessage(buildMessage(user, subject, content));
+		String content = String.format("Your User Account with the username \"%s\" on \"Event Manager\" has been deleted!\n\n"
+				+ "If this was a mistake, please contact us!", user.getUsername());
+		sendMessage(buildMessage(user, subject, generateContentString(user, content)));
 	}
 }
