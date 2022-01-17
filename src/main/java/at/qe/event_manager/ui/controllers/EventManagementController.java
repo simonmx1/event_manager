@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -56,9 +57,13 @@ public class EventManagementController {
         event.setTimeslot(null);
         event.setCreator(userService.loadUserByUsername(eventCreationRequest.getCreatorUsername()));
         event.setCreatorIsPreferred(eventCreationRequest.getCreatorIsPreferred());
-        event.setPollEndDate(java.sql.Timestamp.valueOf(LocalDateTime.parse(eventCreationRequest.getPollEndDate().substring(0, 19))));
+        event.setPollEndDate(convertStringDateToDate(eventCreationRequest.getPollEndDate()));
         eventService.saveEvent(event);
         return null;
+    }
+
+    private Date convertStringDateToDate(String date) {
+        return(Timestamp.valueOf(LocalDateTime.parse(date.substring(0, 19))));
     }
 
     @PostMapping("/edit")
