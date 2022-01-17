@@ -45,19 +45,19 @@ public class EventManagementController {
     public ResponseEntity<?> create(@RequestBody EventCreationRequest eventCreationRequest) {
         System.out.println(eventCreationRequest.toString());
 
-//        Event event = new Event();
-//        event.setName(eventCreationRequest.getName());
-//        Set<User> participants = new HashSet<>();
-//        eventCreationRequest.getParticipants().forEach(p -> participants.add(userService.loadUserByUsername(p)));
-//        event.setParticipants(participants);
-//        //Set<Location> locations = new HashSet<>();
-//        //eventCreationRequest.getLocations().forEach(l -> locations.add(locationService.loadLocationByLocationId(l)));
-//        event.setLocation(null);
-//        event.setTimeslot(null);
-//        event.setCreator(userService.loadUserByUsername(eventCreationRequest.getCreatorUsername()));
-//        event.setCreatorIsPreferred(eventCreationRequest.getCreatorIsPreferred());
-//        event.setPollEndDate(java.sql.Timestamp.valueOf(LocalDateTime.parse(eventCreationRequest.getPollEndDate().substring(0, 19))));
-//        eventService.saveEvent(event);
+        Event event = new Event();
+        event.setName(eventCreationRequest.getName());
+        Set<User> participants = new HashSet<>();
+        eventCreationRequest.getParticipants().forEach(p -> participants.add(userService.loadUserByUsername(p)));
+        event.setParticipants(participants);
+        //Set<Location> locations = new HashSet<>();
+        //eventCreationRequest.getLocations().forEach(l -> locations.add(locationService.loadLocationByLocationId(l)));
+        event.setLocation(null);
+        event.setTimeslot(null);
+        event.setCreator(userService.loadUserByUsername(eventCreationRequest.getCreatorUsername()));
+        event.setCreatorIsPreferred(eventCreationRequest.getCreatorIsPreferred());
+        event.setPollEndDate(eventCreationRequest.getPollEndDate());
+        eventService.saveEvent(event);
         return null;
     }
 

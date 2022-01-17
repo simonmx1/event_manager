@@ -1,72 +1,40 @@
 package at.qe.event_manager.payload.request;
 
 import at.qe.event_manager.model.Location;
+import at.qe.event_manager.model.Timeslot;
 import at.qe.event_manager.model.User;
-import at.qe.event_manager.services.LocationService;
-import at.qe.event_manager.services.UserService;
 import org.primefaces.shaded.json.JSONArray;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class EventCreationRequest {
 
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private LocationService locationService;
-
     private String name;
-    private User creator;
-    private Set<User> participants = new HashSet<>();
-    private Set<Location> locations = new HashSet<>();
+    private String creatorUsername;
+    private List<String> participants = new ArrayList<>();
+    private List<Integer> locations = new ArrayList<>();
     private Set<Date> timeslots = new HashSet<>();
     private Boolean creatorIsPreferred;
     private Date pollEndDate;
 
     public EventCreationRequest(String name, String creatorUsername, JSONArray participants, JSONArray locations,
                                 JSONArray timeslots, Boolean creatorIsPreferred, String pollEndDate) {
-
-        this.name = name;
-        System.out.println(userService);
-        this.creator = userService.loadUserByUsername(creatorUsername);
-        System.out.println("Hello1!");
-        participants.forEach(username -> this.participants.add(userService.loadUserByUsername(username.toString())));
-        System.out.println("Hello2!");
-        locations.forEach(location -> this.locations.add(locationService.loadLocationByLocationId(Integer.valueOf(location.toString()))));
-        System.out.println("Hello3!");
-        timeslots.forEach(timeslot -> this.timeslots.add(convertStringDateToDate(timeslot.toString())));
-        System.out.println("Hello4!");
-        this.creatorIsPreferred = creatorIsPreferred;
-        this.pollEndDate = convertStringDateToDate(pollEndDate);
+            this.name = name;
+            this.creatorUsername = creatorUsername;
+            participants.forEach(System.out::println);
+            locations.forEach(System.out::println);
+            timeslots.forEach(System.out::println);
+            participants.forEach(user -> this.participants.add(user.toString()));
+            locations.forEach(location -> this.locations.add(Integer.valueOf(location.toString())));
+            timeslots.forEach(timeslot -> this.timeslots.add(convertStringDateToDate(timeslot.toString())));
+            this.creatorIsPreferred = creatorIsPreferred;
+            this.pollEndDate = convertStringDateToDate(pollEndDate);
     }
 
     private Date convertStringDateToDate(String date) {
         return(Timestamp.valueOf(LocalDateTime.parse(date.substring(0, 19))));
-    }
-
-    public UserService getUserService() {
-        return userService;
-    }
-
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
-    public LocationService getLocationService() {
-        return locationService;
-    }
-
-    public void setLocationService(LocationService locationService) {
-        this.locationService = locationService;
     }
 
     public String getName() {
@@ -77,27 +45,27 @@ public class EventCreationRequest {
         this.name = name;
     }
 
-    public User getCreator() {
-        return creator;
+    public String getCreatorUsername() {
+        return creatorUsername;
     }
 
-    public void setCreator(User creator) {
-        this.creator = creator;
+    public void setCreatorUsername(String creatorUsername) {
+        this.creatorUsername = creatorUsername;
     }
 
-    public Set<User> getParticipants() {
+    public List<String> getParticipants() {
         return participants;
     }
 
-    public void setParticipants(Set<User> participants) {
+    public void setParticipants(List<String> participants) {
         this.participants = participants;
     }
 
-    public Set<Location> getLocations() {
+    public List<Integer> getLocations() {
         return locations;
     }
 
-    public void setLocations(Set<Location> locations) {
+    public void setLocations(List<Integer> locations) {
         this.locations = locations;
     }
 
@@ -129,7 +97,7 @@ public class EventCreationRequest {
     public String toString() {
         return "EventCreationRequest{" +
                 "name='" + name + '\'' +
-                ", creatorUsername='" + creator + '\'' +
+                ", creatorUsername='" + creatorUsername + '\'' +
                 ", participants=" + participants +
                 ", locations=" + locations +
                 ", timeslots=" + timeslots +
