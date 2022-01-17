@@ -1,17 +1,15 @@
 package at.qe.event_manager.ui.controllers;
 
-import at.qe.event_manager.model.Event;
-import at.qe.event_manager.model.Location;
-import at.qe.event_manager.model.User;
+import at.qe.event_manager.model.*;
 import at.qe.event_manager.payload.request.EventCreationRequest;
 import at.qe.event_manager.payload.response.MessageResponse;
-import at.qe.event_manager.services.EventService;
-import at.qe.event_manager.services.LocationService;
-import at.qe.event_manager.services.UserService;
+import at.qe.event_manager.services.*;
+import org.primefaces.shaded.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -29,6 +27,18 @@ public class EventManagementController {
 
     @Autowired
     private LocationService locationService;
+
+    @Autowired
+    private PollService pollService;
+
+    @Autowired
+    private TimeslotService timeslotService;
+
+    @Autowired
+    private PollLocationsService pollLocationsService;
+
+    @Autowired
+    private PollTimeslotsService pollTimeslotsService;
 
     @GetMapping("/getAll")
     public Collection<Event> getEvents() {
@@ -50,20 +60,55 @@ public class EventManagementController {
         Set<User> participants = new HashSet<>();
         eventCreationRequest.getParticipants().forEach(p -> participants.add(userService.loadUserByUsername(p)));
         event.setParticipants(participants);
-        //Set<Location> locations = new HashSet<>();
-        //eventCreationRequest.getLocations().forEach(l -> locations.add(locationService.loadLocationByLocationId(l)));
         event.setLocation(null);
         event.setTimeslot(null);
         event.setCreator(userService.loadUserByUsername(eventCreationRequest.getCreatorUsername()));
         event.setCreatorIsPreferred(eventCreationRequest.getCreatorIsPreferred());
-        event.setPollEndDate(java.sql.Timestamp.valueOf(LocalDateTime.parse(eventCreationRequest.getPollEndDate().substring(0, 19))));
-        eventService.saveEvent(event);
+        event.setPollEndDate(convertStringDateToDate(eventCreationRequest.getPollEndDate()));
+        event = eventService.saveEvent(event);
+        createPollPerParticipant(event, eventCreationRequest.getLocations(), eventCreationRequest.getTimeslots());
         return null;
+    }
+
+    private Date convertStringDateToDate(String date) {
+        return (Timestamp.valueOf(LocalDateTime.parse(date.substring(0, 19))));
+    }
+
+    private void createPollPerParticipant(Event event, List<Integer> locations, List<String> timeslots) {
+        Set<Location> pollLocations = new HashSet<>();
+        locations.forEach(l -> pollLocations.add(locationService.loadLocationByLocationId(l)));
+        Set<Timeslot> pollTimeslots = new HashSet<>();
+        timeslots.forEach(t -> {
+            Timeslot timeslot = new Timeslot();
+            timeslot.setStart((Timestamp) convertStringDateToDate(new JSONObject(t).getString("start")));
+            timeslot.setEnd((Timestamp) convertStringDateToDate(new JSONObject(t).getString("end")));
+            pollTimeslots.add(timeslotService.saveTimeslot(timeslot));
+        });
+
+        for (User participant : event.getParticipants()) {
+            Poll poll = new Poll();
+            poll.setUser(participant);
+            poll.setEvent(event);
+            final Poll finalPoll = pollService.savePoll(poll);
+
+            pollLocations.forEach(l -> {
+                PollLocations pl = new PollLocations();
+                pl.setPoll(finalPoll);
+                pl.setLocation(l);
+                pollLocationsService.savePollLocations(pl);
+            });
+            pollTimeslots.forEach(t -> {
+                PollTimeslots pt = new PollTimeslots();
+                pt.setPoll(finalPoll);
+                pt.setTimeslot(t);
+                pollTimeslotsService.savePollTimeslots(pt);
+            });
+        }
     }
 
     @PostMapping("/edit")
     public ResponseEntity<?> edit(@RequestBody Event event) {
-        if(eventService.saveEvent(event) == null) {
+        if (eventService.saveEvent(event) == null) {
             return ResponseEntity.ok(new MessageResponse("Error: Event does not exist!"));
         } else {
             return ResponseEntity.ok(new MessageResponse("Event edited successfully!"));

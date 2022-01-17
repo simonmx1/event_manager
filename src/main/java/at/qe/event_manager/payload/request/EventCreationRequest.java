@@ -1,12 +1,7 @@
 package at.qe.event_manager.payload.request;
 
-import at.qe.event_manager.model.Location;
-import at.qe.event_manager.model.Timeslot;
-import at.qe.event_manager.model.User;
 import org.primefaces.shaded.json.JSONArray;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class EventCreationRequest {
 
@@ -22,15 +17,13 @@ public class EventCreationRequest {
                                 JSONArray timeslots, Boolean creatorIsPreferred, String pollEndDate) {
             this.name = name;
             this.creatorUsername = creatorUsername;
-            participants.forEach(System.out::println);
-            locations.forEach(System.out::println);
-            timeslots.forEach(System.out::println);
             participants.forEach(user -> this.participants.add(user.toString()));
             locations.forEach(location -> this.locations.add(Integer.valueOf(location.toString())));
             timeslots.forEach(timeslot -> this.timeslots.add(timeslot.toString()));
             this.creatorIsPreferred = creatorIsPreferred;
             this.pollEndDate = pollEndDate;
     }
+
 
     public String getName() {
         return name;

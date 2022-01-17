@@ -3,6 +3,7 @@ package at.qe.event_manager.repositories;
 import java.io.Serializable;
 import at.qe.event_manager.model.Poll;
 
+import at.qe.event_manager.model.PollLocations;
 import org.springframework.data.jpa.repository.Query;
 
 /**
