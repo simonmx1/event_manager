@@ -2,11 +2,14 @@ package at.qe.event_manager.ui.controllers;
 
 import at.qe.event_manager.model.Event;
 import at.qe.event_manager.model.Location;
+import at.qe.event_manager.model.Poll;
+import at.qe.event_manager.model.Timeslot;
 import at.qe.event_manager.model.User;
 import at.qe.event_manager.payload.request.EventCreationRequest;
 import at.qe.event_manager.payload.response.MessageResponse;
 import at.qe.event_manager.services.EventService;
 import at.qe.event_manager.services.LocationService;
+import at.qe.event_manager.services.PollService;
 import at.qe.event_manager.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +33,9 @@ public class EventManagementController {
 
     @Autowired
     private LocationService locationService;
+    
+    @Autowired
+    private PollService pollService;
 
     @GetMapping("/getAll")
     public Collection<Event> getEvents() {
@@ -51,19 +57,32 @@ public class EventManagementController {
         Set<User> participants = new HashSet<>();
         eventCreationRequest.getParticipants().forEach(p -> participants.add(userService.loadUserByUsername(p)));
         event.setParticipants(participants);
-        //Set<Location> locations = new HashSet<>();
-        //eventCreationRequest.getLocations().forEach(l -> locations.add(locationService.loadLocationByLocationId(l)));
         event.setLocation(null);
         event.setTimeslot(null);
         event.setCreator(userService.loadUserByUsername(eventCreationRequest.getCreatorUsername()));
         event.setCreatorIsPreferred(eventCreationRequest.getCreatorIsPreferred());
         event.setPollEndDate(convertStringDateToDate(eventCreationRequest.getPollEndDate()));
-        eventService.saveEvent(event);
+        event = eventService.saveEvent(event);
+        createPollPerParticipant(event, eventCreationRequest.getLocations(), eventCreationRequest.getTimeslots());
         return null;
     }
-
+    
     private Date convertStringDateToDate(String date) {
         return(Timestamp.valueOf(LocalDateTime.parse(date.substring(0, 19))));
+    }
+    
+    private void createPollPerParticipant(Event event, List<Integer> locations, List<String> timeslots) {
+    	Set<Location> pollLocations = new HashSet<>();
+        locations.forEach(l -> pollLocations.add(locationService.loadLocationByLocationId(l)));
+        Set<Timeslot> pollTimeslots = new HashSet<>();
+        locations.forEach(l -> pollTimeslots.add();
+    	
+    	for(User participant : event.getParticipants()) {
+    		Poll poll = new Poll();
+    		poll.setUser(participant);
+    		poll.setEvent(event);
+    		poll = pollService.savePoll(poll);
+    	}
     }
 
     @PostMapping("/edit")

@@ -1,12 +1,6 @@
 package at.qe.event_manager.payload.request;
 
-import at.qe.event_manager.model.Location;
-import at.qe.event_manager.model.Timeslot;
-import at.qe.event_manager.model.User;
 import org.primefaces.shaded.json.JSONArray;
-
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.*;
 
 public class EventCreationRequest {
@@ -15,27 +9,21 @@ public class EventCreationRequest {
     private String creatorUsername;
     private List<String> participants = new ArrayList<>();
     private List<Integer> locations = new ArrayList<>();
-    private Set<Date> timeslots = new HashSet<>();
+    private List<String> timeslots = new ArrayList<>();
     private Boolean creatorIsPreferred;
-    private Date pollEndDate;
+    private String pollEndDate;
 
     public EventCreationRequest(String name, String creatorUsername, JSONArray participants, JSONArray locations,
                                 JSONArray timeslots, Boolean creatorIsPreferred, String pollEndDate) {
             this.name = name;
             this.creatorUsername = creatorUsername;
-            participants.forEach(System.out::println);
-            locations.forEach(System.out::println);
-            timeslots.forEach(System.out::println);
             participants.forEach(user -> this.participants.add(user.toString()));
             locations.forEach(location -> this.locations.add(Integer.valueOf(location.toString())));
-            timeslots.forEach(timeslot -> this.timeslots.add(convertStringDateToDate(timeslot.toString())));
+            timeslots.forEach(timeslot -> this.timeslots.add(timeslot.toString()));
             this.creatorIsPreferred = creatorIsPreferred;
-            this.pollEndDate = convertStringDateToDate(pollEndDate);
+            this.pollEndDate = pollEndDate;
     }
 
-    private Date convertStringDateToDate(String date) {
-        return(Timestamp.valueOf(LocalDateTime.parse(date.substring(0, 19))));
-    }
 
     public String getName() {
         return name;
@@ -69,11 +57,11 @@ public class EventCreationRequest {
         this.locations = locations;
     }
 
-    public Set<Date> getTimeslots() {
+    public List<String> getTimeslots() {
         return timeslots;
     }
 
-    public void setTimeslots(Set<Date> timeslots) {
+    public void setTimeslots(List<String> timeslots) {
         this.timeslots = timeslots;
     }
 
@@ -85,11 +73,11 @@ public class EventCreationRequest {
         this.creatorIsPreferred = creatorIsPreferred;
     }
 
-    public Date getPollEndDate() {
+    public String getPollEndDate() {
         return pollEndDate;
     }
 
-    public void setPollEndDate(Date pollEndDate) {
+    public void setPollEndDate(String pollEndDate) {
         this.pollEndDate = pollEndDate;
     }
 
