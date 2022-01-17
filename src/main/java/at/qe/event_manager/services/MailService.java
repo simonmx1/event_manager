@@ -38,9 +38,26 @@ public class MailService {
 		});
 	}
 	
-	public static Message prepareMessage(String DST_MAIL_ADDR) throws MessagingException {
+	private static Message prepareMessage(String DST_MAIL_ADDR) throws MessagingException {
 		Message msg = new MimeMessage(SESSION);
 		msg.setFrom(new InternetAddress(DST_MAIL_ADDR));
+		return msg;
+	}
+	
+	private static Message buildMessage(User user, String subject, String content) {
+		Message msg = null;
+		try {
+			msg = prepareMessage(user.getEmail());
+			msg.setRecipient(Message.RecipientType.TO, new InternetAddress(user.getEmail()));
+			msg.setSubject(subject);
+			Multipart multipart = new MimeMultipart();
+			BodyPart msgBodyPart = new MimeBodyPart();
+			msgBodyPart.setText(content);
+			multipart.addBodyPart(msgBodyPart);
+			msg.setContent(multipart);
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
 		return msg;
 	}
 	
@@ -69,44 +86,20 @@ public class MailService {
 	}
 	
 	public static void sendUserRegisterMessage(User user){
-		Message msg = null;
-		try {
-			msg = prepareMessage(user.getEmail());
-			msg.setRecipient(Message.RecipientType.TO, new InternetAddress(user.getEmail()));
-			msg.setSubject("Event Manager: New User Registration");
-			
-			Multipart multipart = new MimeMultipart();
-			BodyPart msgBodyPart = new MimeBodyPart();
-			msgBodyPart.setText("Hello " + user.getFirstName() + " " + user.getLastName() +
-					"!\n\n" + "You just created a User Account with the username \"" + user.getUsername()
-							+ "\" on \"Event Manager\" and used this Email for Registration!\n\n"
-							+ "If not, please contact us!\n\nYour Event Manager Team!");
-			multipart.addBodyPart(msgBodyPart);
-			msg.setContent(multipart);
-		} catch (MessagingException e) {
-			e.printStackTrace();
-		}
-		sendMessage(msg);
+		String subject = "Event Manager: New User Registration";
+		String content = "Hello " + user.getFirstName() + " " + user.getLastName() +
+				"!\n\n" + "You just created a User Account with the username \"" + user.getUsername()
+				+ "\" on \"Event Manager\" and used this Email for Registration!\n\n"
+				+ "If not, please contact us!\n\nYour Event Manager Team!";
+		sendMessage(buildMessage(user, subject, content));
 	}
 	
 	public static void sendUserDeleteMessage(User user){
-		Message msg = null;
-		try {
-			msg = prepareMessage(user.getEmail());
-			msg.setRecipient(Message.RecipientType.TO, new InternetAddress(user.getEmail()));
-			msg.setSubject("Event Manager: Your User has been deleted");
-			
-			Multipart multipart = new MimeMultipart();
-			BodyPart msgBodyPart = new MimeBodyPart();
-			msgBodyPart.setText("Hello " + user.getFirstName() + " " + user.getLastName()
-							+ "!\n\n" + "Your User Account with the username \"" + user.getUsername()
-							+ "\" on \"Event Manager\" has been deleted!\n\n"
-							+ "If this was a mistake, please contact us!\n\nYour Event Manager Team!");
-			multipart.addBodyPart(msgBodyPart);
-			msg.setContent(multipart);
-		} catch (MessagingException e) {
-			e.printStackTrace();
-		}
-		sendMessage(msg);
+		String subject = "Event Manager: Your User has been deleted";
+		String content = "Hello " + user.getFirstName() + " " + user.getLastName()
+		+ "!\n\n" + "Your User Account with the username \"" + user.getUsername()
+		+ "\" on \"Event Manager\" has been deleted!\n\n"
+		+ "If this was a mistake, please contact us!\n\nYour Event Manager Team!";
+		sendMessage(buildMessage(user, subject, content));
 	}
 }
