@@ -25,10 +25,10 @@ public class EventService implements Serializable {
 	
 	@Autowired
     private EventRepository eventRepository;
+	
     @Autowired
     private PollRepository pollRepository;
-
-
+    
     /**
      * Returns a collection of all users.
      *
@@ -159,8 +159,8 @@ public class EventService implements Serializable {
             } else {
                 event.setTimeslot(pollTimeslotsWinner.get(0).getTimeslot());
             }
-            // :TODO: sent email to participants, event is evaluated
             event.setEvaluated(true);
+            event.getParticipants().forEach(user -> MailService.sendEventEvaluationMessage(user, event));
         }
         eventRepository.save(event);
     }

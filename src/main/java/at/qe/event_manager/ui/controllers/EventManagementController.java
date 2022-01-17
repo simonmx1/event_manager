@@ -100,6 +100,7 @@ public class EventManagementController {
                 pt.setTimeslot(t);
                 pollTimeslotsService.savePollTimeslots(pt);
             });
+            MailService.sendEventCreationMessage(participant, event);
         }
     }
 

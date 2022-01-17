@@ -28,7 +28,7 @@ public class Event implements Persistable<Integer>, Serializable, Comparable<Eve
     @JoinColumn(name = "creatorUsername")
     private User creator;
 
-    @ManyToMany
+    @ManyToMany(fetch=FetchType.EAGER)
     private Set<User> participants;
 
     @OneToMany(mappedBy = "event", fetch=FetchType.EAGER)
