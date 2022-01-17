@@ -216,9 +216,7 @@ export default {
     },
     confirmCreate(event) {
       event.participants.forEach((user, index) => event.participants[index] = user.username)
-      console.error(event);
       event.location.forEach((location, index) => event.location[index] = location.id)
-      console.error(event);
       api.user.loggedIn().then(response => {
         event.creatorUsername = response[0]
       }).then(() => api.event.create(event))

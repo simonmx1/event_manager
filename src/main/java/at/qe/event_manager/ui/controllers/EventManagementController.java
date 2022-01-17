@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -43,21 +44,21 @@ public class EventManagementController {
 
     @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody EventCreationRequest eventCreationRequest) {
-        System.out.println(eventCreationRequest.toString());
+        System.out.println(eventCreationRequest);
 
-        Event event = new Event();
-        event.setName(eventCreationRequest.getName());
-        Set<User> participants = new HashSet<>();
-        eventCreationRequest.getParticipants().forEach(p -> participants.add(userService.loadUserByUsername(p)));
-        event.setParticipants(participants);
-        //Set<Location> locations = new HashSet<>();
-        //eventCreationRequest.getLocations().forEach(l -> locations.add(locationService.loadLocationByLocationId(l)));
-        event.setLocation(null);
-        event.setTimeslot(null);
-        event.setCreator(userService.loadUserByUsername(eventCreationRequest.getCreatorUsername()));
-        event.setCreatorIsPreferred(eventCreationRequest.getCreatorIsPreferred());
-        event.setPollEndDate(java.sql.Timestamp.valueOf(LocalDateTime.parse(eventCreationRequest.getPollEndDate().substring(0, 19))));
-        eventService.saveEvent(event);
+//        Event event = new Event();
+//        event.setName(eventCreationRequest.getName());
+//        Set<User> participants = new HashSet<>();
+//        eventCreationRequest.getParticipants().forEach(p -> participants.add(userService.loadUserByUsername(p)));
+//        event.setParticipants(participants);
+//        //Set<Location> locations = new HashSet<>();
+//        //eventCreationRequest.getLocations().forEach(l -> locations.add(locationService.loadLocationByLocationId(l)));
+//        event.setLocation(null);
+//        event.setTimeslot(null);
+//        event.setCreator(userService.loadUserByUsername(eventCreationRequest.getCreatorUsername()));
+//        event.setCreatorIsPreferred(eventCreationRequest.getCreatorIsPreferred());
+//        event.setPollEndDate(Timestamp.valueOf(LocalDateTime.parse(eventCreationRequest.getPollEndDate().substring(0, 19))));
+//        eventService.saveEvent(event);
         return null;
     }
 
