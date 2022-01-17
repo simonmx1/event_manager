@@ -41,7 +41,7 @@ public class UserServiceTest {
 				assertNotNull(user.getLastName(), "User \"" + user + "\" does not have a lastname defined");
 				assertNotNull(user.getEmail(), "User \"" + user + "\" does not have a email defined");
             } else if ("user1".equals(user.getUsername())) {
-            	assertTrue(user.getRole().compareTo(UserRole.LOCATION_MANAGER) == 0, "User \"" + user + "\" does not have role ADMIN");
+            	assertTrue(user.getRole().compareTo(UserRole.USER) == 0, "User \"" + user + "\" does not have role USER");
             	assertNotNull(user.getUsername(), "User \"" + user + "\" does not have a username defined");
 				assertNotNull(user.getPassword(), "User \"" + user + "\" does not have a password defined");
 				assertNotNull(user.getCreateDate(), "User \"" + user + "\" does not have a createDate defined");
@@ -49,7 +49,7 @@ public class UserServiceTest {
 				assertNotNull(user.getLastName(), "User \"" + user + "\" does not have a lastname defined");
 				assertNotNull(user.getEmail(), "User \"" + user + "\" does not have a email defined");
             } else if ("user2".equals(user.getUsername())) {
-            	assertTrue(user.getRole().compareTo(UserRole.USER) == 0, "User \"" + user + "\" does not have role ADMIN");
+            	assertTrue(user.getRole().compareTo(UserRole.LOCATION_MANAGER) == 0, "User \"" + user + "\" does not have role LOCATION_MANAGER");
             	assertNotNull(user.getUsername(), "User \"" + user + "\" does not have a username defined");
 				assertNotNull(user.getPassword(), "User \"" + user + "\" does not have a password defined");
 				assertNotNull(user.getCreateDate(), "User \"" + user + "\" does not have a createDate defined");
@@ -57,7 +57,7 @@ public class UserServiceTest {
 				assertNotNull(user.getLastName(), "User \"" + user + "\" does not have a lastname defined");
 				assertNotNull(user.getEmail(), "User \"" + user + "\" does not have a email defined");
             } else  if ("elvis".equals(user.getUsername())) {
-            	assertTrue(user.getRole().compareTo(UserRole.USER) == 0, "User \"" + user + "\" does not have role ADMIN");
+            	assertTrue(user.getRole().compareTo(UserRole.USER) == 0, "User \"" + user + "\" does not have role USER");
             	assertNotNull(user.getUsername(), "User \"" + user + "\" does not have a username defined");
 				assertNotNull(user.getPassword(), "User \"" + user + "\" does not have a password defined");
 				assertNotNull(user.getCreateDate(), "User \"" + user + "\" does not have a createDate defined");
@@ -74,7 +74,7 @@ public class UserServiceTest {
     @Test
     @WithMockUser(username = "admin", authorities = {"ROLE_ADMIN"})
     public void testDeleteUser() {
-		String username = "user1";
+		String username = "user2";
         User adminUser = userService.loadUserByUsername("admin");
         assertNotNull(adminUser, "Admin user could not be loaded from test data source");
         User toBeDeletedUser = userService.loadUserByUsername(username);
