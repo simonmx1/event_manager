@@ -24,7 +24,7 @@ public class PollService implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Autowired
-    private PollRepository PollRepository;
+    private PollRepository pollRepository;
 
     /**
      * Returns a collection of all users.
@@ -32,7 +32,7 @@ public class PollService implements Serializable {
      * @return
      */
     public Collection<Poll> getAllPolls() {
-        return PollRepository.findAll();
+        return pollRepository.findAll();
     }
 
     /**
@@ -42,7 +42,7 @@ public class PollService implements Serializable {
      * @return the user with the given username
      */
     public Poll loadPoll(Integer id) {
-        return PollRepository.findById(id);
+        return pollRepository.findById(id);
     }
 
     /**
@@ -58,7 +58,7 @@ public class PollService implements Serializable {
         if (poll.isNew()) {
             poll.setCreateDate(new Date());
         }
-        return PollRepository.save(poll);
+        return pollRepository.save(poll);
     }
 
     /**
@@ -80,7 +80,7 @@ public class PollService implements Serializable {
      * @param user the user to delete
      */
     public void deletePoll(Poll poll) {
-        PollRepository.delete(poll);
+        pollRepository.delete(poll);
         // :TODO: write some audit log stating who and when this user was permanently deleted.
     }
 }

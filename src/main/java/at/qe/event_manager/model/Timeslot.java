@@ -45,8 +45,12 @@ public class Timeslot implements Persistable<Integer>, Serializable, Comparable<
         this.end = end;
     }
 
-    public void setTimeslotId(Integer timeslotId) {
-        this.timeslotId = timeslotId;
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
     }
 
     @Override
