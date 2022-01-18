@@ -23,7 +23,7 @@ public class Timeslot implements Persistable<Integer>, Serializable, Comparable<
     private Timestamp end;
 
     @OneToMany (mappedBy = "timeslot")
-    private Set<PollTimeslots> poll_timeslots;
+    private Set<PollTimeslots> pollTimeslots;
 
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)

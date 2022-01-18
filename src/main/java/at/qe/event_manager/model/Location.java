@@ -44,7 +44,7 @@ public class Location implements Persistable<Integer>, Serializable, Comparable<
     private List<OpeningTime> openingTimes;
 
     @OneToMany (mappedBy = "location", fetch=FetchType.EAGER)
-    private Set<PollLocations> poll_locations;
+    private Set<PollLocations> pollLocations;
 
     public List<OpeningTime> getOpeningTimes() {
         return openingTimes;

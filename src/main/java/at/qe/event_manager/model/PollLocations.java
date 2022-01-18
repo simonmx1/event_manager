@@ -41,8 +41,8 @@ public class PollLocations {
         this.points = points;
     }
     
-    public void addPoints(PollLocations poll_location) {
-        this.points += poll_location.getPoints();
+    public void addPoints(PollLocations pollLocation) {
+        this.points += pollLocation.getPoints();
     }
     
     @Override

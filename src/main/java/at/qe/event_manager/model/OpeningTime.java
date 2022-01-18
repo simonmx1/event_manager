@@ -38,13 +38,6 @@ public class OpeningTime implements Persistable<Integer>, Serializable, Comparab
     @JsonIgnore
     private Location location;
 
-/*
-    @ManyToOne
-    @JoinColumn(name = "location_id")
-    @JsonIgnore
-    private Location location;*/
-
-
     private int weekday; //monday=0 to sunday=6
 
     @Column(nullable = false)

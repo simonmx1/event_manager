@@ -41,8 +41,8 @@ public class PollTimeslots {
         this.points = points;
     }
     
-    public void addPoints(PollTimeslots poll_timeslot) {
-        this.points += poll_timeslot.getPoints();
+    public void addPoints(PollTimeslots pollTimeslot) {
+        this.points += pollTimeslot.getPoints();
     }
     
     @Override
