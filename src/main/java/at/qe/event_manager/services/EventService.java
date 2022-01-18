@@ -90,6 +90,15 @@ public class EventService implements Serializable {
     	pollService.cleanUpForParticipantDeletion(user);
     }
     
+    public void cleanUpForLocationDeletion(Location location) {
+//    	for(Event event : getAllEvents()) {
+//    		if(event.getLocation().compareTo(location) == 0) {
+    			// :TODO: delete Event or somehow cancel event
+//    		}
+//    	}
+    	pollService.cleanUpForLocationDeletion(location);
+    }
+    
     public void evaluatePolls(Event event) {
     	Set<Poll> polls = event.getPolls();
     	ArrayList<PollLocations> pollLocationsWinner = new ArrayList<>();

@@ -3,7 +3,11 @@ package at.qe.event_manager.services;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Set;
+
+import at.qe.event_manager.model.Location;
 import at.qe.event_manager.model.Poll;
+import at.qe.event_manager.model.PollLocations;
 import at.qe.event_manager.model.User;
 import at.qe.event_manager.repositories.PollRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,6 +101,21 @@ public class PollService implements Serializable {
     			poll.getPollLocations().forEach(pl -> pollLocationsService.deletePollLocations(pl));
     			poll.getPollTimeslots().forEach(pt -> pollTimeslotsService.deletePollTimeslots(pt));
     			deletePoll(poll);
+    		}
+    	}
+    }
+    
+    public void cleanUpForLocationDeletion(Location location) {
+    	// Delete Policy for Location in Polls
+    	for(Poll poll : getAllPolls()) {
+    		Set<PollLocations> pollLocations = poll.getPollLocations();
+    		for(PollLocations pollLocation : pollLocations) {
+    			if(pollLocation.getLocation().compareTo(location) == 0) {
+    				pollLocationsService.deletePollLocations(pollLocation);
+    			}
+    		}
+    		if(pollLocations.size() < 1) {
+    			// :TODO: Event can't be held -> delete or somehow cancel event
     		}
     	}
     }

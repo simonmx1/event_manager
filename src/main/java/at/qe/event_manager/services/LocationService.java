@@ -90,6 +90,7 @@ public class LocationService implements Serializable {
     }
     
     public void cleanUpForTagDeletion(Tag tag) {
+    	// Delete Policy for Tag in Locations
     	for(Location location : getAllLocations()) {
     		location.getTags().remove(tag);
     	}
