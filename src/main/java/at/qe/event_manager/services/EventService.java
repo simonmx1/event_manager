@@ -32,12 +32,6 @@ public class EventService implements Serializable {
     @Autowired
     private PollService pollService;
     
-    @Autowired
-    private PollLocationsService pollLocationsService;
-    
-    @Autowired
-    private PollTimeslotsService pollTimeslotsService;
-    
     /**
      * Returns a collection of all users.
      *
@@ -93,14 +87,7 @@ public class EventService implements Serializable {
         		}
         	}
         }
-    	for(Poll poll : pollService.getAllPolls()) {
-    		if(poll.getUser().getUsername().compareTo(user.getUsername()) == 0) {
-    			poll.getPollLocations().forEach(pl -> pollLocationsService.deletePollLocations(pl));
-    			poll.getPollTimeslots().forEach(pt -> pollTimeslotsService.deletePollTimeslots(pt));
-    			pollService.deletePoll(poll);
-    			
-    		}
-    	}
+    	pollService.cleanUpForParticipantDeletion(user);
     }
     
     public void evaluatePolls(Event event) {

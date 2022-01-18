@@ -25,6 +25,12 @@ public class PollService implements Serializable {
 	
 	@Autowired
     private PollRepository pollRepository;
+	
+	@Autowired
+    private PollLocationsService pollLocationsService;
+    
+    @Autowired
+    private PollTimeslotsService pollTimeslotsService;
 
     /**
      * Returns a collection of all users.
@@ -82,5 +88,16 @@ public class PollService implements Serializable {
     public void deletePoll(Poll poll) {
         pollRepository.delete(poll);
         // :TODO: write some audit log stating who and when this user was permanently deleted.
+    }
+    
+    public void cleanUpForParticipantDeletion(User user) {
+    	// Delete Policy for User in Polls
+    	for(Poll poll : getAllPolls()) {
+    		if(poll.getUser().getUsername().compareTo(user.getUsername()) == 0) {
+    			poll.getPollLocations().forEach(pl -> pollLocationsService.deletePollLocations(pl));
+    			poll.getPollTimeslots().forEach(pt -> pollTimeslotsService.deletePollTimeslots(pt));
+    			deletePoll(poll);
+    		}
+    	}
     }
 }
