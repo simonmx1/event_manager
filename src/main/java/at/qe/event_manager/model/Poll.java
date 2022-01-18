@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
+
 @Entity
 public class Poll implements Persistable<Integer>, Serializable, Comparable<Poll> {
 
@@ -18,10 +19,10 @@ public class Poll implements Persistable<Integer>, Serializable, Comparable<Poll
 
 
     @OneToMany (mappedBy = "poll", fetch=FetchType.EAGER)
-    private Set<PollTimeslots> poll_timeslots;
+    private Set<PollTimeslots> pollTimeslots;
 
     @OneToMany (mappedBy = "poll", fetch=FetchType.EAGER)
-    private Set<PollLocations> poll_locations;
+    private Set<PollLocations> pollLocations;
 
     @ManyToOne
     private User user;
@@ -44,20 +45,20 @@ public class Poll implements Persistable<Integer>, Serializable, Comparable<Poll
         this.pollId = pollId;
     }
 
-    public Set<PollTimeslots> getPoll_timeslots() {
-        return poll_timeslots;
+    public Set<PollTimeslots> getPollTimeslots() {
+        return pollTimeslots;
     }
 
-    public void setPoll_timeslots(Set<PollTimeslots> poll_timeslots) {
-        this.poll_timeslots = poll_timeslots;
+    public void setPollTimeslots(Set<PollTimeslots> pollTimeslots) {
+        this.pollTimeslots = pollTimeslots;
     }
 
-    public Set<PollLocations> getPoll_locations() {
-        return poll_locations;
+    public Set<PollLocations> getPollLocations() {
+        return pollLocations;
     }
 
-    public void setPoll_locations(Set<PollLocations> poll_locations) {
-        this.poll_locations = poll_locations;
+    public void setPollLocations(Set<PollLocations> pollLocations) {
+        this.pollLocations = pollLocations;
     }
 
     public User getUser() {

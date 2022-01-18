@@ -29,6 +29,15 @@ public class EventService implements Serializable {
     @Autowired
     private PollRepository pollRepository;
     
+    @Autowired
+    private PollService pollService;
+    
+    @Autowired
+    private PollLocationsService pollLocationsService;
+    
+    @Autowired
+    private PollTimeslotsService pollTimeslotsService;
+    
     /**
      * Returns a collection of all users.
      *
@@ -69,13 +78,40 @@ public class EventService implements Serializable {
         // :TODO: write some audit log stating who and when this user was permanently deleted.
     }
     
+    public void cleanUpForParticipantDeletion(User user) {
+    	// Delete Policy for User in Events
+    	for(Event event : getAllEvents()) {
+    		if(event.getCreator().getUsername().compareTo(user.getUsername()) == 0) {
+    			// :TODO: delete Event or somehow cancel event
+    		}
+        	Set<User> participants = event.getParticipants();
+        	if(participants.contains(user)) {
+        		participants.remove(user);
+        		if(participants.size() < 2) {
+        			// :TODO: Event can't be held
+        			// :TODO: Send Mail to last participant
+        		}
+        		event.setParticipants(participants);
+        		saveEvent(event);
+        	}
+        }
+    	for(Poll poll : pollService.getAllPolls()) {
+    		if(poll.getUser().getUsername().compareTo(user.getUsername()) == 0) {
+    			poll.getPollLocations().forEach(pl -> pollLocationsService.deletePollLocations(pl));
+    			poll.getPollTimeslots().forEach(pt -> pollTimeslotsService.deletePollTimeslots(pt));
+    			pollService.deletePoll(poll);
+    			
+    		}
+    	}
+    }
+    
     public void evaluatePolls(Event event) {
     	Set<Poll> polls = event.getPolls();
     	ArrayList<PollLocations> pollLocationsWinner = new ArrayList<>();
     	ArrayList<PollTimeslots> pollTimeslotsWinner = new ArrayList<>();
     	
     	for(Poll poll : polls) {
-    		for(PollLocations pollLocation : poll.getPoll_locations()) {
+    		for(PollLocations pollLocation : poll.getPollLocations()) {
     			if(!pollLocationsWinner.contains(pollLocation)) {
     				pollLocationsWinner.add(pollLocation);
     			}
@@ -83,7 +119,7 @@ public class EventService implements Serializable {
     				pollLocationsWinner.get(pollLocationsWinner.indexOf(pollLocation)).addPoints(pollLocation);
     			}
     		}
-    		for(PollTimeslots pollTimeslot : poll.getPoll_timeslots()) {
+    		for(PollTimeslots pollTimeslot : poll.getPollTimeslots()) {
     			if(!pollTimeslotsWinner.contains(pollTimeslot)) {
                     pollTimeslotsWinner.add(pollTimeslot);
     			}
@@ -111,7 +147,7 @@ public class EventService implements Serializable {
                     }
                 }
                 if (event.isCreatorIsPreferred()) {
-                    ArrayList<PollLocations> tempCreator = new ArrayList<>(pollRepository.findFirstByUserUsername(event.getCreator().getUsername()).getPoll_locations());
+                    ArrayList<PollLocations> tempCreator = new ArrayList<>(pollRepository.findFirstByUserUsername(event.getCreator().getUsername()).getPollLocations());
                     for (PollLocations pl : temp) {
                         for (PollLocations plCreator : tempCreator) {
                             if (pl.equals(plCreator)) {
@@ -139,7 +175,7 @@ public class EventService implements Serializable {
                     }
                 }
                 if (event.isCreatorIsPreferred()) {
-                    ArrayList<PollTimeslots> tempCreator = new ArrayList<>(pollRepository.findFirstByUserUsername(event.getCreator().getUsername()).getPoll_timeslots());
+                    ArrayList<PollTimeslots> tempCreator = new ArrayList<>(pollRepository.findFirstByUserUsername(event.getCreator().getUsername()).getPollTimeslots());
                     for (PollTimeslots pt : temp) {
                         for (PollTimeslots ptCreator : tempCreator) {
                             if (pt.equals(ptCreator)) {

@@ -54,12 +54,13 @@ public class EventManagementController {
 
         Event event = new Event();
         event.setName(eventCreationRequest.getName());
+        event.setCreator(userService.loadUserByUsername(eventCreationRequest.getCreatorUsername()));
         Set<User> participants = new HashSet<>();
+        participants.add(event.getCreator());
         eventCreationRequest.getParticipants().forEach(p -> participants.add(userService.loadUserByUsername(p)));
         event.setParticipants(participants);
         event.setLocation(null);
         event.setTimeslot(null);
-        event.setCreator(userService.loadUserByUsername(eventCreationRequest.getCreatorUsername()));
         event.setCreatorIsPreferred(eventCreationRequest.getCreatorIsPreferred());
         event.setPollEndDate(convertStringDateToDate(eventCreationRequest.getPollEndDate()));
         event = eventService.saveEvent(event);

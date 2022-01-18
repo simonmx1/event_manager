@@ -2,6 +2,10 @@ package at.qe.event_manager.model;
 
 import java.io.Serializable;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+@OnDelete(action = OnDeleteAction.CASCADE)
 public class PollLocationsId implements Serializable {
 
 	private static final long serialVersionUID = 1L;
