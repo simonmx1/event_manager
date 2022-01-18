@@ -3,7 +3,6 @@ package at.qe.event_manager.model;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
-
 import org.springframework.data.domain.Persistable;
 
 /**

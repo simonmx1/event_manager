@@ -91,8 +91,6 @@ public class EventService implements Serializable {
         			// :TODO: Event can't be held
         			// :TODO: Send Mail to last participant
         		}
-        		event.setParticipants(participants);
-        		saveEvent(event);
         	}
         }
     	for(Poll poll : pollService.getAllPolls()) {
