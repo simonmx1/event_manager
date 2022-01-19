@@ -2,6 +2,12 @@ import api from "@/utils/api";
 
 let navBarItems = [
     {
+        title: "Overview",
+        icon: "mdi-home",
+        url: "/",
+        roles: ['ADMIN', 'LOCATION_MANAGER', 'USER']
+    },
+    {
         title: "Users",
         icon: "mdi-account",
         url: "/users",
