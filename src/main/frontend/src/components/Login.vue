@@ -83,7 +83,7 @@ export default {
   methods: {
     login() {
       api.user.login(this.username, this.password).then(response => {
-        response ? this.$router.push("/home") : this.wrongCredentials = true
+        response ? this.$router.push("/") : this.wrongCredentials = true
       })
     }
   }
