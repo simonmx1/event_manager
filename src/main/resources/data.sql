@@ -8,10 +8,10 @@ INSERT INTO TAG (TEXT, CREATE_DATE) VALUES('Fast Food', '2016-01-01 00:00:00');
 INSERT INTO TAG (TEXT, CREATE_DATE) VALUES('Pizza', '2016-01-01 00:00:00');
 INSERT INTO TAG (TEXT, CREATE_DATE) VALUES('Delivery', '2016-01-01 00:00:00');
 
-INSERT INTO LOCATION (ENABLED, NAME, MENU, GEOLOCATION, CREATE_DATE) VALUES(TRUE, 'Pizzeria Mario', 'mariuspizza.it', 'goo.gl/maps/j4QqpPUHtUoqqyEp9', '2016-01-01 00:00:00');
-INSERT INTO LOCATION (ENABLED, NAME, MENU, GEOLOCATION, CREATE_DATE) VALUES(TRUE, 'McDonalds', 'mcdonalds.at', 'goo.gl/maps/tJEtHefB6FYXJkAa9', '2016-01-01 00:00:00');
-INSERT INTO LOCATION (ENABLED, NAME, MENU, GEOLOCATION, CREATE_DATE) VALUES(TRUE, 'Burger King', 'burgerking.de', 'goo.gl/maps/CPPrigxSo9Tg8hfF7', '2016-01-01 00:00:00');
-INSERT INTO LOCATION (ENABLED, NAME, MENU, GEOLOCATION, CREATE_DATE) VALUES(TRUE, 'KFC', 'kfc.de', 'goo.gl/maps/fQkQcnWPH2s9MiLt7', '2016-01-01 00:00:00');
+INSERT INTO LOCATION (ENABLED, NAME, MENU, GEOLOCATION, DESCRIPTION, CREATE_DATE) VALUES(TRUE, 'Pizzeria Mario', 'mariuspizza.it', 'goo.gl/maps/j4QqpPUHtUoqqyEp9', 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea tak','2016-01-01 00:00:00');
+INSERT INTO LOCATION (ENABLED, NAME, MENU, GEOLOCATION, DESCRIPTION, CREATE_DATE) VALUES(TRUE, 'McDonalds', 'mcdonalds.at', 'goo.gl/maps/tJEtHefB6FYXJkAa9', 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea tak', '2016-01-01 00:00:00');
+INSERT INTO LOCATION (ENABLED, NAME, MENU, GEOLOCATION, DESCRIPTION, CREATE_DATE) VALUES(TRUE, 'Burger King', 'burgerking.de', 'goo.gl/maps/CPPrigxSo9Tg8hfF7', 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea tak', '2016-01-01 00:00:00');
+INSERT INTO LOCATION (ENABLED, NAME, MENU, GEOLOCATION, DESCRIPTION, CREATE_DATE) VALUES(TRUE, 'KFC', 'kfc.de', 'goo.gl/maps/fQkQcnWPH2s9MiLt7', 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea tak','2016-01-01 00:00:00');
 INSERT INTO LOCATION (ENABLED, NAME, MENU, GEOLOCATION, CREATE_DATE) VALUES(TRUE, 'Meggima', 'meggima.eu', 'goo.gl/maps/Fspndr3WTdEJJyMH6', '2016-01-01 00:00:00');
 
 INSERT INTO LOCATION_TAGS(LOCATION_ID, TAGS_TEXT) VALUES(1, 'Chinese');
@@ -67,6 +67,7 @@ INSERT INTO TIMESLOT(START, END, CREATE_DATE) VALUES('2023-01-03 20:15:00', '202
 
 INSERT INTO EVENT(NAME, CREATE_DATE, POLL_END_DATE, CREATOR_USERNAME, CREATOR_IS_PREFERRED, IS_EVALUATED) VALUES('TEST EVENT', '2022-01-15 00:00:00', '2022-01-15 12:00:00', 'user1', true, false);
 INSERT INTO EVENT_PARTICIPANTS(EVENT_ID, PARTICIPANTS_USERNAME) VALUES(4, 'user1');
+INSERT INTO EVENT_PARTICIPANTS(EVENT_ID, PARTICIPANTS_USERNAME) VALUES(4, 'admin');
 INSERT INTO EVENT_PARTICIPANTS(EVENT_ID, PARTICIPANTS_USERNAME) VALUES(4, 'elvis');
 INSERT INTO POLL(CREATE_DATE, EVENT_ID, USER_USERNAME) VALUES('2022-01-15 00:00:00', 4, 'user1');
 INSERT INTO POLL(CREATE_DATE, EVENT_ID, USER_USERNAME) VALUES('2022-01-15 00:00:00', 4, 'elvis');

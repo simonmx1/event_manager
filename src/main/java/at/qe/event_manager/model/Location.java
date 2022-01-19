@@ -34,6 +34,8 @@ public class Location implements Persistable<Integer>, Serializable, Comparable<
 
     private String geolocation;
 
+    private String description;
+
     boolean enabled = true;
 
     @ManyToMany
@@ -45,6 +47,14 @@ public class Location implements Persistable<Integer>, Serializable, Comparable<
 
     @OneToMany (mappedBy = "location", fetch=FetchType.EAGER)
     private Set<PollLocations> pollLocations;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public List<OpeningTime> getOpeningTimes() {
         return openingTimes;
