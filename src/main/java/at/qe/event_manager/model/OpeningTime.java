@@ -68,10 +68,6 @@ public class OpeningTime implements Persistable<Integer>, Serializable, Comparab
         this.end = end;
     }
 
-    public Integer getOpeningTimeId() {
-        return openingTimeId;
-    }
-
     public void setOpeningTimeId(Integer openingTimeId) {
         this.openingTimeId = openingTimeId;
     }
@@ -94,12 +90,18 @@ public class OpeningTime implements Persistable<Integer>, Serializable, Comparab
 
     @Override
     public int compareTo(OpeningTime o) {
-        return this.openingTimeId.compareTo(o.getOpeningTimeId());
+        return this.openingTimeId.compareTo(o.getId());
+    }
+    
+    @Override
+    public boolean equals(Object openingTime) {
+    	if(!(openingTime instanceof OpeningTime)) return false;
+    	return this.openingTimeId.compareTo(((OpeningTime)openingTime).getId()) == 0;
     }
 
     @Override
     public Integer getId() {
-        return getOpeningTimeId();
+        return openingTimeId;
     }
 
     @Override

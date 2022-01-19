@@ -17,6 +17,7 @@ import org.springframework.data.domain.Persistable;
 public class Tag implements Persistable<String>, Serializable, Comparable<Tag> {
 
     private static final long serialVersionUID = 1L;
+    
     @Id
     @Column(length = 100)
     private String text;
@@ -44,6 +45,12 @@ public class Tag implements Persistable<String>, Serializable, Comparable<Tag> {
     @Override
     public int compareTo(Tag o) {
         return this.text.compareTo(o.text);
+    }
+    
+    @Override
+    public boolean equals(Object tag) {
+    	if(!(tag instanceof Tag)) return false;
+    	return this.text.compareTo(((Tag)tag).text) == 0;
     }
 
     @Override

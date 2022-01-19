@@ -60,10 +60,6 @@ public class Event implements Persistable<Integer>, Serializable, Comparable<Eve
         this.eventId = eventId;
     }
 
-    public Integer getEventId() {
-        return eventId;
-    }
-
     public String getName() {
         return name;
     }
@@ -138,7 +134,13 @@ public class Event implements Persistable<Integer>, Serializable, Comparable<Eve
 
     @Override
     public int compareTo(Event event) {
-        return this.eventId.compareTo(event.eventId);
+        return this.eventId.compareTo(event.getId());
+    }
+    
+    @Override
+    public boolean equals(Object event) {
+    	if(!(event instanceof Event)) return false;
+    	return this.eventId.compareTo(((Event)event).getId()) == 0;
     }
 
     @Override

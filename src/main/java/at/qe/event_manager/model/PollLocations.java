@@ -1,13 +1,17 @@
 package at.qe.event_manager.model;
 
+import java.io.Serializable;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "pollLocations")
 @IdClass(PollLocationsId.class)
-public class PollLocations {
+public class PollLocations implements Serializable{
 
-    @Id
+	private static final long serialVersionUID = 1L;
+
+	@Id
     @ManyToOne
     private Poll poll;
 
@@ -47,7 +51,7 @@ public class PollLocations {
     
     @Override
     public boolean equals(Object o) {
-    	if(o == null || !(o instanceof PollLocations)) {
+    	if(!(o instanceof PollLocations)) {
     		return false;
     	}
     	PollLocations pl = (PollLocations) o;

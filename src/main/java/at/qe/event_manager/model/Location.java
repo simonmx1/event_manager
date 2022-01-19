@@ -114,6 +114,12 @@ public class Location implements Persistable<Integer>, Serializable, Comparable<
     public int compareTo(Location o) {
         return this.locationId.compareTo(o.getId());
     }
+    
+    @Override
+    public boolean equals(Object location) { 
+    	if(!(location instanceof Location)) return false;
+    	return this.locationId.compareTo(((Location)location).getId()) == 0;
+    }
 
     @Override
     public Integer getId() {

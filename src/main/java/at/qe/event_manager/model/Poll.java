@@ -34,13 +34,6 @@ public class Poll implements Persistable<Integer>, Serializable, Comparable<Poll
     @Temporal(TemporalType.TIMESTAMP)
     private Date createDate;
 
-    public Poll() {
-    }
-
-    public Integer getPollId() {
-        return pollId;
-    }
-
     public void setPollId(Integer pollId) {
         this.pollId = pollId;
     }
@@ -87,9 +80,15 @@ public class Poll implements Persistable<Integer>, Serializable, Comparable<Poll
 
     @Override
     public int compareTo(@NotNull Poll poll) {
-        return this.pollId.compareTo(poll.pollId);
+        return this.pollId.compareTo(poll.getId());
     }
-
+    
+    @Override
+    public boolean equals(Object poll) {
+    	if(!(poll instanceof Poll)) return false;
+    	return this.pollId.compareTo(((Poll)poll).getId()) == 0;
+    }
+    
     @Override
     public Integer getId() {
         return pollId;
