@@ -91,7 +91,6 @@ public class PollService implements Serializable {
      */
     public void deletePoll(Poll poll) {
         pollRepository.delete(poll);
-        // :TODO: write some audit log stating who and when this user was permanently deleted.
     }
     
     public void cleanUpForParticipantDeletion(User user) {
@@ -114,7 +113,7 @@ public class PollService implements Serializable {
     				pollLocationsService.deletePollLocations(pollLocation);
     			}
     		}
-    		if(pollLocations.size() < 1) {
+    		if(pollLocations.isEmpty()) {
     			// :TODO: Event can't be held -> delete or somehow cancel event
     		}
     	}

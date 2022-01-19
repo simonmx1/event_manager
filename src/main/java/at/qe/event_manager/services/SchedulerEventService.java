@@ -18,7 +18,7 @@ public class SchedulerEventService {
 	
 	@Scheduled(fixedRate = 5000*60)
 	@Async
-	public void scheduleEventEvaluation() throws Exception {
+	public void scheduleEventEvaluation() {
 		for(Event event : eventService.getAllEvents()) {
 			if (!event.isEvaluated()) {
 				LocalDateTime currentDateTime = LocalDateTime.now();

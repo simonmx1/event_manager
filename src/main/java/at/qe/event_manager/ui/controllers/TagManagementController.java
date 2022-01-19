@@ -34,7 +34,7 @@ public class TagManagementController {
     }
 
     @PostMapping("/delete")
-    public ResponseEntity<?> delete(@RequestBody String tag) {
+    public ResponseEntity<MessageResponse> delete(@RequestBody String tag) {
     	Tag t = tagService.loadTag(new JSONObject(tag).getString("text"));
     	locationService.cleanUpForTagDeletion(t);
         tagService.deleteTag(t);
@@ -42,7 +42,7 @@ public class TagManagementController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> create(@RequestBody Tag tag) {
+    public ResponseEntity<String> create(@RequestBody Tag tag) {
         if (tagService.createTag(tag) == null) {
             return new ResponseEntity<>("Error While creating the Tag!", HttpStatus.OK);
         } else {

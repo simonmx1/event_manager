@@ -82,7 +82,6 @@ public class LocationService implements Serializable {
      */
     public void deleteLocation(Location location) {
         locationRepository.delete(location);
-        // :TODO: write some audit log stating who and when this user was permanently deleted.
     }
 
     public Location loadLocationByLocationId(Integer locationId) {

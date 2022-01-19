@@ -43,16 +43,9 @@ public class LocationManagementController implements Serializable {
     public Location get(@RequestParam(name = "locationId") Integer locationId) {
         return locationService.loadLocationByLocationId(locationId);
     }
-    /*
-        @GetMapping("/get")
-    @ResponseBody
-    public Location get(@RequestParam(name = "name") String name) {
-        return locationService.loadLocationByLocationId(Integer.parseInt(name));
-    }
-    */
 
     @PostMapping("/edit")
-    public ResponseEntity<?> edit(@RequestBody Location location) {
+    public ResponseEntity<MessageResponse> edit(@RequestBody Location location) {
         if(locationService.saveLocation(location) == null) {
             return ResponseEntity.ok(new MessageResponse("Error: Location does not exist!"));
         } else {
@@ -61,7 +54,7 @@ public class LocationManagementController implements Serializable {
     }
 
     @PostMapping("/delete")
-    public ResponseEntity<?> delete(@RequestBody String locationId) {
+    public ResponseEntity<MessageResponse> delete(@RequestBody String locationId) {
         Location location = locationService.loadLocationByLocationId(new JSONObject(locationId).getInt("locationId"));
         eventService.cleanUpForLocationDeletion(location);
         locationService.deleteLocation(location);
@@ -69,7 +62,7 @@ public class LocationManagementController implements Serializable {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createLocation(@RequestBody Location location) {
+    public ResponseEntity<String> createLocation(@RequestBody Location location) {
         if (locationService.createLocation(location) == null) {
             return new ResponseEntity<>("Error While creating the Location!", HttpStatus.OK);
         } else {

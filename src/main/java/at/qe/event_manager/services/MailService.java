@@ -24,6 +24,7 @@ public class MailService {
 	private static final String PASSWORD = "g7t0passwd";
 	private static final Properties PROPERTIES = new Properties();
 	private static final Session SESSION;
+	private static final boolean ENABLED = false;
 	
 	private MailService() {}
 	
@@ -41,7 +42,7 @@ public class MailService {
 		});
 	}
 	
-	private static Message prepareMessage(String DST_MAIL_ADDR) throws MessagingException {
+	private static Message prepareMessage(final String DST_MAIL_ADDR) throws MessagingException {
 		Message msg = new MimeMessage(SESSION);
 		msg.setFrom(new InternetAddress(DST_MAIL_ADDR));
 		return msg;
@@ -80,8 +81,8 @@ public class MailService {
 			try {
 				// We set our own email address here, so that we don't
 				// send any emails to third-party mail addresses.
-				msg.setRecipient(Message.RecipientType.TO, new InternetAddress("event.manager.g7t0@gmail.com"));
-				Transport.send(msg);
+				msg.setRecipient(Message.RecipientType.TO, new InternetAddress(SRC_MAIL_ADDR));
+				if(ENABLED) Transport.send(msg);
 			} catch (MessagingException e) {
 				e.printStackTrace();
 			}
@@ -90,7 +91,7 @@ public class MailService {
 	
 	private static String generateContentString(User user, String content) {
 		StringBuilder contentBuilder = new StringBuilder();
-		contentBuilder.append(String.format("Hello %s %s!\n\n", user.getFirstName(), user.getLastName()));
+		contentBuilder.append(String.format("Hello %s %s!%n%n", user.getFirstName(), user.getLastName()));
 		contentBuilder.append(content);
 		contentBuilder.append("\n\nYour Event Manager Team");
 		return contentBuilder.toString();

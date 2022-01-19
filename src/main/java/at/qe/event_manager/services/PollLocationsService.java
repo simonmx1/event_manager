@@ -66,6 +66,5 @@ public class PollLocationsService implements Serializable {
      */
     public void deletePollLocations(PollLocations pollLocations) {
         pollLocationsRepository.delete(pollLocations);
-        // :TODO: write some audit log stating who and when this user was permanently deleted.
     }
 }

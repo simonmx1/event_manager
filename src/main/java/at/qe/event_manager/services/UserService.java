@@ -92,6 +92,5 @@ public class UserService implements Serializable, UserDetailsService {
     @PreAuthorize("hasAuthority('ROLE_ADMIN') or principal.username eq #user.getUsername")
     public void deleteUser(User user) {
         userRepository.delete(user);
-        // :TODO: write some audit log stating who and when this user was permanently deleted.
     }
 }

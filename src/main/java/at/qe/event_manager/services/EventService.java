@@ -69,7 +69,6 @@ public class EventService implements Serializable {
      */
     public void deleteEvent(Event event) {
         eventRepository.delete(event);
-        // :TODO: write some audit log stating who and when this user was permanently deleted.
     }
     
     public void cleanUpForParticipantDeletion(User user) {
@@ -121,14 +120,14 @@ public class EventService implements Serializable {
                     pollTimeslotsWinner.get(pollTimeslotsWinner.indexOf(pollTimeslot)).setPoints(0);
                 }
     			else {
-    				pollTimeslotsWinner.get(pollTimeslotsWinner.indexOf(pollTimeslot)).addPoints(pollTimeslot);;
+    				pollTimeslotsWinner.get(pollTimeslotsWinner.indexOf(pollTimeslot)).addPoints(pollTimeslot);
     			}
     		}
     	}
-        Comparator<PollLocations> poll_LocationsComparator = new PollLocationsComparator();
-        Comparator<PollTimeslots> poll_timeslotsComparator = new PollTimeslotsComparator();
-        pollLocationsWinner.sort(poll_LocationsComparator);
-        pollTimeslotsWinner.sort(poll_timeslotsComparator);
+        Comparator<PollLocations> pollLocationsComparator = new PollLocationsComparator();
+        Comparator<PollTimeslots> pollTimeslotsComparator = new PollTimeslotsComparator();
+        pollLocationsWinner.sort(pollLocationsComparator);
+        pollTimeslotsWinner.sort(pollTimeslotsComparator);
         if (pollTimeslotsWinner.get(0).getPoints() == 0) {
             // :TODO: sent email to participants, event is evaluated but will not be held
             event.setEvaluated(true);
@@ -149,7 +148,7 @@ public class EventService implements Serializable {
                             }
                         }
                     }
-                    temp.sort(poll_LocationsComparator);
+                    temp.sort(pollLocationsComparator);
                     event.setLocation(temp.get(0).getLocation());
                 } else {
                     Random random = new Random();
@@ -177,7 +176,7 @@ public class EventService implements Serializable {
                             }
                         }
                     }
-                    temp.sort(poll_timeslotsComparator);
+                    temp.sort(pollTimeslotsComparator);
                     event.setTimeslot(temp.get(0).getTimeslot());
                 } else {
                     Random random = new Random();

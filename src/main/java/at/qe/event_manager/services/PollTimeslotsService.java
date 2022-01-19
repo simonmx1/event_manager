@@ -66,6 +66,5 @@ public class PollTimeslotsService implements Serializable {
      */
     public void deletePollTimeslots(PollTimeslots pollTimeslots) {
         pollTimeslotsRepository.delete(pollTimeslots);
-        // :TODO: write some audit log stating who and when this user was permanently deleted.
     }
 }

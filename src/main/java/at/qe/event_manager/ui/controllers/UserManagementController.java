@@ -29,6 +29,8 @@ public class UserManagementController implements Serializable {
     
     @Autowired
     private EventService eventService;
+    
+    private final String FORBIDDEN = "You shall not pass!";
 
     /**
      * Returns a list of all users.
@@ -52,11 +54,11 @@ public class UserManagementController implements Serializable {
         if (isAuthorized(username)) {
             return new ResponseEntity<>(userService.loadUserByUsername(username), HttpStatus.OK);
         }
-        return new ResponseEntity<>("You shall not pass!", HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(FORBIDDEN, HttpStatus.FORBIDDEN);
     }
 
     @PostMapping("/edit")
-    public ResponseEntity<?> edit(@RequestBody User user) {
+    public ResponseEntity<String> edit(@RequestBody User user) {
         if (isAuthorized(user.getUsername())) {
             if (userService.saveUser(user) == null) {
                 return new ResponseEntity<>("User does not exist!", HttpStatus.BAD_REQUEST);
@@ -64,12 +66,12 @@ public class UserManagementController implements Serializable {
                 return new ResponseEntity<>("User edited successfully", HttpStatus.OK);
             }
         } else {
-            return new ResponseEntity<>("You shall not pass!", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(FORBIDDEN, HttpStatus.FORBIDDEN);
         }
     }
 
     @PostMapping("/delete")
-    public ResponseEntity<?> delete(@RequestBody String username) {
+    public ResponseEntity<String> delete(@RequestBody String username) {
         if (isAuthorized(new JSONObject(username).getString("username"))) {
         	User user = userService.loadUserByUsername(new JSONObject(username).getString("username"));
         	eventService.cleanUpForParticipantDeletion(user);
@@ -77,7 +79,7 @@ public class UserManagementController implements Serializable {
             MailService.sendUserDeleteMessage(user);
             return new ResponseEntity<>("User deleted successfully", HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("You shall not pass!", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(FORBIDDEN, HttpStatus.FORBIDDEN);
         }
     }
 }

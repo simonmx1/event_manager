@@ -6,6 +6,7 @@ import at.qe.event_manager.payload.response.MessageResponse;
 import at.qe.event_manager.services.*;
 import org.primefaces.shaded.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.sql.Timestamp;
@@ -49,9 +50,7 @@ public class EventManagementController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> create(@RequestBody EventCreationRequest eventCreationRequest) {
-        System.out.println(eventCreationRequest.toString());
-
+    public ResponseEntity<String> create(@RequestBody EventCreationRequest eventCreationRequest) {
         Event event = new Event();
         event.setName(eventCreationRequest.getName());
         event.setCreator(userService.loadUserByUsername(eventCreationRequest.getCreatorUsername()));
@@ -65,7 +64,7 @@ public class EventManagementController {
         event.setPollEndDate(convertStringDateToDate(eventCreationRequest.getPollEndDate()));
         event = eventService.saveEvent(event);
         createPollPerParticipant(event, eventCreationRequest.getLocations(), eventCreationRequest.getTimeslots());
-        return null;
+        return new ResponseEntity<>("Event has been created successfully!", HttpStatus.CREATED);
     }
 
     private Date convertStringDateToDate(String date) {
@@ -106,7 +105,7 @@ public class EventManagementController {
     }
 
     @PostMapping("/edit")
-    public ResponseEntity<?> edit(@RequestBody Event event) {
+    public ResponseEntity<MessageResponse> edit(@RequestBody Event event) {
         if (eventService.saveEvent(event) == null) {
             return ResponseEntity.ok(new MessageResponse("Error: Event does not exist!"));
         } else {
@@ -115,7 +114,7 @@ public class EventManagementController {
     }
 
     @PostMapping("/delete")
-    public ResponseEntity<?> delete(@RequestBody Integer id) {
+    public ResponseEntity<MessageResponse> delete(@RequestBody Integer id) {
         eventService.deleteEvent(eventService.loadEvent(id));
         return ResponseEntity.ok(new MessageResponse("Event deleted successfully!"));
     }
