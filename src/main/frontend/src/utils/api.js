@@ -226,8 +226,8 @@ export default {
         }
     },
     poll: {
-        async get() {
-            return await axios.get('/api/poll/get',
+        async get(eventId, username) {
+            return await axios.get('/api/poll/get?eventId=' + eventId + '&username=' + username,
             {headers: {"Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt'))}}
             ).then(response => {
                 return response.data;
