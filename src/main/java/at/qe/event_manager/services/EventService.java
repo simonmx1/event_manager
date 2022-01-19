@@ -140,7 +140,7 @@ public class EventService implements Serializable {
                     }
                 }
                 if (event.isCreatorIsPreferred()) {
-                    ArrayList<PollLocations> tempCreator = new ArrayList<>(pollRepository.findFirstByUserUsername(event.getCreator().getUsername()).getPollLocations());
+                    ArrayList<PollLocations> tempCreator = new ArrayList<>(pollRepository.findFirstByEventAndUser(event, event.getCreator()).getPollLocations());
                     for (PollLocations pl : temp) {
                         for (PollLocations plCreator : tempCreator) {
                             if (pl.equals(plCreator)) {
@@ -168,7 +168,7 @@ public class EventService implements Serializable {
                     }
                 }
                 if (event.isCreatorIsPreferred()) {
-                    ArrayList<PollTimeslots> tempCreator = new ArrayList<>(pollRepository.findFirstByUserUsername(event.getCreator().getUsername()).getPollTimeslots());
+                    ArrayList<PollTimeslots> tempCreator = new ArrayList<>(pollRepository.findFirstByEventAndUser(event, event.getCreator()).getPollTimeslots());
                     for (PollTimeslots pt : temp) {
                         for (PollTimeslots ptCreator : tempCreator) {
                             if (pt.equals(ptCreator)) {
