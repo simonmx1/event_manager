@@ -57,10 +57,10 @@
                   {{ tag.text }}
                 </v-chip>
               </v-item>
-              <v-list-item-title style="margin-top: 10px">
+              <v-list-item-title style="margin-top: 10px" v-if="currentLocation.description">
                 <b>Description</b>
               </v-list-item-title>
-              <v-list-item>
+              <v-list-item v-if="currentLocation.description">
                 {{currentLocation.description}}
               </v-list-item>
             </v-item-group>
