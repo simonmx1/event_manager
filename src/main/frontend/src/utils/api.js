@@ -224,5 +224,46 @@ export default {
                 return response
             }).catch(() => false);
         }
+    },
+    poll: {
+        async get(poll) {
+            return await axios.get('/api/poll/get',
+            {headers: {"Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt'))}}
+            ).then(response => {
+                return response.data;
+            }).catch(() => false);
+        },
+        async getAllPollLocations() {
+            return await axios.get('/api/pollLocations/getAll',
+                {headers: {"Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt'))}}
+            ).then(response => {
+                return response.data;
+            }).catch(() => false);
+        },
+        async getAllPollTimeslots() {
+            return await axios.get('/api/pollTimeslots/getAll',
+                {headers: {"Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt'))}}
+            ).then(response => {
+                return response.data;
+            }).catch(() => false);
+        },
+        async edit(poll) {
+            return await axios.post('/api/poll/edit', {
+                    'pollId': poll.pollId,
+                    'pollLocations': poll.pollLocations,
+                    'pollTimeslots': poll.pollTimeslots,
+                    'user': poll.user,
+                    'event': poll.event,
+                },
+                {
+                    headers: {
+                        "Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt')),
+                        "Content-Type": "application/json"
+                    }
+                }
+            ).then(response => {
+                return response
+            }).catch(() => false);
+        },
     }
 }
