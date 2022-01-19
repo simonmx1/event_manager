@@ -124,6 +124,7 @@ export default {
                     'menu': location.menu,
                     'geolocation': location.geolocation,
                     'tags': location.tags,
+                    'description': location.description,
                     'enabled': location.enabled
                 },
                 {

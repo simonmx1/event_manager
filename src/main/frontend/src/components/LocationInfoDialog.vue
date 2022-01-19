@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="showDialog" max-width="700px">
+  <v-dialog v-model="showDialog" max-width="800px">
     <template v-slot:activator="{ on, attrs }">
       <v-btn
           icon
@@ -21,18 +21,20 @@
         </v-btn>
       </v-card-title>
       <v-row>
-        <v-col cols="6">
+        <v-col cols="12"
+               sm="6"
+               md="8">
           <v-list style="margin-left: 30px">
             <v-list-item-title>
-              Menu
+              <b>Menu</b>
             </v-list-item-title>
             <v-list-item>
               <a :href="'//' + currentLocation.menu" target="_blank">
                 {{ currentLocation.menu }}
               </a>
             </v-list-item>
-            <v-list-item-title>
-              Geo Location
+            <v-list-item-title style="margin-top: 10px">
+              <b>Geo Location</b>
             </v-list-item-title>
             <v-list-item>
               <a :href="'//' + currentLocation.location" target="_blank" style="text-decoration: none">
@@ -42,6 +44,9 @@
               </a>
             </v-list-item>
             <v-item-group>
+              <v-list-item-title style="margin-top: 10px">
+                <b>Tags</b>
+              </v-list-item-title>
               <v-item
                   v-for="(tag,id) in currentLocation.tags"
                   :key="id"
@@ -52,13 +57,20 @@
                   {{ tag.text }}
                 </v-chip>
               </v-item>
+              <v-list-item-title style="margin-top: 10px">
+                <b>Description</b>
+              </v-list-item-title>
+              <v-list-item>
+                {{currentLocation.description}}
+              </v-list-item>
             </v-item-group>
           </v-list>
         </v-col>
         <v-divider
             vertical
         ></v-divider>
-        <v-col cols="6">
+        <v-col cols="6"
+               md="4">
           <th class="text-center" style="font-size: medium">
             Opening Times
           </th>
