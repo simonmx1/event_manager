@@ -51,6 +51,10 @@ public class EventManagementController {
 
     @PostMapping("/create")
     public ResponseEntity<String> create(@RequestBody EventCreationRequest eventCreationRequest) {
+       /* if (!checkTimeslotsWithLocationOpeningTimes(eventCreationRequest.getLocations(), eventCreationRequest.getTimeslots())) {
+            System.out.println("Kaputt");
+            return new ResponseEntity<>("At least one Timeslot is not matching with at least one Location opening time", HttpStatus.OK);
+        }*/
         Event event = new Event();
         event.setName(eventCreationRequest.getName());
         event.setCreator(userService.loadUserByUsername(eventCreationRequest.getCreatorUsername()));
@@ -65,6 +69,29 @@ public class EventManagementController {
         event = eventService.saveEvent(event);
         createPollPerParticipant(event, eventCreationRequest.getLocations(), eventCreationRequest.getTimeslots());
         return new ResponseEntity<>("Event has been created successfully!", HttpStatus.CREATED);
+    }
+
+    private Boolean checkTimeslotsWithLocationOpeningTimes(List<Integer> locationIds, List<String> timeslotsStrings) {
+        Set<Location> locations = new HashSet<>();
+        locationIds.forEach(l -> locations.add(locationService.loadLocationByLocationId(l)));
+        Set<Timeslot> timeslots = new HashSet<>();
+        timeslotsStrings.forEach(t -> {
+            Timeslot timeslot = new Timeslot();
+            timeslot.setStart((Timestamp) convertStringDateToDate(new JSONObject(t).getString("start")));
+            timeslot.setEnd((Timestamp) convertStringDateToDate(new JSONObject(t).getString("end")));
+            timeslots.add(timeslot);
+        });
+        for (Location l : locations) {
+            for (Timeslot t : timeslots) {
+                List<OpeningTime> openingTimes = l.getOpeningTimes();
+                for (OpeningTime o : openingTimes) {
+                    if (o.getStart().compareTo(t.getStart()) > 0 || o.getEnd().compareTo(t.getEnd()) < 0) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     private Date convertStringDateToDate(String date) {

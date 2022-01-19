@@ -46,7 +46,7 @@
         </v-list>
       </v-menu>
     </v-app-bar>
-    <v-navigation-drawer app clipped temporary v-model="drawer">
+      <v-navigation-drawer app clipped temporary v-model="drawer">
       <v-list
           dense
           nav
