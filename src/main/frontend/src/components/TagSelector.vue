@@ -114,7 +114,12 @@ export default {
       api.tag.create(item.text).then(() => this.getTags())
     },
     deleteItem(item) {
-      this.model.splice(this.model.indexOf(item), 1)
+      let index_model = this.model.findIndex((value) => value.text === item.text)
+      this.items.splice(this.items.indexOf(item), 1)
+      if (index_model !== -1) {
+        this.model.splice(index_model, 1)
+      }
+      // this.$forceUpdate()
       api.tag.delete(item.text).then(() => this.getTags())
     },
     getTags() {

@@ -57,7 +57,7 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <v-dialog v-model="editDialog" max-width="500px">
+        <v-dialog v-model="editDialog" max-width="500px" persistent>
           <edit-location
               v-if="currentLocation != null"
               @close="editDialog = false; currentLocation = null; getLocations()"
