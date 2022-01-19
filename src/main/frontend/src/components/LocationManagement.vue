@@ -80,6 +80,29 @@
           </v-icon>
         </a>
       </template>
+      <template v-slot:item.description="{ item }">
+        <v-menu
+            transition="slide-y-transition"
+            bottom
+            offset-y
+        >
+          <template v-if="item.description" v-slot:activator="{ on, attrs }">
+            <v-btn
+                dark
+                v-bind="attrs"
+                v-on="on"
+                icon
+            >
+              <v-icon>
+                mdi-card-text
+              </v-icon>
+            </v-btn>
+          </template>
+          <v-card max-width="300px" class="pa-4">
+            {{item.description}}
+          </v-card>
+        </v-menu>
+      </template>
       <template v-slot:item.openingTimes="{ item }">
         <v-menu
             transition="slide-y-transition"
@@ -171,8 +194,9 @@ export default {
       {text: 'Menu', align: 'left', value: 'menu'},
       {text: 'Geo Location', align: 'center', value: 'geolocation'},
       {text: 'Tags', align: 'left', value: 'tags'},
-      {text: 'Opening Times', align: 'left', value: 'openingTimes'},
-      {text: 'Enabled', align: 'left', value: 'enabled'},
+      {text: 'Description', align: 'center', value: 'description'},
+      {text: 'Opening Times', align: 'center', value: 'openingTimes'},
+      {text: 'Enabled', align: 'center', value: 'enabled'},
       {text: 'Actions', value: 'actions'},
     ],
     locations: []
