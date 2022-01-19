@@ -38,7 +38,7 @@
         <v-spacer></v-spacer>
         <v-btn
             icon
-            @click.stop.prevent="deleteItem(index)"
+            @click.stop.prevent="deleteItem(item)"
         >
           <v-icon
               small>
@@ -113,13 +113,13 @@ export default {
     createItem(item) {
       api.tag.create(item.text).then(() => this.getTags())
     },
-    deleteItem(index) {
-      let item = this.items[index]
-      this.items.splice(index, 1)
-      if (this.model.indexOf(item) !== -1) {
-        this.model.splice(this.model.indexOf(item), 1)
+    deleteItem(item) {
+      let index_model = this.model.findIndex((value) => value.text === item.text)
+      this.items.splice(this.items.indexOf(item), 1)
+      if (index_model !== -1) {
+        this.model.splice(index_model, 1)
       }
-      this.$forceUpdate()
+      // this.$forceUpdate()
       api.tag.delete(item.text).then(() => this.getTags())
     },
     getTags() {
