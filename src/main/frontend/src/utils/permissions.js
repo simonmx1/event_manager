@@ -17,7 +17,7 @@ let navBarItems = [
         title: "Event Management",
         icon: "mdi-calendar",
         url: "/events",
-        roles: ['ADMIN', 'LOCATION_MANAGER', 'USER']
+        roles: ['ADMIN']
     }
 ]
 

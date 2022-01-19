@@ -106,7 +106,7 @@ export default {
       permissions.getNavBarItems().then(response => this.navBarItems = response)
     },
     navToHome() {
-      (this.$route.path !== "/home") ? this.$router.push("/home") : null
+      (this.$route.path !== "/") ? this.$router.push("/") : null
     }
   },
   computed: {},

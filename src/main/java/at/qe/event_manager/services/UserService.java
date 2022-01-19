@@ -34,7 +34,6 @@ public class UserService implements Serializable, UserDetailsService {
      *
      * @return
      */
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public Collection<User> getAllUsers() {
         return userRepository.findAll();
     }
