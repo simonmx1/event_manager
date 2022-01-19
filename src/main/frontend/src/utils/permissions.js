@@ -2,7 +2,7 @@ import api from "@/utils/api";
 
 let navBarItems = [
     {
-        title: "Overview",
+        title: "Home",
         icon: "mdi-home",
         url: "/",
         roles: ['ADMIN', 'LOCATION_MANAGER', 'USER']

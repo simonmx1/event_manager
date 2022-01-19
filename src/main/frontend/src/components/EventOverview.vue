@@ -98,19 +98,19 @@
                 </v-card-subtitle>
               </div>
               <div v-else>
-                <v-btn @click="showPollDialog(index)">
+                <v-btn @click="showPollDialog(index, item)">
                   Vote
                 </v-btn>
-                <v-dialog v-model="pollDialog">
+                <v-dialog v-model="pollDialog[index]">
                   <v-card>
                     <v-toolbar>
                       <v-card-title>Choose your poll options</v-card-title>
                     </v-toolbar>
-                    <poll-form v-if="currentEvent != null" :event="currentEvent"></poll-form>
+                    <poll-form v-if="currentEvent != null && pollDialog[index]" :event="currentEvent"></poll-form>
                     <v-card-actions>
                       <v-spacer></v-spacer>
-                      <v-btn @click="closePollDialog()" color="primary">Cancel</v-btn>
-                      <v-btn @click="closePollDialog()" color="red">Save</v-btn>
+                      <v-btn @click="closePollDialog(index)" color="primary">Cancel</v-btn>
+                      <v-btn @click="closePollDialog(index)" color="red">Save</v-btn>
                     </v-card-actions>
                   </v-card>
                 </v-dialog>
@@ -189,7 +189,7 @@ export default {
       filter: {},
       sortDesc: false,
       sortBy: 'name',
-      pollDialog: false,
+      pollDialog: [],
       currentEvent: null,
       keys: [
         'Name',
@@ -202,21 +202,22 @@ export default {
       return this.formatTimeStamp(timeslot.start) + " - "  + this.formatTimeStamp(timeslot.end)
     },*/
     formatTimeStamp(timestamp) {
-      //2023-01-02T19:15:00.000+00:00
       const date = new Date(timestamp).toISOString().slice(0, 10)
       const time = new Date(timestamp).toISOString().slice(11, 16)
       return {"date": date, "time": time}
     },
-    showPollDialog(index) {
-      this.currentEvent = this.items[index]
-      this.pollDialog = true
+    showPollDialog(index, item) {
+      this.currentEvent = item
+      this.pollDialog[index] = true
     },
-    closePollDialog() {
-      this.pollDialog = false
+    closePollDialog(index) {
+      this.pollDialog[index] = false
       this.currentEvent = null
     },
     getEvents() {
-      api.event.getAll().then(response => this.items = response)
+      api.event.getAll()
+          .then(response => this.items = response)
+          .then(() => this.items.forEach(() => this.pollDialog.push(false)))
     }
   },
   computed: {

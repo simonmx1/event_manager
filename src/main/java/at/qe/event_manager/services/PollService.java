@@ -5,10 +5,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
 
-import at.qe.event_manager.model.Location;
-import at.qe.event_manager.model.Poll;
-import at.qe.event_manager.model.PollLocations;
-import at.qe.event_manager.model.User;
+import at.qe.event_manager.model.*;
 import at.qe.event_manager.repositories.PollRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -113,9 +110,13 @@ public class PollService implements Serializable {
     				pollLocationsService.deletePollLocations(pollLocation);
     			}
     		}
-    		if(pollLocations.isEmpty()) {
+    		if (pollLocations.isEmpty()) {
     			// :TODO: Event can't be held -> delete or somehow cancel event
     		}
     	}
+    }
+
+    public Poll loadPollByEventIdAndUsername(Event event, User user) {
+        return pollRepository.findFirstByEventAndUser(event, user);
     }
 }

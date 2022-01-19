@@ -1,11 +1,17 @@
 package at.qe.event_manager.ui.controllers;
 
+import at.qe.event_manager.model.Event;
 import at.qe.event_manager.model.Poll;
 import at.qe.event_manager.payload.response.MessageResponse;
+
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Objects;
 
+import at.qe.event_manager.repositories.EventRepository;
+import at.qe.event_manager.services.EventService;
 import at.qe.event_manager.services.PollService;
+import at.qe.event_manager.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +28,12 @@ public class PollManagementController implements Serializable {
     @Autowired
     private PollService pollService;
 
+    @Autowired
+    private EventService eventService;
+
+    @Autowired
+    private UserService userService;
+
     /**
      * Returns a list of all polls.
      *
@@ -35,13 +47,17 @@ public class PollManagementController implements Serializable {
 
     @GetMapping("/get")
     @ResponseBody
-    public Poll get(@RequestParam(name = "pollId") Integer pollId) {
-        return pollService.loadPoll(pollId);
+    public Poll get(@RequestParam(name = "eventId") Integer eventId, @RequestParam(name = "username") String username) {
+        // Event event = eventService.loadEvent(eventId); // TODO: WHY THE HELL DOES THIS NOT WORK
+        //WORKAROUND
+        Event event = eventService.getAllEvents().stream().filter(e -> Objects.equals(e.getId(), eventId)).findFirst().get();
+        Poll p = pollService.loadPollByEventIdAndUsername(event, userService.loadUserByUsername(username));
+        return pollService.loadPollByEventIdAndUsername(event, userService.loadUserByUsername(username));
     }
 
     @PostMapping("/edit")
     public ResponseEntity<MessageResponse> edit(@RequestBody Poll poll) {
-        if(pollService.savePoll(poll) == null) {
+        if (pollService.savePoll(poll) == null) {
             return ResponseEntity.ok(new MessageResponse("Error: Location does not exist!"));
         } else {
             return ResponseEntity.ok(new MessageResponse("Poll submitted successfully!"));
