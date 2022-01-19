@@ -39,8 +39,9 @@ public class UserManagementController implements Serializable {
      */
     @GetMapping("/getAll")
     public Collection<User> getUsers() {
-        // TODO: Addition non admin method for event creation
-        return userService.getAllUsers();
+    	Collection<User> u = userService.getAllUsers();
+        u.forEach(x -> x.setPassword(""));
+        return u;
     }
 
     private boolean isAuthorized(String username) {
