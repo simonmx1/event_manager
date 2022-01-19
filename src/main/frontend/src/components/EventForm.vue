@@ -4,102 +4,112 @@
       v-if="currentEvent"
       v-model="valid"
       lazy-validation>
-    <v-text-field
-        v-model="currentEvent.name"
-        :rules="nameRules"
-        prepend-icon="mdi-form-textbox"
-        label="Eventname"
-        type="text"
-    ></v-text-field>
-    <v-combobox
-        prepend-icon="mdi-account-multiple-plus"
-        v-if="availableUsers !== [] && currentEvent.participants"
-        v-model="currentEvent.participants"
-        :items="availableUsers"
-        :search-input.sync="search"
-        :filter="filter"
-        label="Participants"
-        item-text="id"
-        multiple
-        outlined
-        dense
-    >
-      <template v-slot:no-data>
-        <v-container>
-          <span class="subheading">User does not exist: </span>
-          <v-chip style="margin-left: 10px"
-                  :color="'#ff0000'"
-                  small
-          >
-            {{ search }}
-          </v-chip>
-        </v-container>
-      </template>
-
-      <template v-slot:selection="{ attrs, item, parent }">
-        <v-chip
-            v-bind="attrs"
-            style="margin: 5px"
+    <v-row>
+      <v-col cols="6">
+        <v-text-field
+            v-model="currentEvent.name"
+            :rules="nameRules"
+            prepend-icon="mdi-form-textbox"
+            label="Eventname"
+            type="text"
+        ></v-text-field>
+        <v-combobox
+            prepend-icon="mdi-account-multiple-plus"
+            v-if="availableUsers !== [] && currentEvent.participants"
+            v-model="currentEvent.participants"
+            :items="availableUsers"
+            :search-input.sync="search"
+            :filter="filter"
+            label="Participants"
+            item-text="id"
+            multiple
+            outlined
+            dense
         >
-          <v-chip
-              small
-              color="#437505">
-            {{ item.email }}
-          </v-chip>
-          <v-chip
-              small
-              color="#054375">
-            {{ item.username }}
-          </v-chip>
-          <v-icon
-              small
-              @click="parent.selectItem(item)"
-          >
-            $delete
-          </v-icon>
-        </v-chip>
-      </template>
-      <template v-slot:item="{ index, item }">
-        <span :key="item.id">{{ item.firstName }} {{ item.lastName }}</span>
-        <v-chip
-            style="margin-left: 5px"
-            small
-            color="#437505">
-          {{ item.email }}
-        </v-chip>
-        <v-chip
-            small
-            style="margin-left: 5px"
-            color="#054375">
-          {{ item.username }}
-        </v-chip>
-      </template>
-    </v-combobox>
-    <template>
-      <location-selector ref="locationSelector" @confirm="confirmLocations"/>
-    </template>
-    <div v-if="loadTimeslots">
-      <v-row v-for="(timeslot, index) in currentEvent.timeslots" :key="index" ref="timeslots">
-        <v-col class=".col-auto">
-          <v-datetime-picker :time-picker-props="{format:'24hr', allowedMinutes:allowedStepTimeSlot}" label="Select Starttime" v-model="timeslot.start"></v-datetime-picker>
-        </v-col>
-        <v-col class=".col-auto">
-          <v-datetime-picker :time-picker-props="{format:'24hr', allowedMinutes:allowedStepTimeSlot}" label="Select Endtime" v-model="timeslot.end"></v-datetime-picker>
-        </v-col>
-        <v-col v-if="index + 1 === currentEvent.timeslots.length" cols="auto" style="margin-top: 10px">
-          <v-btn icon @click="addTimeslotInput()">
-            <v-icon>mdi-plus</v-icon>
-          </v-btn>
-        </v-col>
-        <v-col v-if="index + 1 !== currentEvent.timeslots.length" cols="auto" style="margin-top: 10px">
-          <v-btn icon @click="removeTimeslotInput(index)">
-            <v-icon>mdi-minus</v-icon>
-          </v-btn>
-        </v-col>
-      </v-row>
-    </div>
-    <v-checkbox v-model="currentEvent.creatorIsPreferred" label="Creator decides on poll tie"/>
-    <v-datetime-picker :time-picker-props="{format:'24hr', allowedMinutes:allowedStepTimeEnd}" label="Select poll end date" v-model="currentEvent.pollEndDate"></v-datetime-picker>
+          <template v-slot:no-data>
+            <v-container>
+              <span class="subheading">User does not exist: </span>
+              <v-chip style="margin-left: 10px"
+                      :color="'#ff0000'"
+                      small
+              >
+                {{ search }}
+              </v-chip>
+            </v-container>
+          </template>
+          <template v-slot:selection="{ attrs, item, parent }">
+            <v-chip
+                v-bind="attrs"
+                style="margin: 5px"
+            >
+              <v-chip
+                  small
+                  color="#437505">
+                {{ item.email }}
+              </v-chip>
+              <v-chip
+                  small
+                  color="#054375">
+                {{ item.username }}
+              </v-chip>
+              <v-icon
+                  small
+                  @click="parent.selectItem(item)"
+              >
+                $delete
+              </v-icon>
+            </v-chip>
+          </template>
+          <template v-slot:item="{ index, item }">
+            <span :key="item.id">{{ item.firstName }} {{ item.lastName }}</span>
+            <v-chip
+                style="margin-left: 5px"
+                small
+                color="#437505">
+              {{ item.email }}
+            </v-chip>
+            <v-chip
+                small
+                style="margin-left: 5px"
+                color="#054375">
+              {{ item.username }}
+            </v-chip>
+          </template>
+        </v-combobox>
+        <template>
+          <location-selector ref="locationSelector" @confirm="confirmLocations"/>
+        </template>
+        <v-checkbox v-model="currentEvent.creatorIsPreferred" label="Creator decides on poll tie"/>
+      </v-col>
+      <v-divider vertical/>
+      <v-col cols="6">
+        <div v-if="loadTimeslots">
+          <v-row v-for="(timeslot, index) in currentEvent.timeslots" :key="index" ref="timeslots">
+            <v-col class=".col-auto">
+              <v-datetime-picker :time-picker-props="{format:'24hr', allowedMinutes:allowedStepTimeSlot}"
+                                 label="Select Starttime" v-model="timeslot.start"></v-datetime-picker>
+            </v-col>
+            <v-col class=".col-auto">
+              <v-datetime-picker :time-picker-props="{format:'24hr', allowedMinutes:allowedStepTimeSlot}"
+                                 label="Select Endtime" v-model="timeslot.end"></v-datetime-picker>
+            </v-col>
+            <v-col v-if="index + 1 === currentEvent.timeslots.length" cols="auto" style="margin-top: 10px">
+              <v-btn icon @click="addTimeslotInput()">
+                <v-icon>mdi-plus</v-icon>
+              </v-btn>
+            </v-col>
+            <v-col v-if="index + 1 !== currentEvent.timeslots.length" cols="auto" style="margin-top: 10px">
+              <v-btn icon @click="removeTimeslotInput(index)">
+                <v-icon>mdi-minus</v-icon>
+              </v-btn>
+            </v-col>
+          </v-row>
+        </div>
+        <v-divider/>
+        <v-datetime-picker :time-picker-props="{format:'24hr', allowedMinutes:allowedStepTimeEnd}"
+                           label="Poll end time" v-model="currentEvent.pollEndDate"></v-datetime-picker>
+      </v-col>
+    </v-row>
   </v-form>
 </template>
 
