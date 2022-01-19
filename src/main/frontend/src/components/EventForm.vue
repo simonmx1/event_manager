@@ -39,13 +39,18 @@
       <template v-slot:selection="{ attrs, item, parent }">
         <v-chip
             v-bind="attrs"
-            color="#437505"
-            small
             style="margin: 5px"
         >
-          <span class="pr-2">
+          <v-chip
+              small
+              color="#437505">
             {{ item.email }}
-          </span>
+          </v-chip>
+          <v-chip
+              small
+              color="#054375">
+            {{ item.username }}
+          </v-chip>
           <v-icon
               small
               @click="parent.selectItem(item)"
@@ -57,10 +62,16 @@
       <template v-slot:item="{ index, item }">
         <span :key="item.id">{{ item.firstName }} {{ item.lastName }}</span>
         <v-chip
+            style="margin-left: 5px"
+            small
+            color="#437505">
+          {{ item.email }}
+        </v-chip>
+        <v-chip
             small
             style="margin-left: 5px"
-            color="#437505">
-          {{ item.email }}, {{ item.username }}
+            color="#054375">
+          {{ item.username }}
         </v-chip>
       </template>
     </v-combobox>
