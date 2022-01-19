@@ -226,7 +226,7 @@ export default {
         }
     },
     poll: {
-        async get(poll) {
+        async get() {
             return await axios.get('/api/poll/get',
             {headers: {"Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt'))}}
             ).then(response => {
