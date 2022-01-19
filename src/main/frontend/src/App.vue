@@ -1,5 +1,5 @@
 <template>
-  <v-app app>
+  <v-app app style="background: #333">
     <v-app-bar app clipped-left>
       <v-img
           src="favicon.png"

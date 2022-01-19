@@ -31,7 +31,7 @@
           <v-spacer/>
 
 
-          <v-dialog v-model="createDialog" persistent max-width="500px">
+          <v-dialog v-model="createDialog" persistent max-width="1000px">
             <template v-slot:activator="{ on, attrs }">
               <v-btn
                   color="primary"
@@ -72,7 +72,7 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
-          <v-dialog v-model="editDialog" max-width="500px">
+          <v-dialog v-model="editDialog" max-width="1000px">
             <edit-event v-if="currentEvent" @close="editDialog = false" :user="currentEvent"/>
           </v-dialog>
         </v-toolbar>
