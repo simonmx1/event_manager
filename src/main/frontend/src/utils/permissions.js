@@ -2,19 +2,19 @@ import api from "@/utils/api";
 
 let navBarItems = [
     {
-        title: "User Management",
+        title: "Users",
         icon: "mdi-account",
         url: "/users",
         roles: ['ADMIN']
     },
     {
-        title: "Location Management",
+        title: "Locations",
         icon: "mdi-earth",
         url: "/locations",
         roles: ['ADMIN', 'LOCATION_MANAGER']
     },
     {
-        title: "Event Management",
+        title: "Events",
         icon: "mdi-calendar",
         url: "/events",
         roles: ['ADMIN']
