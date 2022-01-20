@@ -76,7 +76,7 @@
                   Vote
                 </v-btn>
                 <v-dialog v-model="pollDialog[index]" width="900px" persistent>
-                  <v-card style="overflow: hidden" class="pa-2">
+                  <v-card style="overflow: hidden">
                     <v-toolbar>
                       <v-card-title>Choose your poll options</v-card-title>
                     </v-toolbar>

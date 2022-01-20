@@ -19,39 +19,39 @@
                     v-on="on">
                 </v-text-field>
               </template>
-              <v-container>
-                <v-card width="100%">
-                  <v-toolbar color="primary">
-                    <v-card-title>Opening Times on {{ day.day }}</v-card-title>
-                  </v-toolbar>
-                  <v-row class="pa-5">
-                    <v-col cols="6">
-                      <h2>Opening:</h2>
-                      <v-time-picker
-                          v-if="timepicker[dayIndex][timeIndex]"
-                          format="24hr"
-                          v-model="time.start"
-                          :max="time.end"
-                          :allowed-minutes="allowedStep"
-                      ></v-time-picker>
-                    </v-col>
-                    <v-col cols="6">
-                      <h2>Closing:</h2>
-                      <v-time-picker
-                          v-if="timepicker[dayIndex][timeIndex]"
-                          format="24hr"
-                          v-model="time.end"
-                          :min="time.start"
-                          :allowed-minutes="allowedStep"
-                      ></v-time-picker>
-                    </v-col>
-                  </v-row>
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="primary" text @click="saveTime(dayIndex, timeIndex)">Save</v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-container>
+              <v-card width="100%" style="horiz-align: center">
+                <v-toolbar color="primary">
+                  <v-card-title>Opening Time on {{ day.day }}</v-card-title>
+                </v-toolbar>
+                <v-row class="ma-8">
+                  <v-col cols="5"
+                         style="margin-left: 25px">
+                    <h2>Opening:</h2>
+                    <v-time-picker
+                        v-if="timepicker[dayIndex][timeIndex]"
+                        format="24hr"
+                        v-model="time.start"
+                        :max="time.end"
+                        :allowed-minutes="allowedStep"
+                    ></v-time-picker>
+                  </v-col>
+                  <v-col cols="5"
+                         style="margin-left: 65px">
+                    <h2>Closing:</h2>
+                    <v-time-picker
+                        v-if="timepicker[dayIndex][timeIndex]"
+                        format="24hr"
+                        v-model="time.end"
+                        :min="time.start"
+                        :allowed-minutes="allowedStep"
+                    ></v-time-picker>
+                  </v-col>
+                </v-row>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="primary" text @click="saveTime(dayIndex, timeIndex)">Save</v-btn>
+                </v-card-actions>
+              </v-card>
             </v-dialog>
           </v-col>
           <v-col v-if="timeIndex + 1 === day.openingTimes.length" cols="auto" style="margin-top: 10px">

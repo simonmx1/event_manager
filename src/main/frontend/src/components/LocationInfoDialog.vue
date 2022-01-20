@@ -10,7 +10,7 @@
         <v-icon> mdi-information-variant</v-icon>
       </v-btn>
     </template>
-    <v-card style="overflow: hidden">
+    <v-card style="overflow: hidden"  class="pa-4">
       <v-card-title style="width: 100%">
         {{ currentLocation.name }}
         <v-spacer></v-spacer>

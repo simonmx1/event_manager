@@ -1,5 +1,5 @@
 <template>
-  <v-row>
+  <v-row class="pa-4">
     <v-col cols="6">
       <v-card-title>
         Sort your Locations:
