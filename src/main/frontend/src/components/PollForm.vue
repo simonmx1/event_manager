@@ -5,7 +5,14 @@
         Sort your Locations:
       </v-card-title>
       <draggable v-model="locations" group="people" @start="drag=true" @end="drag=false">
-        <div v-for="element in locations" :key="element.id">{{element.name}}</div>
+        <div v-for="(item) in locations "
+             :key="item.location.id">
+          <v-card color="#3d3d3d" class="pa-2, ma-2">
+            <v-card-title>
+              {{item.location.name}}
+            </v-card-title>
+          </v-card>
+        </div>
       </draggable>
     </v-col>
     <v-divider vertical></v-divider>
@@ -14,7 +21,23 @@
         Sort your Timeslots:
       </v-card-title>
       <draggable v-model="timeslots" group="people" @start="drag=true" @end="drag=false">
-        <div v-for="element in timeslots" :key="element.id">{{element.name}}</div>
+        <div v-for="item in timeslots"
+             :key="item.timeslot.id"
+        >
+          <v-card color="#3d3d3d" class="pa-2, ma-2">
+            <v-card-subtitle style="font-size: medium">
+              From:
+              <div style="float: right">
+                {{ formatTimeStamp(item.timeslot.start).date }} at {{ formatTimeStamp(item.timeslot.start).time }}
+              </div>
+              <br>
+              To:
+              <div style="float: right">
+                {{ formatTimeStamp(item.timeslot.end).date }} at {{ formatTimeStamp(item.timeslot.end).time }}
+              </div>
+            </v-card-subtitle>
+          </v-card>
+        </div>
       </draggable>
     </v-col>
   </v-row>
@@ -35,22 +58,24 @@ export default {
   data: () => ({
     drag: false,
     poll: null,
-    locations: [
-      {id: 0, name: "Simon", order: 0},
-      {id: 1, name: "Simon1", order: 1},
-      {id: 2, name: "Simo2", order: 2},
-      {id: 3, name: "Simon3", order: 3},
-    ],
+    locations: [],
     timeslots: []
   }),
   methods: {
+    formatTimeStamp(timestamp) {
+      const date = new Date(timestamp).toISOString().slice(0, 10)
+      const time = new Date(timestamp).toISOString().slice(11, 16)
+      return {"date": date, "time": time}
+    },
     getPoll() {
-      console.log(this.event);
       api.user.loggedIn()
           .then(response => api.poll.get(this.event.id, response[0])
               .then(response => this.poll = response)
           )
-          .then(() => console.log(this.poll))
+          .then(() => (
+              this.locations = this.poll.pollLocations,
+              this.timeslots = this.poll.pollTimeslots,
+          console.log(this.timeslots)))
     }
   },
   mounted() {

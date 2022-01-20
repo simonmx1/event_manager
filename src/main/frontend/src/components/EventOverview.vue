@@ -101,8 +101,8 @@
                 <v-btn @click="showPollDialog(index, item)">
                   Vote
                 </v-btn>
-                <v-dialog v-model="pollDialog[index]">
-                  <v-card>
+                <v-dialog v-model="pollDialog[index]" width="900px">
+                  <v-card style="overflow: hidden" class="pa-2">
                     <v-toolbar>
                       <v-card-title>Choose your poll options</v-card-title>
                     </v-toolbar>
