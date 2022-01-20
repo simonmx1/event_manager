@@ -173,8 +173,7 @@ export default {
           )
           .then(() => (
               this.locations = this.poll.pollLocations,
-                  this.timeslots = this.poll.pollTimeslots,
-          this.test()))
+                  this.timeslots = this.poll.pollTimeslots))
     }
   },
   mounted() {
