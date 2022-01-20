@@ -216,14 +216,15 @@ export default {
     calculatePercent(timestamp) {
       let dif = new Date(timestamp).getTime() - new Date().getTime()
       let p = 100 - dif /1000 /3600 /24 *100
-      return dif < 86400000 ? p : 100
+      console.log(dif)
+      return dif < 86400000 ? p : dif < 0 ?  100 : 0
     },
     calculateColor(percent){
       if (percent >= 95.83){//1 hour
         return 'red'
       }else if (percent >= 91.66){//2 hours
         return 'orange'
-      }else if (percent >= 87.5){
+      }else if (percent >= 87.5){//3 hours
         return '#e6c000'
       }else{
         return 'green'
