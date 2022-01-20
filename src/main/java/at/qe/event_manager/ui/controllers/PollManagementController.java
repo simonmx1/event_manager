@@ -1,13 +1,9 @@
 package at.qe.event_manager.ui.controllers;
 
-import at.qe.event_manager.model.Event;
 import at.qe.event_manager.model.Poll;
-import at.qe.event_manager.model.User;
 import at.qe.event_manager.payload.response.MessageResponse;
-
 import java.io.Serializable;
 import java.util.Collection;
-
 import at.qe.event_manager.services.EventService;
 import at.qe.event_manager.services.PollService;
 import at.qe.event_manager.services.UserService;

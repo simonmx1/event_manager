@@ -3,8 +3,6 @@ package at.qe.event_manager.model;
 import java.io.Serializable;
 import java.util.*;
 import javax.persistence.*;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.domain.Persistable;

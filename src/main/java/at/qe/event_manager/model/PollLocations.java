@@ -1,10 +1,9 @@
 package at.qe.event_manager.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.io.Serializable;
-
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "pollLocations")
@@ -15,6 +14,7 @@ public class PollLocations implements Serializable{
 
 	@Id
     @ManyToOne
+    @JsonIgnore
     private Poll poll;
 
     @Id

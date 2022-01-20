@@ -1,12 +1,9 @@
 package at.qe.event_manager.model;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.domain.Persistable;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
-import java.util.Set;
 
 @Entity
 public class Timeslot implements Persistable<Integer>, Serializable, Comparable<Timeslot> {

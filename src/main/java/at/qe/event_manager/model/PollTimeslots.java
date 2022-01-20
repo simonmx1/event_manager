@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "pollTimeslots")
 @IdClass(PollTimeslotsId.class)
@@ -13,6 +15,7 @@ public class PollTimeslots implements Serializable{
 
 	@Id
     @ManyToOne
+    @JsonIgnore
     private Poll poll;
 
     @Id
