@@ -2,9 +2,6 @@ package at.qe.event_manager.model;
 
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Persistable;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
