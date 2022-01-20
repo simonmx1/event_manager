@@ -71,6 +71,23 @@
             <v-card class="pa-3">
               <v-card-title class="subheading font-weight-bold">
                 {{ item.name }}
+                <v-spacer></v-spacer>
+                <v-btn v-if="!item.evaluated" @click="showPollDialog(index, item)" color="green">
+                  Vote
+                </v-btn>
+                <v-dialog v-model="pollDialog[index]" width="900px" persistent>
+                  <v-card style="overflow: hidden" class="pa-2">
+                    <v-toolbar>
+                      <v-card-title>Choose your poll options</v-card-title>
+                    </v-toolbar>
+                    <poll-form v-if="currentEvent != null && pollDialog[index]" :event="currentEvent"></poll-form>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn @click="closePollDialog(index)" color="primary">Cancel</v-btn>
+                      <v-btn @click="closePollDialog(index)" color="red">Save</v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
               </v-card-title>
 
               <v-divider></v-divider>
@@ -96,24 +113,6 @@
                     {{ formatTimeStamp(item.timeslot.end).date }} at {{ formatTimeStamp(item.timeslot.end).time }}
                   </div>
                 </v-card-subtitle>
-              </div>
-              <div v-else>
-                <v-btn @click="showPollDialog(index, item)">
-                  Vote
-                </v-btn>
-                <v-dialog v-model="pollDialog[index]" width="900px" persistent>
-                  <v-card style="overflow: hidden" class="pa-2">
-                    <v-toolbar>
-                      <v-card-title>Choose your poll options</v-card-title>
-                    </v-toolbar>
-                    <poll-form v-if="currentEvent != null && pollDialog[index]" :event="currentEvent"></poll-form>
-                    <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn @click="closePollDialog(index)" color="primary">Cancel</v-btn>
-                      <v-btn @click="closePollDialog(index)" color="red">Save</v-btn>
-                    </v-card-actions>
-                  </v-card>
-                </v-dialog>
               </div>
               <div>
                 <v-card-subtitle style="font-size: medium">
