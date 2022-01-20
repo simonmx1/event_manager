@@ -55,7 +55,6 @@ export default {
   },
   mounted() {
     this.getPoll()
-    console.log(this.poll);
   }
 }
 </script>
