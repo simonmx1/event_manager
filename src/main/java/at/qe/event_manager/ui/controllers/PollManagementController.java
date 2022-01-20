@@ -2,13 +2,12 @@ package at.qe.event_manager.ui.controllers;
 
 import at.qe.event_manager.model.Event;
 import at.qe.event_manager.model.Poll;
+import at.qe.event_manager.model.User;
 import at.qe.event_manager.payload.response.MessageResponse;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.Objects;
 
-import at.qe.event_manager.repositories.EventRepository;
 import at.qe.event_manager.services.EventService;
 import at.qe.event_manager.services.PollService;
 import at.qe.event_manager.services.UserService;
@@ -48,11 +47,15 @@ public class PollManagementController implements Serializable {
     @GetMapping("/get")
     @ResponseBody
     public Poll get(@RequestParam(name = "eventId") Integer eventId, @RequestParam(name = "username") String username) {
-        // Event event = eventService.loadEvent(eventId); // TODO: WHY THE HELL DOES THIS NOT WORK
+        //Event event = eventService.loadEvent(eventId);
         //WORKAROUND
-        Event event = eventService.getAllEvents().stream().filter(e -> Objects.equals(e.getId(), eventId)).findFirst().get();
-        Poll p = pollService.loadPollByEventIdAndUsername(event, userService.loadUserByUsername(username));
-        return pollService.loadPollByEventIdAndUsername(event, userService.loadUserByUsername(username));
+        //Event event = eventService.getAllEvents().stream().filter(e -> Objects.equals(e.getId(), eventId)).findFirst().get();
+        /*User user = userService.loadUserByUsername(username);
+        System.out.println(user.getUsername());
+        Poll p = pollService.loadPollByEventAndUser(event, user);
+        System.out.println(p);*/
+        Poll p =  pollService.loadPollByEventAndUser(eventService.loadEvent(eventId), userService.loadUserByUsername(username));
+        return p;
     }
 
     @PostMapping("/edit")

@@ -48,7 +48,7 @@ public class EventService implements Serializable {
      * @return the user with the given username
      */
     public Event loadEvent(Integer id) {
-        return eventRepository.findById(id);
+        return eventRepository.findFirstById(id);
     }
 
     public Event saveEvent(Event event) {

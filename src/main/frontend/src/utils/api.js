@@ -230,6 +230,7 @@ export default {
             return await axios.get('/api/poll/get?eventId=' + eventId + '&username=' + username,
             {headers: {"Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt'))}}
             ).then(response => {
+                console.log(response);
                 return response.data;
             }).catch(() => false);
         },

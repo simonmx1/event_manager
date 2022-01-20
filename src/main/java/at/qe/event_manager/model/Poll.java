@@ -1,5 +1,6 @@
 package at.qe.event_manager.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Persistable;
 import javax.persistence.*;
@@ -19,9 +20,11 @@ public class Poll implements Persistable<Integer>, Serializable, Comparable<Poll
 
 
     @OneToMany (mappedBy = "poll", fetch=FetchType.EAGER)
+    @JsonIgnore
     private Set<PollTimeslots> pollTimeslots;
 
     @OneToMany (mappedBy = "poll", fetch=FetchType.EAGER)
+    @JsonIgnore
     private Set<PollLocations> pollLocations;
 
     @ManyToOne

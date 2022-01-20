@@ -1,5 +1,7 @@
 package at.qe.event_manager.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 
 import javax.persistence.*;

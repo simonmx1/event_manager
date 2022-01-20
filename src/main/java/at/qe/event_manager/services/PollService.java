@@ -116,7 +116,7 @@ public class PollService implements Serializable {
     	}
     }
 
-    public Poll loadPollByEventIdAndUsername(Event event, User user) {
+    public Poll loadPollByEventAndUser(Event event, User user) {
         return pollRepository.findFirstByEventAndUser(event, user);
     }
 }

@@ -3,6 +3,8 @@ package at.qe.event_manager.model;
 import java.io.Serializable;
 import java.util.*;
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.domain.Persistable;
@@ -45,8 +47,9 @@ public class Location implements Persistable<Integer>, Serializable, Comparable<
     @OneToMany(mappedBy = "location", cascade = CascadeType.ALL)
     private List<OpeningTime> openingTimes;
 
-    @OneToMany (mappedBy = "location", fetch=FetchType.EAGER)
-    private Set<PollLocations> pollLocations;
+    /*@OneToMany (mappedBy = "location", fetch=FetchType.EAGER)
+    @JsonIgnore
+    private Set<PollLocations> pollLocations;*/
 
     public String getDescription() {
         return description;

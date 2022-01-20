@@ -1,5 +1,6 @@
 package at.qe.event_manager.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.domain.Persistable;
 import javax.persistence.*;
 import java.io.Serializable;
@@ -20,8 +21,9 @@ public class Timeslot implements Persistable<Integer>, Serializable, Comparable<
     private Timestamp start;
     private Timestamp end;
 
-    @OneToMany (mappedBy = "timeslot")
-    private Set<PollTimeslots> pollTimeslots;
+   /* @OneToMany (mappedBy = "timeslot")
+    @JsonIgnore
+    private Set<PollTimeslots> pollTimeslots;*/
 
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
