@@ -4,6 +4,10 @@
       <v-card-title>
         Sort your Locations:
       </v-card-title>
+      <v-progress-linear v-if="!locations"
+          indeterminate
+          color="primary"
+      ></v-progress-linear>
       <draggable v-model="locations" group="people" @start="drag=true" @end="drag=false">
         <div v-for="(item, index) in locations "
              :key="item.location.id">
@@ -36,6 +40,10 @@
       <v-card-title>
         Sort your Timeslots:
       </v-card-title>
+      <v-progress-linear v-if="!timeslots"
+                         indeterminate
+                         color="primary"
+      ></v-progress-linear>
       <draggable v-model="timeslots" group="people" @start="drag=true" @end="drag=false">
         <div v-for="(item, index) in timeslots"
              :key="item.timeslot.id"
@@ -97,8 +105,8 @@ export default {
   data: () => ({
     drag: false,
     poll: null,
-    locations: [],
-    timeslots: []
+    locations: null,
+    timeslots: null
   }),
   methods: {
     formatTimeStamp(timestamp) {
@@ -165,7 +173,8 @@ export default {
           )
           .then(() => (
               this.locations = this.poll.pollLocations,
-                  this.timeslots = this.poll.pollTimeslots))
+                  this.timeslots = this.poll.pollTimeslots,
+          this.test()))
     }
   },
   mounted() {
