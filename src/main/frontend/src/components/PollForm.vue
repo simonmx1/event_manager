@@ -12,16 +12,18 @@
               <v-chip>{{ index + 1 }}</v-chip>
             </th>
             <th style="width: 100%">
-              <v-card color="#3d3d3d" class="pa-2, ma-2">
+              <v-card color="#3d3d3d" class="pa-2, ma-2" style="height: 75px">
                 <v-card-title>
-                  <div style="margin-right: 10px">
+                  <div style="margin-right: 10px; margin-top: 5px">
                     <template>
                       <location-info-dialog :current-location="item.location"></location-info-dialog>
                     </template>
                   </div>
-                  {{ item.location.name }}
+                  <div style="margin-top: 5px">
+                    {{ item.location.name }}
+                  </div>
                   <v-spacer></v-spacer>
-                  <v-icon color="#aaa">mdi-reorder-horizontal</v-icon>
+                  <v-icon style="margin-top: 5px" color="#aaa">mdi-reorder-horizontal</v-icon>
                 </v-card-title>
               </v-card>
             </th>
@@ -38,13 +40,12 @@
         <div v-for="(item, index) in timeslots"
              :key="item.timeslot.id"
         >
-
           <tr>
-            <th>
+            <th style="vertical-align: middle">
               <v-chip>{{ index + 1 }}</v-chip>
             </th>
             <th style="width: 100%">
-              <v-card color="#3d3d3d" class="pa-2, ma-2">
+              <v-card color="#3d3d3d" class="pa-2, ma-2" style="height: 75px">
                 <v-card-subtitle style="font-size: medium; color: white">
                   <v-row>
                     <v-col cols="2">
@@ -60,6 +61,7 @@
                       <div style="float: right">
                         {{ formatTimeStamp(item.timeslot.start).date }} at {{ formatTimeStamp(item.timeslot.start).time }}
                       </div>
+                      <br>
                       <div style="float: right">
                         {{ formatTimeStamp(item.timeslot.end).date }} at {{ formatTimeStamp(item.timeslot.end).time }}
                       </div>
@@ -100,9 +102,61 @@ export default {
   }),
   methods: {
     formatTimeStamp(timestamp) {
-      const date = new Date(timestamp).toISOString().slice(0, 10)
       const time = new Date(timestamp).toISOString().slice(11, 16)
-      return {"date": date, "time": time}
+      return {"date": this.formatDate(new Date(timestamp)), "time": time}
+    },
+    formatWeekday(weekday) {
+      switch (weekday) {
+        case 0:
+          return 'Mon'
+        case 1:
+          return 'Tue'
+        case 2:
+          return 'Wed'
+        case 3:
+          return 'Thu'
+        case 4:
+          return 'Fri'
+        case 5:
+          return 'Sat'
+        case 6:
+          return 'Sun'
+      }
+    },
+    formatMonth(month) {
+      switch (month) {
+        case 0:
+          return 'Jan'
+        case 1:
+          return 'Feb'
+        case 2:
+          return 'Mar'
+        case 3:
+          return 'Apr'
+        case 4:
+          return 'May'
+        case 5:
+          return 'Jun'
+        case 6:
+          return 'Jul'
+        case 7:
+          return 'Aug'
+        case 8:
+          return 'Sep'
+        case 9:
+          return 'Oct'
+        case 10:
+          return 'Nov'
+        case 11:
+          return 'Dec'
+      }
+    },
+    formatDate(date) {
+      const weekday = this.formatWeekday(date.getDay());
+      const day = date.getDate();
+      const month = this.formatMonth(date.getMonth());
+      const year = date.getFullYear();
+      return weekday + ", " + day + " " + month + " " + year;
     },
     getPoll() {
       api.user.loggedIn()
