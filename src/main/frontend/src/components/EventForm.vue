@@ -13,69 +13,9 @@
             label="Eventname"
             type="text"
         ></v-text-field>
-        <v-combobox
-            prepend-icon="mdi-account-multiple-plus"
-            v-if="availableUsers !== [] && currentEvent.participants"
-            v-model="currentEvent.participants"
-            :items="availableUsers"
-            :search-input.sync="search"
-            :filter="filter"
-            label="Participants"
-            item-text="id"
-            multiple
-            outlined
-            dense
-        >
-          <template v-slot:no-data>
-            <v-container>
-              <span class="subheading">User does not exist: </span>
-              <v-chip style="margin-left: 10px"
-                      :color="'#ff0000'"
-                      small
-              >
-                {{ search }}
-              </v-chip>
-            </v-container>
-          </template>
-          <template v-slot:selection="{ attrs, item, parent }">
-            <v-chip
-                v-bind="attrs"
-                style="margin: 5px"
-            >
-              <v-chip
-                  small
-                  color="#437505">
-                {{ item.email }}
-              </v-chip>
-              <v-chip
-                  small
-                  color="#054375">
-                {{ item.username }}
-              </v-chip>
-              <v-icon
-                  small
-                  @click="parent.selectItem(item)"
-              >
-                $delete
-              </v-icon>
-            </v-chip>
-          </template>
-          <template v-slot:item="{ index, item }">
-            <span :key="item.id">{{ item.firstName }} {{ item.lastName }}</span>
-            <v-chip
-                style="margin-left: 5px"
-                small
-                color="#437505">
-              {{ item.email }}
-            </v-chip>
-            <v-chip
-                small
-                style="margin-left: 5px"
-                color="#054375">
-              {{ item.username }}
-            </v-chip>
-          </template>
-        </v-combobox>
+        <template>
+          <participants-selector ref="participantsSelector" @confirm="confirmParticipants"/>
+        </template>
         <template>
           <location-selector ref="locationSelector" @confirm="confirmLocations"/>
         </template>
@@ -116,10 +56,11 @@
 <script>
 import api from "@/utils/api";
 import LocationSelector from './LocationSelector.vue';
+import ParticipantsSelector from './ParticipantsSelector.vue';
 
 export default {
   name: "EventForm",
-  components: {LocationSelector},
+  components: {LocationSelector, ParticipantsSelector},
   props: {
     event: {
       type: Object, default: () => ({
@@ -128,7 +69,7 @@ export default {
         timeslots: [
           {start: null, end: null}
         ],
-        participants: [],
+        participants: null,
         creatorIsPreferred: false,
         pollEndDate: null,
         enabled: true,
@@ -181,9 +122,14 @@ export default {
     allowedStepTimeEnd: m => m % 5 === 0,
     sendData() {
       this.$refs.locationSelector.sendData()
+      this.$refs.participantsSelector.sendData()
     },
     confirmLocations(locations) {
       this.currentEvent.location = locations
+      this.$emit('confirm', this.currentEvent)
+    },
+    confirmParticipants(participants) {
+      this.currentEvent.participants = participants
       this.$emit('confirm', this.currentEvent)
     }
   },
