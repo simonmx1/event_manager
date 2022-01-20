@@ -9,7 +9,11 @@
              :key="item.location.id">
           <v-card color="#3d3d3d" class="pa-2, ma-2">
             <v-card-title>
-              {{item.location.name}}
+              {{ item.location.name }}
+              <v-spacer></v-spacer>
+              <template style="float: right">
+                <location-info-dialog :current-location="item.location"></location-info-dialog>
+              </template>
             </v-card-title>
           </v-card>
         </div>
@@ -25,7 +29,7 @@
              :key="item.timeslot.id"
         >
           <v-card color="#3d3d3d" class="pa-2, ma-2">
-            <v-card-subtitle style="font-size: medium">
+            <v-card-subtitle style="font-size: medium; color: white">
               From:
               <div style="float: right">
                 {{ formatTimeStamp(item.timeslot.start).date }} at {{ formatTimeStamp(item.timeslot.start).time }}
@@ -46,11 +50,13 @@
 <script>
 import draggable from 'vuedraggable'
 import api from "../utils/api";
+import LocationInfoDialog from "@/components/LocationInfoDialog";
 
 export default {
   name: "PollForm",
   components: {
-    draggable
+    draggable,
+    LocationInfoDialog
   },
   props: {
     event: {type: Object, required: true}
@@ -74,8 +80,7 @@ export default {
           )
           .then(() => (
               this.locations = this.poll.pollLocations,
-              this.timeslots = this.poll.pollTimeslots,
-          console.log(this.timeslots)))
+                  this.timeslots = this.poll.pollTimeslots))
     }
   },
   mounted() {
