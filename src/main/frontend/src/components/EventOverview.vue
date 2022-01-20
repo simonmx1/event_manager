@@ -94,14 +94,14 @@
 
               <div v-if="item.evaluated">
                 <v-card-subtitle style="font-size: medium">
-                  <b>Location: </b>
+                  <b>Location</b>
                   <span style="float: right">
                   <v-chip color="primary">{{ item.location.name }}</v-chip>
                   <location-info-dialog :current-location="item.location"></location-info-dialog>
                   </span>
                 </v-card-subtitle>
                 <v-card-subtitle style="font-size: medium">
-                  <b>Timeslot: </b>
+                  <b>Timeslot</b>
                   <br>
                   From:
                   <div style="float: right">
@@ -111,6 +111,19 @@
                   To:
                   <div style="float: right">
                     {{ formatTimeStamp(item.timeslot.end).date }} at {{ formatTimeStamp(item.timeslot.end).time }}
+                  </div>
+                </v-card-subtitle>
+              </div>
+              <div v-else>
+                <v-progress-linear style="margin-top: 15px"
+                                   :color="calculateColor(calculatePercent(item.pollEndDate))"
+                                   rounded
+                                   :value="calculatePercent(item.pollEndDate)"
+                ></v-progress-linear>
+                <v-card-subtitle style="font-size: medium">
+                  <b>Poll end time</b>
+                  <div style="float: right">
+                    {{ formatTimeStamp(item.pollEndDate).date }} at {{ formatTimeStamp(item.pollEndDate).time }}
                   </div>
                 </v-card-subtitle>
               </div>
@@ -200,6 +213,22 @@ export default {
     /*formatTimeSlot(timeslot){
       return this.formatTimeStamp(timeslot.start) + " - "  + this.formatTimeStamp(timeslot.end)
     },*/
+    calculatePercent(timestamp) {
+      let dif = new Date(timestamp).getTime() - new Date().getTime()
+      let p = 100 - dif /1000 /3600 /24 *100
+      return dif < 86400000 ? p : 100
+    },
+    calculateColor(percent){
+      if (percent >= 95.83){//1 hour
+        return 'red'
+      }else if (percent >= 91.66){//2 hours
+        return 'orange'
+      }else if (percent >= 87.5){
+        return '#e6c000'
+      }else{
+        return 'green'
+      }
+    },
     formatTimeStamp(timestamp) {
       const date = new Date(timestamp).toISOString().slice(0, 10)
       const time = new Date(timestamp).toISOString().slice(11, 16)
