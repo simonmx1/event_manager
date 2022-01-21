@@ -75,7 +75,7 @@
                 <v-btn v-if="!item.evaluated" @click="showPollDialog(index, item)" color="green">
                   Vote
                 </v-btn>
-                <v-dialog v-model="pollDialog[index]" width="900px" persistent>
+                <v-dialog v-model="pollDialog[index]" width="1000px" persistent>
                   <v-card style="overflow: hidden">
                     <v-toolbar>
                       <v-card-title>Choose your poll options</v-card-title>
