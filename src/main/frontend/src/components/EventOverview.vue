@@ -78,7 +78,11 @@
                 <v-dialog v-model="pollDialog[index]" width="1000px" persistent>
                   <v-card style="overflow: hidden">
                     <v-toolbar>
-                      <v-card-title>Choose your poll options</v-card-title>
+                      <v-card-title>{{ item.name }}</v-card-title>
+                      <v-spacer/>
+                      <template>
+                        <poll-info-dialog></poll-info-dialog>
+                      </template>
                     </v-toolbar>
                     <poll-form v-if="currentEvent != null && pollDialog[index]" :event="currentEvent"></poll-form>
                     <v-card-actions>
@@ -190,11 +194,12 @@
 <script>
 import api from "../utils/api";
 import LocationInfoDialog from "./LocationInfoDialog";
+import PollInfoDialog from "./PollInfoDialog"
 import PollForm from "./PollForm";
 
 export default {
   name: 'EventOverview',
-  components: {PollForm, LocationInfoDialog},
+  components: {PollForm, LocationInfoDialog, PollInfoDialog},
   data() {
     return {
       search: '',
@@ -215,18 +220,18 @@ export default {
     },*/
     calculatePercent(timestamp) {
       let dif = new Date(timestamp).getTime() - new Date().getTime()
-      let p = 100 - dif /1000 /3600 /24 *100
+      let p = 100 - dif / 1000 / 3600 / 24 * 100
       console.log(dif)
-      return dif < 86400000 ? p : dif < 0 ?  100 : 0
+      return dif < 86400000 ? p : dif < 0 ? 100 : 0
     },
-    calculateColor(percent){
-      if (percent >= 95.83){//1 hour
+    calculateColor(percent) {
+      if (percent >= 95.83) {//1 hour
         return 'red'
-      }else if (percent >= 91.66){//2 hours
+      } else if (percent >= 91.66) {//2 hours
         return 'orange'
-      }else if (percent >= 87.5){//3 hours
+      } else if (percent >= 87.5) {//3 hours
         return '#e6c000'
-      }else{
+      } else {
         return 'green'
       }
     },

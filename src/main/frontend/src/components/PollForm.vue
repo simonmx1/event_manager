@@ -2,7 +2,7 @@
   <v-row class="pa-4">
     <v-col cols="6">
       <v-card-title>
-        Sort your Locations:
+        Order the locations to your preference
       </v-card-title>
       <v-progress-linear v-if="!locations"
                          indeterminate
@@ -38,7 +38,7 @@
     <v-divider vertical></v-divider>
     <v-col cols="6">
       <v-card-title>
-        Sort your Timeslots:
+        Order the timeslots to your preference
       </v-card-title>
       <v-progress-linear v-if="!timeslots"
                          indeterminate
