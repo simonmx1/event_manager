@@ -237,7 +237,7 @@ export default {
     },
     formatTimeStamp(timestamp) {
       const date = new Date(timestamp).toISOString().slice(0, 10)
-      const time = new Date(timestamp).toISOString().slice(11, 16)
+      const time = new Date(timestamp).toTimeString().slice(0,8)
       return {"date": date, "time": time}
     },
     showPollDialog(index, item) {

@@ -176,7 +176,7 @@ export default {
       this.timeslots.push(timeslot)
     },
     formatTimeStamp(timestamp) {
-      const time = new Date(timestamp).toISOString().slice(11, 16)
+      const time = new Date(timestamp).toTimeString().slice(0,8)
       return {"date": this.formatDate(new Date(timestamp)), "time": time}
     },
     formatWeekday(weekday) {

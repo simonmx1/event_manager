@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.*;
 
 @RestController
@@ -77,8 +77,8 @@ public class EventManagementController {
         Set<Timeslot> timeslots = new HashSet<>();
         timeslotsStrings.forEach(t -> {
             Timeslot timeslot = new Timeslot();
-            timeslot.setStart((Timestamp) convertStringDateToDate(new JSONObject(t).getString("start")));
-            timeslot.setEnd((Timestamp) convertStringDateToDate(new JSONObject(t).getString("end")));
+            timeslot.setStart(convertStringDateToDate(new JSONObject(t).getString("start")));
+            timeslot.setEnd(convertStringDateToDate(new JSONObject(t).getString("end")));
             timeslots.add(timeslot);
         });
         for (Location l : locations) {
@@ -94,8 +94,8 @@ public class EventManagementController {
         return true;
     }
 
-    private Date convertStringDateToDate(String date) {
-        return (Timestamp.valueOf(LocalDateTime.parse(date.substring(0, 19))));
+    private Timestamp convertStringDateToDate(String date) {
+    	return Timestamp.from(Instant.parse(date));
     }
 
     private void createPollPerParticipant(Event event, List<Integer> locations, List<String> timeslots) {
@@ -104,8 +104,8 @@ public class EventManagementController {
         Set<Timeslot> pollTimeslots = new HashSet<>();
         timeslots.forEach(t -> {
             Timeslot timeslot = new Timeslot();
-            timeslot.setStart((Timestamp) convertStringDateToDate(new JSONObject(t).getString("start")));
-            timeslot.setEnd((Timestamp) convertStringDateToDate(new JSONObject(t).getString("end")));
+            timeslot.setStart(convertStringDateToDate(new JSONObject(t).getString("start")));
+            timeslot.setEnd(convertStringDateToDate(new JSONObject(t).getString("end")));
             pollTimeslots.add(timeslotService.saveTimeslot(timeslot));
         });
 
