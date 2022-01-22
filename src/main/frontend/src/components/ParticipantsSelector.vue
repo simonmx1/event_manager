@@ -1,11 +1,12 @@
 <template>
-  <v-combobox
+  <v-autocomplete
       prepend-icon="mdi-account-multiple-plus"
       v-model="model"
       :items="availableParticipants"
       :search-input.sync="search"
       :filter="filter"
       :hint="'Creator is always a participant'"
+      :error-messages="errorMessage"
       persistent-hint
       label="Participants"
       item-text="id"
@@ -62,7 +63,7 @@
         {{ item.username }}
       </v-chip>
     </template>
-  </v-combobox>
+  </v-autocomplete>
 </template>
 
 <script>
@@ -70,16 +71,30 @@ import api from "@/utils/api";
 
 export default {
   name: "ParticipantsSelector",
+  props: {
+    errorMessage: {type: String, default: null}
+  },
   data: () => ({
     availableParticipants: [],
     model: [],
     search: null,
-    filter: null,
   }),
   methods: {
     sendData() {
       this.$emit("confirm", this.model)
-    }
+    },
+    filter(item, queryText, itemText) {
+      const hasValue = val => val != null ? val : ''
+
+      const query = hasValue(queryText)
+      const text = hasValue(itemText)
+
+      return item.username.toString().toLowerCase().indexOf(query.toString().toLowerCase()) > -1
+          || item.email.toString().toLowerCase().indexOf(query.toString().toLowerCase()) > -1
+          || item.firstName.toString().toLowerCase().indexOf(query.toString().toLowerCase()) > -1
+          || item.lastName.toString().toLowerCase().indexOf(query.toString().toLowerCase()) > -1
+          || text.toString().toLowerCase().indexOf(query.toString().toLowerCase()) > -1;
+    },
   },
   mounted() {
     api.user.getAll().then((response) => (this.availableParticipants = response))

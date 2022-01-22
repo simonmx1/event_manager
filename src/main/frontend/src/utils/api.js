@@ -221,7 +221,7 @@ export default {
                 'name': event.name,
                 'creatorUsername': event.creatorUsername,
                 'participants': JSON.stringify(event.participants),
-                'locations': JSON.stringify(event.location),
+                'locations': JSON.stringify(event.locations),
                 'timeslots': JSON.stringify(event.timeslots),
                 'creatorIsPreferred': event.creatorIsPreferred,
                 'pollEndDate': event.pollEndDate
