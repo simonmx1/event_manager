@@ -8,16 +8,17 @@
       <v-col cols="6">
         <v-text-field
             v-model="currentEvent.name"
-            :rules="nameRules"
+            :error-messages="eventNameError"
             prepend-icon="mdi-form-textbox"
-            label="Eventname"
+            label="Event name"
             type="text"
         ></v-text-field>
         <template>
-          <participants-selector ref="participantsSelector" @confirm="confirmParticipants"/>
+          <participants-selector ref="participantsSelector" @confirm="confirmParticipants"
+                                 :error-message="participantsError"/>
         </template>
         <template>
-          <location-selector ref="locationSelector" @confirm="confirmLocations"/>
+          <location-selector ref="locationSelector" @confirm="confirmLocations" :error-message="locationsError"/>
         </template>
         <v-checkbox v-model="currentEvent.creatorIsPreferred" label="Creator decides on poll tie"/>
       </v-col>
@@ -46,8 +47,11 @@
           </v-row>
         </div>
         <v-divider/>
-        <v-datetime-picker :time-picker-props="{format:'24hr', allowedMinutes:allowedStepTimeEnd}"
-                           label="Poll end time" v-model="currentEvent.pollEndDate"></v-datetime-picker>
+        <v-datetime-picker
+            :time-picker-props="{format:'24hr', allowedMinutes:allowedStepTimeEnd}"
+            label="Poll end time"
+            v-model="currentEvent.pollEndDate"
+            :text-field-props="{errorMessage: 'error'}"/>
       </v-col>
     </v-row>
   </v-form>
@@ -65,7 +69,7 @@ export default {
     event: {
       type: Object, default: () => ({
         name: '',
-        location: null,
+        locations: null,
         timeslots: [
           {start: null, end: null}
         ],
@@ -82,23 +86,13 @@ export default {
     availableUsers: [],
     search: null,
     datetime: null,
-    nameRules: [
-      v => !!v || 'Eventname is required'
-    ]
+    participantsError: null,
+    locationsError: null,
+    eventNameError: null,
+    pollEndDateError: null,
+    timeslotError: null,
   }),
   methods: {
-    filter(item, queryText, itemText) {
-      const hasValue = val => val != null ? val : ''
-
-      const query = hasValue(queryText)
-      const text = hasValue(itemText)
-
-      return item.username.toString().toLowerCase().indexOf(query.toString().toLowerCase()) > -1
-          || item.email.toString().toLowerCase().indexOf(query.toString().toLowerCase()) > -1
-          || item.firstName.toString().toLowerCase().indexOf(query.toString().toLowerCase()) > -1
-          || item.lastName.toString().toLowerCase().indexOf(query.toString().toLowerCase()) > -1
-          || text.toString().toLowerCase().indexOf(query.toString().toLowerCase()) > -1;
-    },
     addTimeslotInput() {
       this.event.timeslots.push({start: null, end: null})
     },
@@ -121,14 +115,50 @@ export default {
       this.$refs.locationSelector.sendData()
     },
     confirmLocations(locations) {
-      this.currentEvent.location = locations
+      this.currentEvent.locations = locations
       this.$refs.participantsSelector.sendData()
+
     },
     confirmParticipants(participants) {
       this.currentEvent.participants = participants
-      this.$emit('confirm', this.currentEvent)
+      this.tryCreate()
+
+    },
+    tryCreate() {
+      let valid = true;
+
+      if (this.currentEvent.locations.length === 0) {
+        this.locationsError = 'Please select at least one participant'
+        valid = false
+      } else {
+        this.locationsError = null
+      }
+      if (this.currentEvent.participants.length === 0) {
+        this.participantsError = 'Please select at least one location'
+        valid = false
+      } else {
+        this.participantsError = null
+      }
+
+      if (this.currentEvent.name.length === 0) {
+        this.eventNameError = 'Please enter a name for this event'
+        valid = false
+      } else {
+        this.eventNameError = null
+      }
+      if (this.currentEvent.pollEndDate == null) {
+        console.log("pollenddate: ", this.currentEvent.pollEndDate);
+        this.pollEndDateError = 'Please enter a end date for the poll of this event'
+        valid = false
+      } else {
+        this.pollEndDateError = null
+      }
+      if (valid)
+        this.$emit('confirm', this.currentEvent)
     },
     clear() {
+      this.participantsError = null
+      this.locationsError = null
       this.$refs.form.reset()
       this.$forceUpdate()
     }

@@ -317,7 +317,9 @@ export default {
       }).then(() => api.event.create(event).then(response => {
         this.success = response.status === 201;
         this.response = response.data
-      })).then(() => this.$refs.eventForm.clear())
+        if (this.success)
+          this.$refs.eventForm.clear()
+      }))
     },
     deleteEventConfirm() {
       api.event.delete(this.currentEvent.id).then(() => this.getEvents())

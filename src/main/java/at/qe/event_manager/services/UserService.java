@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 /**
@@ -28,6 +29,9 @@ public class UserService implements Serializable, UserDetailsService {
 	
 	@Autowired
     private UserRepository userRepository;
+	
+	@Autowired
+    PasswordEncoder passwordEncoder;
 
     /**
      * Returns a collection of all users.
@@ -62,6 +66,13 @@ public class UserService implements Serializable, UserDetailsService {
     public User saveUser(User user) {
         if (user.isNew()) {
             user.setCreateDate(new Date());
+        }
+        System.out.println(user.getPassword().length());
+        if(user.getPassword().length() == 0) {
+        	user.setPassword(loadUserByUsername(user.getUsername()).getPassword());
+        }
+        else {
+        	user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
         return userRepository.save(user);
     }

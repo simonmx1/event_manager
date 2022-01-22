@@ -5,6 +5,7 @@
     :items="availableLocations"
     :search-input.sync="search"
     :filter="filter"
+    :error-messages="errorMessage"
     label="Locations"
     item-text="id"
     multiple
@@ -43,6 +44,9 @@ import LocationInfoDialog from "@/components/LocationInfoDialog.vue"
 
 export default {
   name: "LocationSelector",
+  props: {
+    errorMessage: {type: String, default: null}
+  },
   components: { LocationInfoDialog },
   data: () => ({
     availableLocations: [],
