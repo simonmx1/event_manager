@@ -39,7 +39,7 @@
             <v-dialog v-model="createDialog" persistent max-width="1000px">
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
-                    color="red"
+                    :color="'#910101'"
                     dark
                     class="mb-2"
                     v-bind="attrs"
