@@ -212,6 +212,9 @@ export default {
     sortByWeekday(list) {
       return list.sort((a, b) => (a.weekday !== b.weekday) ? a.weekday - b.weekday : (a.start > b.start ? 1 : -1))
     },
+    sortTags(tags){
+      return tags.sort((a, b) => (a.text).localeCompare(b.text))
+    },
     openEditDialog(location) {
       this.currentLocation = location;
       this.editDialog = true;
@@ -232,6 +235,7 @@ export default {
       api.location.getAll().then(response => {
         this.locations = response
         this.locations.forEach(item => this.sortByWeekday(item.openingTimes))
+        this.locations.forEach(item => this.sortTags(item.tags))
       });
     }
   },
