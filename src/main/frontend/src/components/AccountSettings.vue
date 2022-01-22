@@ -5,7 +5,8 @@
       <user-form
           v-if="user != null"
           :user="user"
-          :accountSettings="true"
+          :account-settings="true"
+          :edit="true"
       ></user-form>
       <v-card-actions>
         <v-dialog v-model="editDialog" width="500" persistent>

@@ -75,7 +75,6 @@ public class EventService implements Serializable {
     	if(!event.getPolls().isEmpty()) {
     		event.getPolls().forEach(p -> pollService.deletePoll(p));
     	}
-    	System.out.println(event.getName());
         eventRepository.delete(event);
     }
     

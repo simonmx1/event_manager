@@ -4,8 +4,8 @@
         :loading="!loadedEvents"
         :items="items"
         :search="search"
-        :sort-by="sortBy.toLowerCase()"
-        :sort-desc="sortDesc"
+        sort-by="pollEndDate"
+        :sort-desc=true
         hide-default-footer
         disable-pagination
     >
@@ -13,7 +13,8 @@
         <v-toolbar
             dark
             color="blue darken-3"
-            class="mb-1"
+            class="pa-1"
+            style="margin-bottom: 20px"
         >
           <v-text-field
               v-model="search"
@@ -26,20 +27,11 @@
           ></v-text-field>
           <template v-if="$vuetify.breakpoint.mdAndUp">
             <v-spacer></v-spacer>
-            <v-select
-                v-model="sortBy"
-                flat
-                solo-inverted
-                hide-details
-                :items="keys"
-                prepend-inner-icon="mdi-magnify"
-                label="Filter by"
-            ></v-select>
             <v-spacer></v-spacer>
             <v-dialog v-model="createDialog" persistent max-width="1000px">
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
-                    color="red"
+                    :color="'#910101'"
                     dark
                     class="mb-2"
                     v-bind="attrs"
@@ -153,7 +145,7 @@
               </div>
               <div>
                 <v-card-subtitle style="font-size: medium">
-                  <b>Participants: </b>
+                  <b>Participants</b>
 
                   <v-menu
                       transition="slide-y-transition"
@@ -196,17 +188,6 @@
           </v-col>
         </v-row>
       </template>
-
-      <template v-slot:footer>
-        <v-toolbar
-            class="mt-2"
-            color="primary"
-            justify="center"
-        >
-          Footer
-          <v-spacer></v-spacer>
-        </v-toolbar>
-      </template>
     </v-data-iterator>
   </v-container>
 </template>
@@ -229,13 +210,9 @@ export default {
       search: '',
       filter: {},
       sortDesc: false,
-      sortBy: 'name',
       pollDialog: [],
       currentEvent: null,
       loadedEvents: false,
-      keys: [
-        'Name',
-      ],
       items: [],
     }
   },

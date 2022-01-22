@@ -43,11 +43,12 @@
                 persistent>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
-                    color="red lighten-2"
+                    color="primary"
                     dark
+                    text
                     v-bind="attrs"
                     v-on="on">
-                  Not A User? Register here!
+                  Register
                 </v-btn>
               </template>
               <register @close="dialog = false"/>
