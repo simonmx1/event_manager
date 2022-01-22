@@ -114,19 +114,22 @@ public class EventManagementController {
             poll.setUser(participant);
             poll.setEvent(event);
             final Poll finalPoll = pollService.savePoll(poll);
-
-            pollLocations.forEach(l -> {
+            int temp = 1;
+            for (Location l : pollLocations) {
                 PollLocations pl = new PollLocations();
                 pl.setPoll(finalPoll);
+                pl.setPoints(temp++);
                 pl.setLocation(l);
                 pollLocationsService.savePollLocations(pl);
-            });
-            pollTimeslots.forEach(t -> {
+            }
+            temp = 1;
+            for (Timeslot t : pollTimeslots) {
                 PollTimeslots pt = new PollTimeslots();
                 pt.setPoll(finalPoll);
+                pt.setPoints(temp++);
                 pt.setTimeslot(t);
                 pollTimeslotsService.savePollTimeslots(pt);
-            });
+            }
             MailService.sendEventCreationMessage(participant, event);
         }
     }

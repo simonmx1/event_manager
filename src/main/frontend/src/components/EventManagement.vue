@@ -215,6 +215,7 @@ export default {
       this.$refs.eventForm.sendData();
     },
     confirmCreate(event) {
+      console.log(event.participants)
       event.participants.forEach((user, index) => event.participants[index] = user.username)
       event.location.forEach((location, index) => event.location[index] = location.id)
       api.user.loggedIn().then(response => {

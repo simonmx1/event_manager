@@ -65,7 +65,7 @@
         <v-row>
           <v-col
               v-for="(item, index) in props.items"
-              :key="item.name"
+              :key="index"
               cols="4"
           >
             <v-card class="pa-3">
@@ -84,14 +84,14 @@
                         <poll-info-dialog></poll-info-dialog>
                       </template>
                     </v-toolbar>
-                    <poll-form :ref="'pollForm' + index"
+                    <poll-form ref='pollForm'
                                class="pa-5"
                                @confirm="savePoll"
                                v-if="currentEvent != null && pollDialog[index]" :event="currentEvent"/>
                     <v-card-actions>
                       <v-spacer></v-spacer>
                       <v-btn @click="closePollDialog(index)" color="red">Cancel</v-btn>
-                      <v-btn @click="confirmPoll(index)" color="primary">Save</v-btn>
+                      <v-btn @click="confirmPoll()" color="primary">Save</v-btn>
                     </v-card-actions>
                   </v-card>
                 </v-dialog>
@@ -257,9 +257,14 @@ export default {
     },
     savePoll(event){
       console.log(event.locations)
+      console.log(event.timeslots)
+      this.getPollswithPoints(event.locations)
+      this.getPollswithPoints(event.timeslots)
+      console.log(event.locations)
+      console.log(event.timeslots)
     },
-    confirmPoll(index){
-      this.$refs["pollForm" + index].sendData();
+    confirmPoll(){
+      this.$refs.pollForm[0].sendData()
     },
     getPollswithPoints(array) {
       var len = array.size;

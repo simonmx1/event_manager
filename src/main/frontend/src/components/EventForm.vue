@@ -69,7 +69,6 @@ export default {
         timeslots: [
           {start: null, end: null}
         ],
-        participants: null,
         creatorIsPreferred: false,
         pollEndDate: null,
         enabled: true,
@@ -122,11 +121,10 @@ export default {
     allowedStepTimeEnd: m => m % 5 === 0,
     sendData() {
       this.$refs.locationSelector.sendData()
-      this.$refs.participantsSelector.sendData()
     },
     confirmLocations(locations) {
       this.currentEvent.location = locations
-      this.$emit('confirm', this.currentEvent)
+      this.$refs.participantsSelector.sendData()
     },
     confirmParticipants(participants) {
       this.currentEvent.participants = participants
