@@ -187,8 +187,12 @@
                 <v-card-actions class="ma-1">
                   <v-btn text color="orange" @click="evaluateEvent(item)" v-if="!item.evaluated">Evaluate Poll</v-btn>
                   <v-spacer/>
-                  <v-btn icon small><v-icon small>mdi-pencil</v-icon></v-btn>
-                  <v-btn icon small @click="deleteDialog = true, currentEvent = item"><v-icon small>mdi-delete</v-icon></v-btn>
+                  <v-btn icon small>
+                    <v-icon small>mdi-pencil</v-icon>
+                  </v-btn>
+                  <v-btn icon small @click="deleteDialog = true, currentEvent = item">
+                    <v-icon small>mdi-delete</v-icon>
+                  </v-btn>
                   <v-dialog v-model="deleteDialog" max-width="500px">
                     <v-card>
                       <v-card-title style="width: 100%">Are you sure you want to delete this Event?</v-card-title>
@@ -222,6 +226,7 @@ export default {
   components: {EventForm, PollForm, LocationInfoDialog, PollInfoDialog},
   data() {
     return {
+      currentUsername: null,
       success: undefined,
       response: null,
       createDialog: false,
@@ -257,10 +262,8 @@ export default {
       const time = new Date(timestamp).toTimeString().slice(0, 8)
       return {"date": date, "time": time}
     },
-    isCreator(){
-      let b
-      api.user.loggedIn().then(response => {b = response[0] === "admin"}).then(() => {return b})
-      return true;
+    isCreator(creator) {
+      return creator.username === this.currentUsername
     },
     showPollDialog(index, item) {
       this.currentEvent = item
@@ -298,7 +301,7 @@ export default {
       }
       return array
     },
-    evaluateEvent(event){
+    evaluateEvent(event) {
       api.event.evaluatePolls(event.id).then(() => this.getEvents())
     },
     closeCreateDialog() {
@@ -336,6 +339,9 @@ export default {
     },
   },
   mounted() {
+    api.user.loggedIn().then(response => {
+      this.currentUsername = response[0]
+    })
     this.getEvents()
   }
 }
