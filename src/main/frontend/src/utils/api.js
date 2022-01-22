@@ -231,7 +231,6 @@ export default {
             }).catch(() => false);
         },
         async create(event) {
-            console.log(event);
             return await axios.post('/api/event/create', {
                     'name': event.name,
                     'creatorUsername': event.creatorUsername,
@@ -257,7 +256,19 @@ export default {
             ).then(response => {
                 return response;
             }).catch(() => false);
-        }
+        },
+        async evaluatePolls(eventId) {
+            return await axios.post('/api/event/evaluatePolls', eventId,
+                {
+                    headers: {
+                        "Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt')),
+                        "Content-Type": "application/json"
+                    }
+                }
+            ).then(response => {
+                return response;
+            }).catch(() => false);
+        },
     },
     poll: {
         async get(eventId, username) {

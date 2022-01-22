@@ -185,7 +185,7 @@
               <div v-if="isCreator(item.creator)">
                 <v-divider style="margin-top: 10px;"/>
                 <v-card-actions class="ma-1">
-                  <v-btn text color="orange">Evaluate Poll</v-btn>
+                  <v-btn text color="orange" @click="evaluateEvent(item)" v-if="!item.evaluated">Evaluate Poll</v-btn>
                   <v-spacer/>
                   <v-btn icon small><v-icon small>mdi-pencil</v-icon></v-btn>
                   <v-btn icon small @click="deleteDialog = true, currentEvent = item"><v-icon small>mdi-delete</v-icon></v-btn>
@@ -297,6 +297,9 @@ export default {
         array[i].points = len--
       }
       return array
+    },
+    evaluateEvent(event){
+      api.event.evaluatePolls(event.id).then(() => this.getEvents())
     },
     closeCreateDialog() {
       this.getEvents()

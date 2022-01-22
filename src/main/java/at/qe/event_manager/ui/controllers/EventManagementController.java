@@ -153,4 +153,10 @@ public class EventManagementController {
         eventService.deleteEvent(eventService.loadEvent(id));
         return ResponseEntity.ok(new MessageResponse("Event deleted successfully!"));
     }
+
+    @PostMapping("/evaluatePolls")
+    public ResponseEntity<MessageResponse> evaluatePolls(@RequestBody Integer id) {
+        eventService.evaluatePolls(eventService.loadEvent(id));
+        return ResponseEntity.ok(new MessageResponse("Event evaluated successfully!"));
+    }
 }
