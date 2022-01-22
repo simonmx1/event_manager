@@ -41,6 +41,10 @@ public class EventService implements Serializable {
         return eventRepository.findAll();
     }
 
+    public Collection<Event> getAllEventFromUser(User user){
+        return eventRepository.findAllByParticipants(user);
+    }
+
     /**
      * Loads a single user identified by its username.
      *
@@ -71,7 +75,6 @@ public class EventService implements Serializable {
     	if(!event.getPolls().isEmpty()) {
     		event.getPolls().forEach(p -> pollService.deletePoll(p));
     	}
-    	System.out.println(event.getName());
         eventRepository.delete(event);
     }
     
