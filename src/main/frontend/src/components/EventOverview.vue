@@ -217,9 +217,6 @@ export default {
     }
   },
   methods: {
-    /*formatTimeSlot(timeslot){
-      return this.formatTimeStamp(timeslot.start) + " - "  + this.formatTimeStamp(timeslot.end)
-    },*/
     calculatePercent(timestamp) {
       let dif = new Date(timestamp).getTime() - new Date().getTime()
       let p = 100 - dif / 1000 / 3600 / 24 * 100
