@@ -223,6 +223,18 @@ export default {
             ).then(response => {
                 return response
             }).catch(() => false);
+        },
+        async delete(eventId) {
+            return await axios.post('/api/event/delete', eventId,
+                {
+                    headers: {
+                        "Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt')),
+                        "Content-Type": "application/json"
+                    }
+                }
+            ).then(response => {
+                return response;
+            }).catch(() => false);
         }
     },
     poll: {
