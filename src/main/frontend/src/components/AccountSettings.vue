@@ -20,6 +20,24 @@
                      :admin="false"
           />
         </v-dialog>
+        <v-dialog v-model="changePasswordDialog" width="500" persistent>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+                style="margin-left: 10px"
+                color="orange"
+                v-bind="attrs"
+                v-on="on"
+                @click="changePasswordDialog = true"
+            >Change Password
+            </v-btn>
+          </template>
+          <change-password
+              v-if="user != null"
+              @close="changePasswordDialog = false"
+              :username="user.username"
+          />
+        </v-dialog>
+
         <v-spacer></v-spacer>
         <v-dialog v-model="deleteDialog" max-width="500px">
           <v-card>
@@ -32,8 +50,9 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
+        <v-spacer></v-spacer>
+        <v-btn color="error" @click="deleteDialog = true">Delete Account</v-btn>
       </v-card-actions>
-      <v-btn color="error" style="float: right" @click="deleteDialog = true">Delete Account</v-btn>
     </v-card>
   </v-main>
 </template>
@@ -42,10 +61,12 @@
 import UserForm from "@/components/UserForm";
 import EditUser from "@/components/EditUser"
 import api from "@/utils/api";
+import ChangePassword from "@/components/ChangePassword";
 
 export default {
   name: "AccountSettings",
   components: {
+    ChangePassword,
     UserForm,
     EditUser
   },
@@ -53,6 +74,7 @@ export default {
     user: null,
     editDialog: false,
     deleteDialog: false,
+    changePasswordDialog: false
   }),
   methods: {
     openEditDialog() {
