@@ -5,7 +5,7 @@
         :items="items"
         :search="search"
         sort-by="pollEndDate"
-        sort-desc="true"
+        :sort-desc=true
         hide-default-footer
         disable-pagination
     >
@@ -145,7 +145,7 @@
               </div>
               <div>
                 <v-card-subtitle style="font-size: medium">
-                  <b>Participants: </b>
+                  <b>Participants</b>
 
                   <v-menu
                       transition="slide-y-transition"
