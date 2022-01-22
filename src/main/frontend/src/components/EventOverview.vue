@@ -105,9 +105,7 @@
                   </v-card>
                 </v-dialog>
               </v-card-title>
-
               <v-divider></v-divider>
-
               <div v-if="item.evaluated">
                 <v-card-subtitle style="font-size: medium">
                   <b>Location</b>
@@ -184,6 +182,26 @@
                   </v-menu>
                 </v-card-subtitle>
               </div>
+              <div v-if="isCreator(item.creator)">
+                <v-divider style="margin-top: 10px;"/>
+                <v-card-actions class="ma-1">
+                  <v-btn text color="orange">Evaluate Poll</v-btn>
+                  <v-spacer/>
+                  <v-btn icon small><v-icon small>mdi-pencil</v-icon></v-btn>
+                  <v-btn icon small @click="deleteDialog = true, currentEvent = item"><v-icon small>mdi-delete</v-icon></v-btn>
+                  <v-dialog v-model="deleteDialog" max-width="500px">
+                    <v-card>
+                      <v-card-title style="width: 100%">Are you sure you want to delete this Event?</v-card-title>
+                      <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn @click="deleteDialog = false; currentEvent = null" color="primary">Cancel</v-btn>
+                        <v-btn @click="deleteEventConfirm()" color="red">Delete</v-btn>
+                        <v-spacer></v-spacer>
+                      </v-card-actions>
+                    </v-card>
+                  </v-dialog>
+                </v-card-actions>
+              </div>
             </v-card>
           </v-col>
         </v-row>
@@ -214,12 +232,10 @@ export default {
       currentEvent: null,
       loadedEvents: false,
       items: [],
+      deleteDialog: false
     }
   },
   methods: {
-    /*formatTimeSlot(timeslot){
-      return this.formatTimeStamp(timeslot.start) + " - "  + this.formatTimeStamp(timeslot.end)
-    },*/
     calculatePercent(timestamp) {
       let dif = new Date(timestamp).getTime() - new Date().getTime()
       let p = 100 - dif / 1000 / 3600 / 24 * 100
@@ -240,6 +256,11 @@ export default {
       const date = new Date(timestamp).toISOString().slice(0, 10)
       const time = new Date(timestamp).toTimeString().slice(0, 8)
       return {"date": date, "time": time}
+    },
+    isCreator(){
+      let b
+      api.user.loggedIn().then(response => {b = response[0] === "admin"}).then(() => {return b})
+      return true;
     },
     showPollDialog(index, item) {
       this.currentEvent = item
@@ -299,7 +320,12 @@ export default {
         if (this.success)
           this.$refs.eventForm.clear()
       }))
-    }
+    },
+    deleteEventConfirm() {
+      api.event.delete(this.currentEvent.id).then(() => this.getEvents())
+      this.currentEvent = null;
+      this.deleteDialog = false
+    },
   },
   computed: {
     filteredKeys() {
