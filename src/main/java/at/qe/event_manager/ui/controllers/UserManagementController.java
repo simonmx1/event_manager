@@ -53,7 +53,9 @@ public class UserManagementController implements Serializable {
     @ResponseBody
     public ResponseEntity<?> get(@RequestParam(name = "username") String username) {
         if (isAuthorized(username)) {
-            return new ResponseEntity<>(userService.loadUserByUsername(username), HttpStatus.OK);
+        	User user = userService.loadUserByUsername(username);
+        	user.setPassword("");
+            return new ResponseEntity<>(user, HttpStatus.OK);
         }
         return new ResponseEntity<>(FORBIDDEN, HttpStatus.FORBIDDEN);
     }
