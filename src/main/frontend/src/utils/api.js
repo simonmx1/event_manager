@@ -28,6 +28,21 @@ export default {
                 return response
             }).catch(() => false);
         },
+        async changePassword(username, password) {
+            return await axios.post('/api/users/password', {
+                    'username': username,
+                    'password': password,
+                },
+                {
+                    headers: {
+                        "Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt')),
+                        "Content-Type": "application/json"
+                    }
+                }
+            ).then(response => {
+                return response
+            }).catch(() => false);
+        },
         async getAll() {
             return await axios.get('/api/users/getAll',
                 {headers: {"Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt'))}}
@@ -218,13 +233,13 @@ export default {
         async create(event) {
             console.log(event);
             return await axios.post('/api/event/create', {
-                'name': event.name,
-                'creatorUsername': event.creatorUsername,
-                'participants': JSON.stringify(event.participants),
-                'locations': JSON.stringify(event.locations),
-                'timeslots': JSON.stringify(event.timeslots),
-                'creatorIsPreferred': event.creatorIsPreferred,
-                'pollEndDate': event.pollEndDate
+                    'name': event.name,
+                    'creatorUsername': event.creatorUsername,
+                    'participants': JSON.stringify(event.participants),
+                    'locations': JSON.stringify(event.locations),
+                    'timeslots': JSON.stringify(event.timeslots),
+                    'creatorIsPreferred': event.creatorIsPreferred,
+                    'pollEndDate': event.pollEndDate
                 },
                 {headers: {"Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt'))}}
             ).then(response => {
@@ -247,7 +262,7 @@ export default {
     poll: {
         async get(eventId, username) {
             return await axios.get('/api/poll/get?eventId=' + eventId + '&username=' + username,
-            {headers: {"Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt'))}}
+                {headers: {"Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt'))}}
             ).then(response => {
                 console.log(response)
                 return response.data;

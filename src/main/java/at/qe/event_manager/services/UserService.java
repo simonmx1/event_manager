@@ -67,12 +67,8 @@ public class UserService implements Serializable, UserDetailsService {
         if (user.isNew()) {
             user.setCreateDate(new Date());
         }
-        System.out.println(user.getPassword().length());
         if(user.getPassword().length() == 0) {
         	user.setPassword(loadUserByUsername(user.getUsername()).getPassword());
-        }
-        else {
-        	user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
         return userRepository.save(user);
     }
