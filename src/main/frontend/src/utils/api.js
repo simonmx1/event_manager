@@ -208,6 +208,13 @@ export default {
                 return response.data;
             }).catch(() => false);
         },
+        async getAllFromUser(username) {
+            return await axios.get('/api/event/getAllFromUser?username=' + username,
+                {headers: {"Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt'))}}
+            ).then(response => {
+                return response.data;
+            }).catch(() => false);
+        },
         async create(event) {
             console.log(event);
             return await axios.post('/api/event/create', {

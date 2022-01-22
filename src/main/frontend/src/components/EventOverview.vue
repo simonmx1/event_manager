@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <v-data-iterator
-        :loading="items.length === 0"
+        :loading="!loadedEvents"
         :items="items"
         :search="search"
         :sort-by="sortBy.toLowerCase()"
@@ -232,6 +232,7 @@ export default {
       sortBy: 'name',
       pollDialog: [],
       currentEvent: null,
+      loadedEvents: false,
       keys: [
         'Name',
       ],
@@ -272,9 +273,12 @@ export default {
       this.currentEvent = null
     },
     getEvents() {
-      api.event.getAll()
-          .then(response => this.items = response)
-          .then(() => this.items.forEach(() => this.pollDialog.push(false)))
+      api.user.loggedIn().then(response => {
+        api.event.getAllFromUser(response[0])
+            .then(response => this.items = response)
+            .then(() => this.items.forEach(() => this.pollDialog.push(false)))
+            .then(() => this.loadedEvents = true)
+      })
     },
     savePoll(event) {
       const arrayLocations = this.getPollswithPoints(event.locations)

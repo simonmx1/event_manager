@@ -41,6 +41,10 @@ public class EventService implements Serializable {
         return eventRepository.findAll();
     }
 
+    public Collection<Event> getAllEventFromUser(User user){
+        return eventRepository.findAllByParticipants(user);
+    }
+
     /**
      * Loads a single user identified by its username.
      *

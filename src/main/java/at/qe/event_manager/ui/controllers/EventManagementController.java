@@ -43,6 +43,11 @@ public class EventManagementController {
         return eventService.getAllEvents();
     }
 
+    @GetMapping("/getAllFromUser")
+    public Collection<Event> getEventsFromUser(@RequestParam(name = "username") String username) {
+        return eventService.getAllEventFromUser(userService.loadUserByUsername(username));
+    }
+
     @GetMapping("/get")
     @ResponseBody
     public Event get(@RequestParam(name = "id") Integer id) {
