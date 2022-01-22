@@ -2,6 +2,8 @@ package at.qe.event_manager.services;
 
 import java.io.Serializable;
 import java.util.Collection;
+
+import at.qe.event_manager.model.PollLocations;
 import at.qe.event_manager.model.PollTimeslots;
 import at.qe.event_manager.repositories.PollTimeslotsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,10 @@ public class PollTimeslotsService implements Serializable {
      */
     public Collection<PollTimeslots> getAllPollTimeslots() {
         return pollTimeslotsRepository.findAll();
+    }
+
+    public PollTimeslots get(Integer pollId, Integer timeslotId) {
+        return pollTimeslotsRepository.findFirstByIds(pollId, timeslotId);
     }
 
     /**

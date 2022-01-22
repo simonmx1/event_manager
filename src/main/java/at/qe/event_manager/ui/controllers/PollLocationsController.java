@@ -2,6 +2,7 @@ package at.qe.event_manager.ui.controllers;
 
 import at.qe.event_manager.model.Poll;
 import at.qe.event_manager.model.PollLocations;
+import at.qe.event_manager.payload.request.PollLocationsRequest;
 import at.qe.event_manager.payload.response.MessageResponse;
 import java.io.Serializable;
 import java.util.Collection;
@@ -39,7 +40,9 @@ public class PollLocationsController implements Serializable {
     }
 
     @PostMapping("/edit")
-    public ResponseEntity<MessageResponse> edit(@RequestBody PollLocations pollLocations) {
+    public ResponseEntity<MessageResponse> edit(@RequestBody PollLocationsRequest pl) {
+        PollLocations pollLocations = pollLocationsService.get(pl.getPollId(), pl.getLocationId());
+        pollLocations.setPoints(pl.getPoints());
         if(pollLocationsService.savePollLocations(pollLocations) == null) {
             return ResponseEntity.ok(new MessageResponse("Error: Poll does not exist!"));
         } else {

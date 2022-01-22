@@ -254,12 +254,13 @@ export default {
         },
     },
     pollLocations: {
-        async edit(pollLocation) {
+        async edit(pollLocation, poll) {
             return await axios.post('/api/pollLocations/edit', {
-                    'pollId': pollLocation.pollId,
-                    'locationId': pollLocation.locationId,
+                    'pollId': poll.id,
+                    'locationId': pollLocation.location.id,
                     'points': pollLocation.points,
                 },
+
                 {
                     headers: {
                         "Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt')),
@@ -272,10 +273,10 @@ export default {
         },
     },
     pollTimeslots: {
-        async edit(pollTimeslot) {
+        async edit(pollTimeslot, poll) {
             return await axios.post('/api/pollTimeslots/edit', {
-                    'pollId': pollTimeslot.pollId,
-                    'timeslotId': pollTimeslot.timeslotId,
+                    'pollId': poll.id,
+                    'timeslotId': pollTimeslot.timeslot.id,
                     'points': pollTimeslot.points,
                 },
                 {

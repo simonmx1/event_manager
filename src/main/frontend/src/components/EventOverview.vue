@@ -256,22 +256,20 @@ export default {
           .then(() => this.items.forEach(() => this.pollDialog.push(false)))
     },
     savePoll(event){
-      console.log(event.locations)
-      console.log(event.timeslots)
-      this.getPollswithPoints(event.locations)
-      this.getPollswithPoints(event.timeslots)
-      console.log(event.locations)
-      console.log(event.timeslots)
+      const arrayLocations = this.getPollswithPoints(event.locations)
+      arrayLocations.forEach(pollLocation => api.pollLocations.edit(pollLocation, event.poll))
+      const arrayTimeslots = this.getPollswithPoints(event.timeslots)
+      arrayTimeslots.forEach(pollTimeslot => api.pollTimeslots.edit(pollTimeslot, event.poll))
     },
     confirmPoll(){
       this.$refs.pollForm[0].sendData()
     },
     getPollswithPoints(array) {
-      var len = array.size;
-      for (var i = 0; i < array.size; i++) {
-        array[i].points = len
-        len--
+      let len = array.length
+      for (let i = 0; i < array.length; i++) {
+        array[i].points = len--
       }
+      return array
     }
   },
   computed: {

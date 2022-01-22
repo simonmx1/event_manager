@@ -1,6 +1,8 @@
 package at.qe.event_manager.ui.controllers;
 
+import at.qe.event_manager.model.PollLocations;
 import at.qe.event_manager.model.PollTimeslots;
+import at.qe.event_manager.payload.request.PollTimeslotsRequest;
 import at.qe.event_manager.payload.response.MessageResponse;
 import java.io.Serializable;
 import java.util.Collection;
@@ -34,7 +36,9 @@ public class PollTimeslotsController implements Serializable {
     }
 
     @PostMapping("/edit")
-    public ResponseEntity<MessageResponse> edit(@RequestBody PollTimeslots pollTimeslots) {
+    public ResponseEntity<MessageResponse> edit(@RequestBody PollTimeslotsRequest pt) {
+        PollTimeslots pollTimeslots = pollTimeslotsService.get(pt.getPollId(), pt.getTimeslotId());
+        pollTimeslots.setPoints(pt.getPoints());
         if(pollTimeslotsService.savePollTimeslots(pollTimeslots) == null) {
             return ResponseEntity.ok(new MessageResponse("Error: Poll does not exist!"));
         } else {

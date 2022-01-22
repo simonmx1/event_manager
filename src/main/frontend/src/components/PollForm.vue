@@ -238,11 +238,14 @@ export default {
               .then(response => this.poll = response)
           )
           .then(() => (
-              this.locations = this.poll.pollLocations.sort(function(a, b) {return a.points - b.points}),
-                  this.timeslots = this.poll.pollTimeslots.sort(function(a, b) {return a.points - b.points})))
+              this.locations = this.poll.pollLocations.sort(function(a, b) {return b.points - a.points}),
+                  this.timeslots = this.poll.pollTimeslots.sort(function(a, b) {return b.points - a.points})))
+          .then(() => (
+              console.log(this.poll)
+          ))
     },
     sendData() {
-      this.$emit("confirm", {locations: this.locations, timeslots: this.timeslots})
+      this.$emit("confirm", {locations: this.locations, timeslots: this.timeslots, poll: this.poll})
     },
   },
   mounted() {

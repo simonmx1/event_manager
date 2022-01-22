@@ -33,6 +33,10 @@ public class PollLocationsService implements Serializable {
         return pollLocationsRepository.findAll();
     }
 
+    public PollLocations get(Integer pollId, Integer locationId) {
+        return pollLocationsRepository.findFirstByIds(pollId, locationId);
+    }
+
     /**
      * Loads a single user identified by its username.
      *
