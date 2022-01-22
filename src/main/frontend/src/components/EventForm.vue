@@ -51,7 +51,7 @@
             :time-picker-props="{format:'24hr', allowedMinutes:allowedStepTimeEnd}"
             label="Poll end time"
             v-model="currentEvent.pollEndDate"
-            :text-field-props="{errorMessage: 'error'}"/>
+            :text-field-props="{errorMessages: pollEndDateError}"/>
       </v-col>
     </v-row>
   </v-form>
@@ -128,13 +128,13 @@ export default {
       let valid = true;
 
       if (this.currentEvent.locations.length === 0) {
-        this.locationsError = 'Please select at least one participant'
+        this.locationsError = 'Please select at least one location'
         valid = false
       } else {
         this.locationsError = null
       }
       if (this.currentEvent.participants.length === 0) {
-        this.participantsError = 'Please select at least one location'
+        this.participantsError = 'Please select at least one participant'
         valid = false
       } else {
         this.participantsError = null
