@@ -68,6 +68,10 @@ public class EventService implements Serializable {
      * @param user the user to delete
      */
     public void deleteEvent(Event event) {
+    	if(!event.getPolls().isEmpty()) {
+    		event.getPolls().forEach(p -> pollService.deletePoll(p));
+    	}
+    	System.out.println(event.getName());
         eventRepository.delete(event);
     }
     

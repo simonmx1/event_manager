@@ -87,6 +87,8 @@ public class PollService implements Serializable {
      * @param user the user to delete
      */
     public void deletePoll(Poll poll) {
+    	poll.getPollLocations().forEach(pl -> pollLocationsService.deletePollLocations(pl));
+    	poll.getPollTimeslots().forEach(pt -> pollTimeslotsService.deletePollTimeslots(pt));
         pollRepository.delete(poll);
     }
     
