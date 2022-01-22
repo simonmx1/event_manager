@@ -198,7 +198,7 @@ export default {
     formatTimeStamp(timestamp) {
       //2023-01-02T19:15:00.000+00:00
       const date = new Date(timestamp).toISOString().slice(0, 10)
-      const time = new Date(timestamp).toISOString().slice(11, 16)
+      const time = new Date(timestamp).toTimeString().slice(0, 8)
       return time + " " + date
     },
     closeCreateDialog() {
