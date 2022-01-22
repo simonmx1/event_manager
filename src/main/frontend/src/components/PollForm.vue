@@ -74,12 +74,13 @@
                       <br>
                       <div style="float: right">
                         {{ formatTimeStamp(item.timeslot.end).date }} at {{
-                          formatTimeStamp(item.timeslot.end).time }}
+                          formatTimeStamp(item.timeslot.end).time
+                        }}
                       </div>
                     </v-col>
                     <v-col cols="1">
                       <v-btn icon style="height: 100%; width: 43px; padding: 5px "
-                      @click="disableTimeslot(item, index)">
+                             @click="disableTimeslot(item, index)">
                         <v-icon color="red">mdi-close</v-icon>
                       </v-btn>
                     </v-col>
@@ -127,7 +128,7 @@
                     </v-col>
                     <v-col cols="1">
                       <v-btn icon style="height: 100%; width: 43px; padding: 5px "
-                      @click="enableTimeslot(item, index++)">
+                             @click="enableTimeslot(item, index++)">
                         <v-icon color="green">mdi-check</v-icon>
                       </v-btn>
                     </v-col>
@@ -164,71 +165,27 @@ export default {
     poll: null,
     locations: null,
     timeslots: null,
-    disabledTimeslots: []
+    disabledTimeslots: [],
+    monthNames: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    weekdayNames: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
   }),
   methods: {
-    disableTimeslot(timeslot, index){
-      this.timeslots.splice(index,1)
+    disableTimeslot(timeslot, index) {
+      this.timeslots.splice(index, 1)
       this.disabledTimeslots.push(timeslot)
     },
-    enableTimeslot(timeslot, index){
-      this.disabledTimeslots.splice(index,1)
+    enableTimeslot(timeslot, index) {
+      this.disabledTimeslots.splice(index, 1)
       this.timeslots.push(timeslot)
     },
     formatTimeStamp(timestamp) {
-      const time = new Date(timestamp).toTimeString().slice(0,8)
+      const time = new Date(timestamp).toTimeString().slice(0, 8)
       return {"date": this.formatDate(new Date(timestamp)), "time": time}
     },
-    formatWeekday(weekday) {
-      switch (weekday) {
-        case 0:
-          return 'Mon'
-        case 1:
-          return 'Tue'
-        case 2:
-          return 'Wed'
-        case 3:
-          return 'Thu'
-        case 4:
-          return 'Fri'
-        case 5:
-          return 'Sat'
-        case 6:
-          return 'Sun'
-      }
-    },
-    formatMonth(month) {
-      switch (month) {
-        case 0:
-          return 'Jan'
-        case 1:
-          return 'Feb'
-        case 2:
-          return 'Mar'
-        case 3:
-          return 'Apr'
-        case 4:
-          return 'May'
-        case 5:
-          return 'Jun'
-        case 6:
-          return 'Jul'
-        case 7:
-          return 'Aug'
-        case 8:
-          return 'Sep'
-        case 9:
-          return 'Oct'
-        case 10:
-          return 'Nov'
-        case 11:
-          return 'Dec'
-      }
-    },
     formatDate(date) {
-      const weekday = this.formatWeekday(date.getDay());
+      const weekday = this.weekdayNames[date.getDay()]
       const day = date.getDate();
-      const month = this.formatMonth(date.getMonth());
+      const month = this.monthNames[date.getMonth()]
       const year = date.getFullYear();
       return weekday + ", " + day + " " + month + " " + year;
     },
@@ -237,15 +194,24 @@ export default {
           .then(response => api.poll.get(this.event.id, response[0])
               .then(response => this.poll = response)
           )
-          .then(() => (
-              this.locations = this.poll.pollLocations.sort(function(a, b) {return b.points - a.points}),
-                  this.timeslots = this.poll.pollTimeslots.sort(function(a, b) {return b.points - a.points})))
-          .then(() => (
-              console.log(this.poll)
-          ))
+          .then(() => {
+            this.locations = this.poll.pollLocations.sort((a, b) => b.points - a.points)
+            this.timeslots = this.poll.pollTimeslots.sort((a, b) => b.points - a.points).filter(t => t.points !== 0)
+            this.poll.pollTimeslots.forEach((item) => {
+              if (item.points === 0) {
+                this.disabledTimeslots.push(item)
+              }
+            })
+          })
     },
     sendData() {
-      this.$emit("confirm", {locations: this.locations, timeslots: this.timeslots, poll: this.poll})
+      console.log(this.disabledTimeslots);
+      this.$emit("confirm", {
+        locations: this.locations,
+        timeslots: this.timeslots,
+        poll: this.poll,
+        disabledTimeslots: this.disabledTimeslots
+      })
     },
   },
   mounted() {

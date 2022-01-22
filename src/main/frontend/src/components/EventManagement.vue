@@ -53,6 +53,14 @@
                   ref="eventForm"
                   class="pa-5"
                   @confirm="confirmCreate"/>
+              <v-alert
+                  v-if="typeof success !== 'undefined'"
+                  dense
+                  outlined
+                  :type="success ? 'success' : 'error'"
+              >
+                <strong>{{ response }}</strong>
+              </v-alert>
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn @click="closeCreateDialog()" color="primary">Cancel</v-btn>
@@ -116,7 +124,7 @@
       </template>
       <template v-slot:item.location="{ item }">
         <span v-if="item.location">
-              {{item.location.name}}
+              {{ item.location.name }}
           <template>
             <location-info-dialog :current-location="item.location"></location-info-dialog>
           </template>
@@ -124,7 +132,7 @@
       </template>
       <template v-slot:item.timeslot="{ item }">
         <span v-if="item.timeslot">
-              {{formatTimeSlot(item.timeslot)}}
+              {{ formatTimeSlot(item.timeslot) }}
         </span>
       </template>
       <template v-slot:item.evaluated="{ item }">
@@ -162,6 +170,8 @@ export default {
   name: "EventManagement",
   components: {LocationInfoDialog, EventForm},
   data: () => ({
+    success: undefined,
+    response: null,
     createDialog: false,
     deleteDialog: false,
     editDialog: false,
@@ -182,10 +192,10 @@ export default {
     formatDate(date) {
       return new Date(date).toISOString().slice(0, 10);
     },
-    formatTimeSlot(timeslot){
-      return this.formatTimeStamp(timeslot.start) + " - "  + this.formatTimeStamp(timeslot.end)
+    formatTimeSlot(timeslot) {
+      return this.formatTimeStamp(timeslot.start) + " - " + this.formatTimeStamp(timeslot.end)
     },
-    formatTimeStamp(timestamp){
+    formatTimeStamp(timestamp) {
       //2023-01-02T19:15:00.000+00:00
       const date = new Date(timestamp).toISOString().slice(0, 10)
       const time = new Date(timestamp).toISOString().slice(11, 16)
@@ -194,6 +204,9 @@ export default {
     closeCreateDialog() {
       this.getEvents()
       this.createDialog = false
+      this.$refs.eventForm.clear()
+      this.success = undefined
+      this.response = null
     },
     openEditDialog(user) {
       this.currentEvent = user;
@@ -212,7 +225,7 @@ export default {
     getEvents() {
       api.event.getAll().then(response => this.events = response).then(() => console.log(this.events))
     },
-    tryCreate(){
+    tryCreate() {
       this.$refs.eventForm.sendData();
     },
     confirmCreate(event) {
@@ -221,7 +234,12 @@ export default {
       event.location.forEach((location, index) => event.location[index] = location.id)
       api.user.loggedIn().then(response => {
         event.creatorUsername = response[0]
-      }).then(() => api.event.create(event))
+      })
+          .then(() => api.event.create(event).then(response => {
+            this.success = response.status === 201;
+            this.response = response.data
+          })).then(() => this.$refs.eventForm.clear())
+
     }
   },
   mounted() {

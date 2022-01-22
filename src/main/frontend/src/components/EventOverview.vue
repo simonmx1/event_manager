@@ -36,27 +36,44 @@
                 label="Filter by"
             ></v-select>
             <v-spacer></v-spacer>
-            <v-btn-toggle
-                v-model="sortDesc"
-                mandatory
-            >
-              <v-btn
-                  large
-                  depressed
-                  color="blue"
-                  :value="false"
-              >
-                <v-icon>mdi-arrow-up</v-icon>
-              </v-btn>
-              <v-btn
-                  large
-                  depressed
-                  color="blue"
-                  :value="true"
-              >
-                <v-icon>mdi-arrow-down</v-icon>
-              </v-btn>
-            </v-btn-toggle>
+            <v-dialog v-model="createDialog" persistent max-width="1000px">
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                    color="red"
+                    dark
+                    class="mb-2"
+                    v-bind="attrs"
+                    v-on="on"
+                >
+                  Create Event
+                </v-btn>
+              </template>
+              <v-card>
+                <v-toolbar color="primary">
+                  <v-card-title>
+                    Create Event
+                  </v-card-title>
+                </v-toolbar>
+                <event-form
+                    ref="eventForm"
+                    class="pa-5"
+                    @confirm="confirmCreate"/>
+                <v-alert
+                    v-if="typeof success !== 'undefined'"
+                    dense
+                    outlined
+                    :type="success ? 'success' : 'error'"
+                >
+                  <strong>{{ response }}</strong>
+                </v-alert>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn @click="closeCreateDialog()" color="primary">Cancel</v-btn>
+                  <v-btn @click="tryCreate()" color="green">Create</v-btn>
+                  <v-spacer></v-spacer>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
           </template>
         </v-toolbar>
       </template>
@@ -199,12 +216,16 @@ import api from "../utils/api";
 import LocationInfoDialog from "./LocationInfoDialog";
 import PollInfoDialog from "./PollInfoDialog"
 import PollForm from "./PollForm";
+import EventForm from "@/components/EventForm";
 
 export default {
   name: 'EventOverview',
-  components: {PollForm, LocationInfoDialog, PollInfoDialog},
+  components: {EventForm, PollForm, LocationInfoDialog, PollInfoDialog},
   data() {
     return {
+      success: undefined,
+      response: null,
+      createDialog: false,
       search: '',
       filter: {},
       sortDesc: false,
@@ -223,8 +244,8 @@ export default {
     },*/
     calculatePercent(timestamp) {
       let dif = new Date(timestamp).getTime() - new Date().getTime()
-      let p = 100 - dif /1000 /3600 /24 *100
-      return dif < 86400000 ? p : dif < 0 ?  100 : 0
+      let p = 100 - dif / 1000 / 3600 / 24 * 100
+      return dif < 86400000 ? p : dif < 0 ? 100 : 0
     },
     calculateColor(percent) {
       if (percent >= 95.83) {//1 hour
@@ -239,7 +260,7 @@ export default {
     },
     formatTimeStamp(timestamp) {
       const date = new Date(timestamp).toISOString().slice(0, 10)
-      const time = new Date(timestamp).toTimeString().slice(0,8)
+      const time = new Date(timestamp).toTimeString().slice(0, 8)
       return {"date": date, "time": time}
     },
     showPollDialog(index, item) {
@@ -255,13 +276,17 @@ export default {
           .then(response => this.items = response)
           .then(() => this.items.forEach(() => this.pollDialog.push(false)))
     },
-    savePoll(event){
+    savePoll(event) {
       const arrayLocations = this.getPollswithPoints(event.locations)
       arrayLocations.forEach(pollLocation => api.pollLocations.edit(pollLocation, event.poll))
       const arrayTimeslots = this.getPollswithPoints(event.timeslots)
       arrayTimeslots.forEach(pollTimeslot => api.pollTimeslots.edit(pollTimeslot, event.poll))
+      event.disabledTimeslots.forEach(disabled => {
+        disabled.points = 0;
+        api.pollTimeslots.edit(disabled, event.poll)
+      })
     },
-    confirmPoll(){
+    confirmPoll() {
       this.$refs.pollForm[0].sendData()
     },
     getPollswithPoints(array) {
@@ -270,6 +295,27 @@ export default {
         array[i].points = len--
       }
       return array
+    },
+    closeCreateDialog() {
+      this.getEvents()
+      this.createDialog = false
+      this.$refs.eventForm.clear()
+      this.success = undefined
+      this.response = null
+    },
+    tryCreate() {
+      this.$refs.eventForm.sendData();
+    },
+    confirmCreate(event) {
+      console.log(event.participants)
+      event.participants.forEach((user, index) => event.participants[index] = user.username)
+      event.location.forEach((location, index) => event.location[index] = location.id)
+      api.user.loggedIn().then(response => {
+        event.creatorUsername = response[0]
+      }).then(() => api.event.create(event).then(response => {
+        this.success = response.status === 201;
+        this.response = response.data
+      })).then(() => this.$refs.eventForm.clear())
     }
   },
   computed: {
