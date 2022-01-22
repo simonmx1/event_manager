@@ -103,8 +103,6 @@ export default {
       this.event.timeslots.push({start: null, end: null})
     },
     removeTimeslotInput(index) {
-      console.log(this.event.timeslots);
-      console.log(index);
       this.event.timeslots.splice(index, 1)
       this.forceRerender()
     },
@@ -129,6 +127,10 @@ export default {
     confirmParticipants(participants) {
       this.currentEvent.participants = participants
       this.$emit('confirm', this.currentEvent)
+    },
+    clear() {
+      this.$refs.form.reset()
+      this.$forceUpdate()
     }
   },
   mounted() {

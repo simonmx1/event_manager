@@ -300,7 +300,7 @@ export default {
             ).then(response => {
                 return response
             }).catch(() => false);
-        },
+        }
     }
 
 }
