@@ -205,6 +205,7 @@ export default {
     },
     deleteEventConfirm() {
       //api.deleteEvent(this.currentEvent.username).then(() => this.getEvents())
+      api.event.delete(this.currentEvent.id).then(() => this.getEvents())
       this.currentEvent = null;
       this.deleteDialog = false
     },

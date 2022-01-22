@@ -15,5 +15,5 @@ import org.springframework.data.jpa.repository.Query;
 public interface EventRepository extends AbstractRepository<Event, Integer>, Serializable {
 
     @Query("SELECT e FROM Event e WHERE :id = e.id")
-    Event findFirstById(Integer id);
+    Event findFirstByEventId(Integer id);
 }
