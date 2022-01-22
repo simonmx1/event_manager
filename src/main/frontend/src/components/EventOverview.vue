@@ -80,11 +80,14 @@
                     <v-toolbar>
                       <v-card-title>Choose your poll options</v-card-title>
                     </v-toolbar>
-                    <poll-form v-if="currentEvent != null && pollDialog[index]" :event="currentEvent"></poll-form>
+                    <poll-form :ref="'pollForm' + index"
+                               class="pa-5"
+                               @confirm="savePoll"
+                               v-if="currentEvent != null && pollDialog[index]" :event="currentEvent"/>
                     <v-card-actions>
                       <v-spacer></v-spacer>
-                      <v-btn @click="closePollDialog(index)" color="primary">Cancel</v-btn>
-                      <v-btn @click="closePollDialog(index)" color="red">Save</v-btn>
+                      <v-btn @click="closePollDialog(index)" color="red">Cancel</v-btn>
+                      <v-btn @click="confirmPoll(index)" color="primary">Save</v-btn>
                     </v-card-actions>
                   </v-card>
                 </v-dialog>
@@ -216,7 +219,6 @@ export default {
     calculatePercent(timestamp) {
       let dif = new Date(timestamp).getTime() - new Date().getTime()
       let p = 100 - dif /1000 /3600 /24 *100
-      console.log(dif)
       return dif < 86400000 ? p : dif < 0 ?  100 : 0
     },
     calculateColor(percent){
@@ -247,6 +249,19 @@ export default {
       api.event.getAll()
           .then(response => this.items = response)
           .then(() => this.items.forEach(() => this.pollDialog.push(false)))
+    },
+    savePoll(event){
+      console.log(event.locations)
+    },
+    confirmPoll(index){
+      this.$refs["pollForm" + index].sendData();
+    },
+    getPollswithPoints(array) {
+      var len = array.size;
+      for (var i = 0; i < array.size; i++) {
+        array[i].points = len
+        len--
+      }
     }
   },
   computed: {

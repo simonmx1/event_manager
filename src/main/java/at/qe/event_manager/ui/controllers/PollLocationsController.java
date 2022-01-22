@@ -1,11 +1,13 @@
 package at.qe.event_manager.ui.controllers;
 
+import at.qe.event_manager.model.Poll;
 import at.qe.event_manager.model.PollLocations;
 import at.qe.event_manager.payload.response.MessageResponse;
 import java.io.Serializable;
 import java.util.Collection;
 
 import at.qe.event_manager.services.PollLocationsService;
+import at.qe.event_manager.services.PollService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +22,9 @@ public class PollLocationsController implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Autowired
+    private PollService pollService;
+
+    @Autowired
     private PollLocationsService pollLocationsService;
 
     /**
@@ -29,8 +34,8 @@ public class PollLocationsController implements Serializable {
      */
 
     @GetMapping("/getAll")
-    public Collection<PollLocations> getAll() {
-        return pollLocationsService.getAllPollLocations();
+    public Collection<PollLocations> getAll(Poll poll) {
+        return pollService.loadPoll(poll.getId()).getPollLocations();
     }
 
     @PostMapping("/edit")
