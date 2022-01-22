@@ -144,7 +144,10 @@
 
 <script>
 export default {
-  name: "PollInfoDialog"
+  name: "PollInfoDialog",
+  data: () => ({
+    showDialog: false
+  })
 }
 </script>
 

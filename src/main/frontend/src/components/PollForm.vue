@@ -9,7 +9,7 @@
                          color="primary"
       ></v-progress-linear>
       <draggable v-model="locations" group="people" @start="drag=true" @end="drag=false">
-        <div v-for="(item, index) in locations "
+        <div v-for="(item, index) in locations"
              :key="item.location.id">
           <tr>
             <th>
@@ -238,9 +238,12 @@ export default {
               .then(response => this.poll = response)
           )
           .then(() => (
-              this.locations = this.poll.pollLocations,
-                  this.timeslots = this.poll.pollTimeslots))
-    }
+              this.locations = this.poll.pollLocations.sort(function(a, b) {return a.points - b.points}),
+                  this.timeslots = this.poll.pollTimeslots.sort(function(a, b) {return a.points - b.points})))
+    },
+    sendData() {
+      this.$emit("confirm", {locations: this.locations, timeslots: this.timeslots})
+    },
   },
   mounted() {
     this.getPoll()

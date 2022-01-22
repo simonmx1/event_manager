@@ -65,7 +65,7 @@
         <v-row>
           <v-col
               v-for="(item, index) in props.items"
-              :key="item.name"
+              :key="index"
               cols="4"
           >
             <v-card class="pa-3">
@@ -84,11 +84,14 @@
                         <poll-info-dialog></poll-info-dialog>
                       </template>
                     </v-toolbar>
-                    <poll-form v-if="currentEvent != null && pollDialog[index]" :event="currentEvent"></poll-form>
+                    <poll-form ref='pollForm'
+                               class="pa-5"
+                               @confirm="savePoll"
+                               v-if="currentEvent != null && pollDialog[index]" :event="currentEvent"/>
                     <v-card-actions>
                       <v-spacer></v-spacer>
-                      <v-btn @click="closePollDialog(index)" color="primary">Cancel</v-btn>
-                      <v-btn @click="closePollDialog(index)" color="red">Save</v-btn>
+                      <v-btn @click="closePollDialog(index)" color="red">Cancel</v-btn>
+                      <v-btn @click="confirmPoll()" color="primary">Save</v-btn>
                     </v-card-actions>
                   </v-card>
                 </v-dialog>
@@ -220,9 +223,8 @@ export default {
     },*/
     calculatePercent(timestamp) {
       let dif = new Date(timestamp).getTime() - new Date().getTime()
-      let p = 100 - dif / 1000 / 3600 / 24 * 100
-      console.log(dif)
-      return dif < 86400000 ? p : dif < 0 ? 100 : 0
+      let p = 100 - dif /1000 /3600 /24 *100
+      return dif < 86400000 ? p : dif < 0 ?  100 : 0
     },
     calculateColor(percent) {
       if (percent >= 95.83) {//1 hour
@@ -252,6 +254,24 @@ export default {
       api.event.getAll()
           .then(response => this.items = response)
           .then(() => this.items.forEach(() => this.pollDialog.push(false)))
+    },
+    savePoll(event){
+      console.log(event.locations)
+      console.log(event.timeslots)
+      this.getPollswithPoints(event.locations)
+      this.getPollswithPoints(event.timeslots)
+      console.log(event.locations)
+      console.log(event.timeslots)
+    },
+    confirmPoll(){
+      this.$refs.pollForm[0].sendData()
+    },
+    getPollswithPoints(array) {
+      var len = array.size;
+      for (var i = 0; i < array.size; i++) {
+        array[i].points = len
+        len--
+      }
     }
   },
   computed: {

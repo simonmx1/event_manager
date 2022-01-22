@@ -246,20 +246,6 @@ export default {
                 return response.data;
             }).catch(() => false);
         },
-        async getAllPollLocations() {
-            return await axios.get('/api/pollLocations/getAll',
-                {headers: {"Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt'))}}
-            ).then(response => {
-                return response.data;
-            }).catch(() => false);
-        },
-        async getAllPollTimeslots() {
-            return await axios.get('/api/pollTimeslots/getAll',
-                {headers: {"Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt'))}}
-            ).then(response => {
-                return response.data;
-            }).catch(() => false);
-        },
         async edit(poll) {
             return await axios.post('/api/poll/edit', {
                     'pollId': poll.pollId,
@@ -278,5 +264,42 @@ export default {
                 return response
             }).catch(() => false);
         },
+    },
+    pollLocations: {
+        async edit(pollLocation) {
+            return await axios.post('/api/pollLocations/edit', {
+                    'pollId': pollLocation.pollId,
+                    'locationId': pollLocation.locationId,
+                    'points': pollLocation.points,
+                },
+                {
+                    headers: {
+                        "Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt')),
+                        "Content-Type": "application/json"
+                    }
+                }
+            ).then(response => {
+                return response
+            }).catch(() => false);
+        },
+    },
+    pollTimeslots: {
+        async edit(pollTimeslot) {
+            return await axios.post('/api/pollTimeslots/edit', {
+                    'pollId': pollTimeslot.pollId,
+                    'timeslotId': pollTimeslot.timeslotId,
+                    'points': pollTimeslot.points,
+                },
+                {
+                    headers: {
+                        "Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt')),
+                        "Content-Type": "application/json"
+                    }
+                }
+            ).then(response => {
+                return response
+            }).catch(() => false);
+        },
     }
+
 }
