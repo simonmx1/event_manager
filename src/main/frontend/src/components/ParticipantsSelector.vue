@@ -5,6 +5,8 @@
       :items="availableParticipants"
       :search-input.sync="search"
       :filter="filter"
+      :hint="'Creator is always a participant'"
+      persistent-hint
       label="Participants"
       item-text="id"
       multiple
@@ -80,7 +82,11 @@ export default {
     }
   },
   mounted() {
-    api.user.getAll().then((response) => (this.availableParticipants = response));
+    api.user.getAll().then((response) => (this.availableParticipants = response))
+        .then(() => api.user.loggedIn()
+            .then(response => this.availableParticipants.splice(
+                this.availableParticipants.findIndex(user => user.username === response[0]), 1))
+        )
   },
 };
 </script>
