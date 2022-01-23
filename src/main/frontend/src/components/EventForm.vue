@@ -25,47 +25,155 @@
       <v-divider vertical/>
       <v-col cols="6">
         <div v-if="loadTimeslots">
-          <v-row v-for="(timeslot, index) in currentEvent.timeslots" :key="index" ref="timeslots">
+          <v-row
+              v-for="(timeslot, index) in timeslots"
+              :key="index"
+              ref="timeslots">
             <v-col class=".col-auto">
-              <v-datetime-picker
-                  :time-picker-props="{format:'24hr', allowedMinutes:allowedStepTimeSlot, max: timeslot.end != null ? timeslot.end.getTime().toString() : null}"
-                  :date-picker-props="{min: new Date().toISOString(), max: timeslot.end != null ? timeslot.end.toISOString() : null}"
-                  label="Select Starttime"
-                  v-model="timeslot.start">
-                <template v-slot:dateIcon>
-                  <v-icon>mdi-calendar</v-icon>
+              <v-menu
+                  ref="dateMenu"
+                  v-model="dateMenu[index]"
+                  :close-on-content-click="false"
+                  :return-value.sync="timeslot.date"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="auto"
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <v-text-field
+                      v-model="timeslot.date"
+                      label="Date"
+                      prepend-icon="mdi-calendar"
+                      readonly
+                      v-bind="attrs"
+                      v-on="on"
+                  ></v-text-field>
                 </template>
-                <template v-slot:timeIcon>
-                  <v-icon>mdi-clock</v-icon>
-                </template>
-              </v-datetime-picker>
+                <v-date-picker
+                    v-model="timeslot.date"
+                    label="Date"
+                    :min="new Date().toISOString()"
+                >
+                  <v-spacer></v-spacer>
+                  <v-btn
+                      text
+                      color="primary"
+                      @click="dateMenu[index] = false; forceRerender()"
+                  >
+                    Cancel
+                  </v-btn>
+                  <v-btn
+                      text
+                      color="primary"
+                      @click="saveTimeslotDate(index, timeslot.date)"
+                  >
+                    OK
+                  </v-btn>
+                </v-date-picker>
+              </v-menu>
             </v-col>
             <v-col class=".col-auto">
-              <v-datetime-picker :time-picker-props="{format:'24hr', allowedMinutes:allowedStepTimeSlot}"
-                                 :date-picker-props="{min: getMinEndDate(timeslot) != null ? getMinEndDate(timeslot) : new Date().toISOString()}"
-                                 label="Select Endtime" v-model="timeslot.end">
-                <template v-slot:dateIcon>
-                  <v-icon>mdi-calendar</v-icon>
+              <v-menu
+                  ref="startTimeMenu"
+                  v-model="startTimeMenu[index]"
+                  :close-on-content-click="false"
+                  :return-value.sync="timeslot.start"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="auto"
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <v-text-field
+                      v-model="timeslot.start"
+                      label="Start Time"
+                      prepend-icon="mdi-clock"
+                      readonly
+                      v-bind="attrs"
+                      v-on="on"
+                  ></v-text-field>
                 </template>
-                <template v-slot:timeIcon>
-                  <v-icon>mdi-clock</v-icon>
-                </template>
-              </v-datetime-picker>
+                <v-time-picker
+                    :format="'24hr'"
+                    :allowedMinutes="allowedStepTimeSlot"
+                    label="Start Time"
+                    v-model="timeslot.start"
+                    :max="timeslot.end">
+                  <v-spacer></v-spacer>
+                  <v-btn
+                      text
+                      color="primary"
+                      @click="startTimeMenu[index] = false; forceRerender()"
+                  >
+                    Cancel
+                  </v-btn>
+                  <v-btn
+                      text
+                      color="primary"
+                      @click="saveTimeslotStart(index, timeslot.start)"
+                  >
+                    OK
+                  </v-btn>
+                </v-time-picker>
+              </v-menu>
             </v-col>
-            <v-col v-if="index + 1 === currentEvent.timeslots.length" cols="auto" style="margin-top: 10px">
-              <v-btn v-if="currentEvent.timeslots.length > 1" icon @click="removeTimeslotInput(index)">
+            <v-col class=".col-auto">
+              <v-menu
+                  ref="endTimeMenu"
+                  v-model="endTimeMenu[index]"
+                  :close-on-content-click="false"
+                  :return-value.sync="timeslot.end"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="auto"
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <v-text-field
+                      v-model="timeslot.end"
+                      label="End Time"
+                      prepend-icon="mdi-clock"
+                      readonly
+                      v-bind="attrs"
+                      v-on="on"
+                  ></v-text-field>
+                </template>
+                <v-time-picker
+                    :format="'24hr'"
+                    :allowedMinutes="allowedStepTimeSlot"
+                    label="End Time"
+                    v-model="timeslot.end"
+                    :min="timeslot.start">
+                  <v-spacer></v-spacer>
+                  <v-btn
+                      text
+                      color="primary"
+                      @click="endTimeMenu[index] = false; forceRerender()"
+                  >
+                    Cancel
+                  </v-btn>
+                  <v-btn
+                      text
+                      color="primary"
+                      @click="saveTimeslotEnd(index, timeslot.end)"
+                  >
+                    OK
+                  </v-btn>
+                </v-time-picker>
+              </v-menu>
+            </v-col>
+            <v-col v-if="index + 1 === timeslots.length" cols="auto" style="margin-top: 10px">
+              <v-btn v-if="timeslots.length > 1" icon @click="removeTimeslotInput(index)">
                 <v-icon>mdi-minus</v-icon>
               </v-btn>
-              <v-btn icon @click="addTimeslotInput()">
-                <v-icon>mdi-plus</v-icon>
-              </v-btn>
             </v-col>
-            <v-col v-if="index + 1 !== currentEvent.timeslots.length" cols="auto" style="margin-top: 10px">
+            <v-col v-if="index + 1 !== timeslots.length" cols="auto" style="margin-top: 10px">
               <v-btn icon @click="removeTimeslotInput(index)">
                 <v-icon>mdi-minus</v-icon>
               </v-btn>
             </v-col>
           </v-row>
+          <v-btn text @click="addTimeslotInput()" style="width: 100%">
+            <v-icon>mdi-plus</v-icon> Add Timeslot
+          </v-btn>
           <v-alert
               v-if="timeslotError != null"
               dense
@@ -76,19 +184,102 @@
           </v-alert>
         </div>
         <v-divider/>
-        <v-datetime-picker
-            :time-picker-props="{format:'24hr', allowedMinutes:allowedStepTimeEnd}"
-            :date-picker-props="{min: new Date().toISOString(), max: pollEndDateMax.date}"
-            label="Poll end time"
-            v-model="currentEvent.pollEndDate"
-            :text-field-props="{errorMessages: pollEndDateError}">
-          <template v-slot:dateIcon>
-            <v-icon>mdi-calendar</v-icon>
-          </template>
-          <template v-slot:timeIcon>
-            <v-icon>mdi-clock</v-icon>
-          </template>
-        </v-datetime-picker>
+        <v-row>
+          <v-col class=".col-auto">
+            <v-menu
+                ref="pollDateMenu"
+                v-model="pollDateMenu"
+                :close-on-content-click="false"
+                :return-value.sync="pollEndDate.date"
+                transition="scale-transition"
+                offset-y
+                min-width="auto"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                    v-model="pollEndDate.date"
+                    label="Poll End Date"
+                    prepend-icon="mdi-calendar"
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
+                    :error="pollEndDateError != null"
+                    :error-messages="pollEndDateError"
+                ></v-text-field>
+              </template>
+              <v-date-picker
+                  v-if="pollEndDate"
+                  v-model="pollEndDate.date"
+                  label="Date"
+                  :min="new Date().toISOString()"
+                  :max="getFirstTimeslot().date"
+              >
+                <v-spacer></v-spacer>
+                <v-btn
+                    text
+                    color="primary"
+                    @click="pollDateMenu = false; forceRerender()"
+                >
+                  Cancel
+                </v-btn>
+                <v-btn
+                    text
+                    color="primary"
+                    @click="$refs.pollDateMenu.save(pollEndDate.date)"
+                >
+                  OK
+                </v-btn>
+              </v-date-picker>
+            </v-menu>
+          </v-col>
+          <v-col class=".col-auto">
+            <v-menu
+                ref="pollTimeMenu"
+                v-model="pollTimeMenu"
+                :close-on-content-click="false"
+                :return-value.sync="pollEndDate.time"
+                transition="scale-transition"
+                offset-y
+                min-width="auto"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                    v-model="pollEndDate.time"
+                    label="Poll End Time"
+                    prepend-icon="mdi-clock"
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
+                    :error="pollEndDateError != null"
+                    :error-messages="pollEndDateError"
+                ></v-text-field>
+              </template>
+              <v-time-picker
+                  :format="'24hr'"
+                  :allowedMinutes="allowedStepTimeSlot"
+                  label="Start Time"
+                  v-model="pollEndDate.time"
+                  :max="pollEndDate.date === getFirstTimeslot().date ? getFirstTimeslot().start : null"
+              >
+                <v-spacer></v-spacer>
+                <v-btn
+                    text
+                    color="primary"
+                    @click="pollTimeMenu = false; forceRerender()"
+                >
+                  Cancel
+                </v-btn>
+                <v-btn
+                    text
+                    color="primary"
+                    @click="$refs.pollTimeMenu.save(pollEndDate.time)"
+                >
+                  OK
+                </v-btn>
+              </v-time-picker>
+            </v-menu>
+          </v-col>
+        </v-row>
       </v-col>
     </v-row>
   </v-form>
@@ -106,16 +297,19 @@ export default {
       type: Object, default: () => ({
         name: '',
         locations: null,
-        timeslots: [
-          {start: null, end: null}
-        ],
+        timeslots: [],
         creatorIsPreferred: false,
-        pollEndDate: null,
+        pollEndDate: {date: null, time: null},
         enabled: true,
       })
     },
   },
   data: () => ({
+    dateMenu: [false],
+    startTimeMenu: [false],
+    endTimeMenu: [false],
+    pollDateMenu: false,
+    pollTimeMenu: false,
     valid: false,
     loadTimeslots: true,
     currentEvent: null,
@@ -127,22 +321,37 @@ export default {
     eventNameError: null,
     pollEndDateError: null,
     timeslotError: null,
+    timeslots: [{date: null, start: null, end: null}],
+    pollEndDate: {date: null, time: null}
   }),
   methods: {
-    getFirstTimeslotStart() {
-      let first = this.currentEvent.timeslots[0]
-      this.currentEvent.timeslots.forEach(timeslot => {
-        if (first.start <= timeslot.start) {
+    saveTimeslotDate(index, date) {
+      this.timeslots[index].date = date
+      this.dateMenu[index] = false
+      this.forceRerender()
+    },
+    saveTimeslotStart(index, start) {
+      this.timeslots[index].start = start
+      this.startTimeMenu[index] = false
+      this.forceRerender()
+    },
+    saveTimeslotEnd(index, end) {
+      this.timeslots[index].end = end
+      this.endTimeMenu[index] = false
+      this.forceRerender()
+    },
+    getFirstTimeslot() {
+      let first = this.timeslots[0]
+      this.timeslots.forEach(timeslot => {
+        if (first.date > timeslot.date) {
           first = timeslot
+        } else {
+          if (first.date === timeslot.date && first.start > timeslot.start) {
+            first = timeslot
+          }
         }
       })
-      return {
-        date: first.start != null ? this.addOneHour(first.start).toISOString() : null,
-        time: first.start != null ? first.start.getTime() : null
-      }
-    },
-    getMinEndDate(timeslot) {
-      return timeslot.start != null ? this.addOneHour(timeslot.start).toISOString() : null
+      return first
     },
     addOneHour(timestamp) {
       let date = new Date(timestamp)
@@ -150,10 +359,17 @@ export default {
       return date
     },
     addTimeslotInput() {
-      this.currentEvent.timeslots.push({start: null, end: null})
+      this.dateMenu.push(false)
+      this.startTimeMenu.push(false)
+      this.endTimeMenu.push(false)
+      this.timeslots.push({date: null, start: null, end: null})
+      this.forceRerender()
     },
     removeTimeslotInput(index) {
-      this.currentEvent.timeslots.splice(index, 1)
+      this.dateMenu.splice(index, 1)
+      this.startTimeMenu.splice(index, 1)
+      this.endTimeMenu.splice(index, 1)
+      this.timeslots.splice(index, 1)
       this.forceRerender()
     },
     forceRerender() {
@@ -194,29 +410,36 @@ export default {
       } else {
         this.participantsError = null
       }
-
       if (this.currentEvent.name.length === 0) {
         this.eventNameError = 'Please enter a name for this event'
         valid = false
       } else {
         this.eventNameError = null
       }
-      if (this.currentEvent.pollEndDate == null) {
-        this.pollEndDateError = 'Please enter a end date for the poll of this event'
+      if (this.pollEndDate.date == null || this.pollEndDate.time == null) {
+        this.pollEndDateError = 'Please enter a end date and time for the poll of this event'
         valid = false
       } else {
+        this.currentEvent.pollEndDate = this.pollEndDate.date + "T" + this.pollEndDate.time + ":00.000Z"
         this.pollEndDateError = null
       }
-      this.currentEvent.timeslots.forEach(timeslot => {
-        if (timeslot.start == null || timeslot.end == null) {
+      this.timeslots.forEach(timeslot => {
+        if (timeslot.start == null || timeslot.end == null || timeslot.date == null) {
           this.timeslotError = "Some of your timeslots are invalid"
           valid = false
         } else {
           this.timeslotError = null
+          this.currentEvent.timeslots.push(this.timeslotConvert(timeslot))
         }
       })
       if (valid)
         this.$emit('confirm', this.currentEvent)
+    },
+    timeslotConvert(timeslot) {
+      return {
+        start: timeslot.date + 'T' + timeslot.start + ":00.000Z",
+        end: timeslot.date + 'T' + timeslot.end + ":00.000Z",
+      }
     },
     clear() {
       this.participantsError = null
@@ -226,6 +449,8 @@ export default {
       this.eventNameError = null
       this.$refs.form.reset()
       this.currentEvent = JSON.parse(JSON.stringify(this.event))
+      this.timeslots = {date: null, start: null, end: null}
+      this.pollEndDate = this.event.pollEndDate
       this.$forceUpdate()
     }
   },
@@ -233,19 +458,6 @@ export default {
     this.currentEvent = JSON.parse(JSON.stringify(this.event))
     this.$api.user.getAll().then(response => this.availableUsers = response)
   },
-  computed: {
-    pollEndDateMax: function () {
-      return this.getFirstTimeslotStart()
-    }
-  },
-  watch: {
-    '$data.currentEvent.timeslots': {
-      handler: function (val) {
-        console.log(val)
-      },
-      deep: true
-    }
-  }
 }
 </script>
 
