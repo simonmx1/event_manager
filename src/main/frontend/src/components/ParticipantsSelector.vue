@@ -80,8 +80,9 @@ export default {
     search: null,
   }),
   methods: {
-    sendData() {
-      this.$emit("confirm", this.model)
+    async sendData() {
+      console.error(this.model)
+      await this.$emit("confirm", this.model)
     },
     filter(item, queryText, itemText) {
       const hasValue = val => val != null ? val : ''

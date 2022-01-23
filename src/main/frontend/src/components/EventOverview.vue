@@ -317,7 +317,7 @@ export default {
     confirmCreate(event) {
       console.log(event.participants)
       event.participants.forEach((user, index) => event.participants[index] = user.username)
-      event.location.forEach((location, index) => event.location[index] = location.id)
+      event.locations.forEach((location, index) => event.locations[index] = location.id)
       api.user.loggedIn().then(response => {
         event.creatorUsername = response[0]
       }).then(() => api.event.create(event).then(response => {
