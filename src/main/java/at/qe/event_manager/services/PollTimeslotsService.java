@@ -2,8 +2,6 @@ package at.qe.event_manager.services;
 
 import java.io.Serializable;
 import java.util.Collection;
-
-import at.qe.event_manager.model.PollLocations;
 import at.qe.event_manager.model.PollTimeslots;
 import at.qe.event_manager.repositories.PollTimeslotsRepository;
 import org.springframework.beans.factory.annotation.Autowired;

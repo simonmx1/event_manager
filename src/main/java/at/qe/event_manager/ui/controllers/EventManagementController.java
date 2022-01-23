@@ -58,7 +58,6 @@ public class EventManagementController {
 	public ResponseEntity<String> create(@RequestBody EventCreationRequest eventCreationRequest) {
 		if (!checkTimeslotsWithLocationOpeningTimes(eventCreationRequest.getLocations(),
 				eventCreationRequest.getTimeslots())) {
-			System.out.println("Kaputt");
 			return new ResponseEntity<>("At least one Timeslot is not matching with at least one Location opening time",
 					HttpStatus.OK);
 		}
@@ -88,22 +87,25 @@ public class EventManagementController {
 			timeslot.setEnd(convertStringDateToDate(new JSONObject(t).getString("end")));
 			timeslots.add(timeslot);
 		});
-//		for (Location l : locations) {
-//			List<OpeningTime> openingTimes = l.getOpeningTimes();
-//			for(OpeningTime openingTime : openingTimes) {
-//				for(Timeslot : timeslots) {
-//					if()
-//				}
-//			}
-//			
-//			for (Timeslot t : timeslots) {
-//				for (OpeningTime o : openingTimes) {
-//					if (o.getStart().compareTo(t.getStart()) > 0 || o.getEnd().compareTo(t.getEnd()) < 0) {
-//						return false;
-//					}
-//				}
-//			}
-//		}
+		boolean correctTimeslot = false;
+		for (Location l : locations) {
+			List<OpeningTime> openingTimes = l.getOpeningTimes();
+			for(Timeslot timeslot : timeslots) {
+				correctTimeslot = false;
+				for(OpeningTime openingTime : openingTimes) {
+					Timestamp ts = timeslot.getStart();
+					Calendar calendar = Calendar.getInstance();
+					calendar.setTime(ts);
+					int weekday = calendar.get(Calendar.DAY_OF_WEEK)-2;
+					if(openingTime.getWeekday() == weekday) {
+						if(openingTime.getStart().toLocalTime().compareTo(timeslot.getStart().toLocalDateTime().toLocalTime()) <= 0 && openingTime.getEnd().toLocalTime().compareTo(timeslot.getEnd().toLocalDateTime().toLocalTime()) >= 0)  {
+							correctTimeslot = true;
+						}
+					}
+				}
+				if(!correctTimeslot) return false;
+			}
+		}
 		return true;
 	}
 

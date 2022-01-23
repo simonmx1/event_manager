@@ -180,7 +180,6 @@ public class EventService implements Serializable {
     }
     
     private void computePointsOfPolls(Event event, List<PollLocations> locationsWithComputedPoints, List<PollTimeslots> timeslotsWithComputedPoints) {
-    	Set<Poll> test = event.getPolls();
     	for(Poll poll : event.getPolls()) {
     		for(PollLocations pollLocation : poll.getPollLocations()) {
     			if(!locationsWithComputedPoints.contains(pollLocation)) {
