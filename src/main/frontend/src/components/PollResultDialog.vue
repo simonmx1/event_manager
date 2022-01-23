@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="showDialog" max-width="1300px">
+  <v-dialog v-model="showDialog" max-width="1200px">
     <template v-slot:activator="{ on, attrs }">
       <v-btn
           icon
@@ -20,7 +20,7 @@
           class="pa-4"
           justify="space-between"
       >
-        <v-col cols="2">
+        <v-col cols="3">
           <v-list-item-group
               class="overflow-y-auto"
               v-model="selectedItem"
@@ -44,7 +44,7 @@
         <v-col
             cols="9"
             class="overflow-y-auto text-center"
-            style="height: 500px"
+            style="min-height: 500px"
         >
           <v-scroll-y-transition mode="out-in">
             <div
