@@ -180,10 +180,11 @@ public class EventService implements Serializable {
     }
     
     private void computePointsOfPolls(Event event, List<PollLocations> locationsWithComputedPoints, List<PollTimeslots> timeslotsWithComputedPoints) {
+    	Set<Poll> test = event.getPolls();
     	for(Poll poll : event.getPolls()) {
     		for(PollLocations pollLocation : poll.getPollLocations()) {
     			if(!locationsWithComputedPoints.contains(pollLocation)) {
-    				locationsWithComputedPoints.add(pollLocation);
+    				locationsWithComputedPoints.add(new PollLocations(pollLocation));
     			}
     			else {
     				locationsWithComputedPoints.get(locationsWithComputedPoints.indexOf(pollLocation)).addPoints(pollLocation);
@@ -191,7 +192,7 @@ public class EventService implements Serializable {
     		}
     		for(PollTimeslots pollTimeslot : poll.getPollTimeslots()) {
     			if(!timeslotsWithComputedPoints.contains(pollTimeslot)) {
-    				timeslotsWithComputedPoints.add(pollTimeslot);
+    				timeslotsWithComputedPoints.add(new PollTimeslots(pollTimeslot));
     			}
                 else if (timeslotsWithComputedPoints.get(timeslotsWithComputedPoints.indexOf(pollTimeslot)).getPoints() == 0 || pollTimeslot.getPoints() == 0){
                 	timeslotsWithComputedPoints.get(timeslotsWithComputedPoints.indexOf(pollTimeslot)).setPoints(0);

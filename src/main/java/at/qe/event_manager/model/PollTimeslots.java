@@ -23,6 +23,14 @@ public class PollTimeslots implements Serializable{
     private Timeslot timeslot;
 
     private Integer points;
+    
+    public PollTimeslots(){}
+    
+    public PollTimeslots(PollTimeslots pollTimeslotToBeCopied) {
+    	this.poll = pollTimeslotToBeCopied.getPoll();
+    	this.timeslot = pollTimeslotToBeCopied.getTimeslot();
+    	this.points = pollTimeslotToBeCopied.getPoints();
+    }
 
     public Poll getPoll() {
         return poll;
