@@ -119,12 +119,12 @@
                   <br>
                   From:
                   <div style="float: right">
-                    {{ $date.formatTimestamp(item.timeslot.start).date }} at {{ $date.formatTimestamp(item.timeslot.start).time }}
+                    {{ $date.formatTimestampPoll(item.timeslot.start).date }} at {{ $date.formatTimestampPoll(item.timeslot.start).time }}
                   </div>
                   <br>
                   To:
                   <div style="float: right">
-                    {{ $date.formatTimestamp(item.timeslot.end).date }} at {{ $date.formatTimestamp(item.timeslot.end).time }}
+                    {{ $date.formatTimestampPoll(item.timeslot.end).date }} at {{ $date.formatTimestampPoll(item.timeslot.end).time }}
                   </div>
                 </v-card-subtitle>
               </div>
@@ -137,7 +137,7 @@
                 <v-card-subtitle style="font-size: medium">
                   <b>Poll end time</b>
                   <div style="float: right">
-                    {{ $date.formatTimestamp(item.pollEndDate).date }} at {{ $date.formatTimestamp(item.pollEndDate).time }}
+                    {{ $date.formatTimestampPoll(item.pollEndDate).date }} at {{ $date.formatTimestampPoll(item.pollEndDate).time }}
                   </div>
                 </v-card-subtitle>
               </div>

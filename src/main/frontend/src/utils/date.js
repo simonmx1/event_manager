@@ -7,7 +7,7 @@ export default {
         return new Date(timestamp).toISOString().slice(0, 10);
     },
     timeFromTimestamp(timestamp) {
-        return new Date(timestamp).toTimeString().slice(0, 8)
+        return new Date(timestamp).toTimeString().slice(0, 5)
     },
     formatTimeslot(timeslot) {
         return this.formatTimestamp(timeslot.start) + " - " + this.formatTimestamp(timeslot.end)
@@ -50,7 +50,7 @@ export default {
         return weekdays
     },
     formatTimestampPoll(timestamp) {
-        const time = new Date(timestamp).toTimeString().slice(0, 8)
+        const time = this.timeFromTimestamp(timestamp)
         return {"date": this.formatDatePoll(new Date(timestamp)), "time": time}
     },
     formatDatePoll(date) {
