@@ -1,5 +1,7 @@
 package at.qe.event_manager.model;
+
 import org.springframework.data.domain.Persistable;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -7,20 +9,16 @@ import java.util.Date;
 
 @Entity
 public class Timeslot implements Persistable<Integer>, Serializable, Comparable<Timeslot> {
-	
-	private static final long serialVersionUID = 1L;
 
-	@Id
+    private static final long serialVersionUID = 1L;
+
+    @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer timeslotId;
 
     private Timestamp start;
     private Timestamp end;
-
-   /* @OneToMany (mappedBy = "timeslot")
-    @JsonIgnore
-    private Set<PollTimeslots> pollTimeslots;*/
 
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -54,11 +52,11 @@ public class Timeslot implements Persistable<Integer>, Serializable, Comparable<
     public int compareTo(Timeslot timeslot) {
         return this.timeslotId.compareTo(timeslot.getId());
     }
-    
+
     @Override
     public boolean equals(Object timeslot) {
-    	if(!(timeslot instanceof Timeslot)) return false;
-    	return this.timeslotId.compareTo(((Timeslot)timeslot).getId()) == 0;
+        if (!(timeslot instanceof Timeslot)) return false;
+        return this.timeslotId.compareTo(((Timeslot) timeslot).getId()) == 0;
     }
 
     @Override

@@ -9,11 +9,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Table(name = "pollTimeslots")
 @IdClass(PollTimeslotsId.class)
-public class PollTimeslots implements Serializable{
+public class PollTimeslots implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
+    @Id
     @ManyToOne
     @JsonIgnore
     private Poll poll;
@@ -23,13 +23,14 @@ public class PollTimeslots implements Serializable{
     private Timeslot timeslot;
 
     private Integer points;
-    
-    public PollTimeslots(){}
-    
+
+    public PollTimeslots() {
+    }
+
     public PollTimeslots(PollTimeslots pollTimeslotToBeCopied) {
-    	this.poll = pollTimeslotToBeCopied.getPoll();
-    	this.timeslot = pollTimeslotToBeCopied.getTimeslot();
-    	this.points = pollTimeslotToBeCopied.getPoints();
+        this.poll = pollTimeslotToBeCopied.getPoll();
+        this.timeslot = pollTimeslotToBeCopied.getTimeslot();
+        this.points = pollTimeslotToBeCopied.getPoints();
     }
 
     public Poll getPoll() {
@@ -55,17 +56,17 @@ public class PollTimeslots implements Serializable{
     public void setPoints(Integer points) {
         this.points = points;
     }
-    
+
     public void addPoints(PollTimeslots pollTimeslot) {
         this.points += pollTimeslot.getPoints();
     }
-    
+
     @Override
     public boolean equals(Object o) {
-    	if(!(o instanceof PollTimeslots)) {
-    		return false;
-    	}
-    	PollTimeslots pl = (PollTimeslots) o;
+        if (!(o instanceof PollTimeslots)) {
+            return false;
+        }
+        PollTimeslots pl = (PollTimeslots) o;
         return this.timeslot.getId() == pl.getTimeslot().getId();
     }
 }

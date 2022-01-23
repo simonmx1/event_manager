@@ -8,11 +8,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Table(name = "pollLocations")
 @IdClass(PollLocationsId.class)
-public class PollLocations implements Serializable{
+public class PollLocations implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
+    @Id
     @ManyToOne
     @JsonIgnore
     private Poll poll;
@@ -22,13 +22,14 @@ public class PollLocations implements Serializable{
     private Location location;
 
     private Integer points;
-    
-    public PollLocations(){}
-    
+
+    public PollLocations() {
+    }
+
     public PollLocations(PollLocations pollLocationToBeCopied) {
-    	this.poll = pollLocationToBeCopied.getPoll();
-    	this.location = pollLocationToBeCopied.getLocation();
-    	this.points = pollLocationToBeCopied.getPoints();
+        this.poll = pollLocationToBeCopied.getPoll();
+        this.location = pollLocationToBeCopied.getLocation();
+        this.points = pollLocationToBeCopied.getPoints();
     }
 
     public Poll getPoll() {
@@ -54,18 +55,18 @@ public class PollLocations implements Serializable{
     public void setPoints(Integer points) {
         this.points = points;
     }
-    
+
     public void addPoints(PollLocations pollLocation) {
         this.points += pollLocation.getPoints();
     }
-    
+
     @Override
     public boolean equals(Object o) {
-    	if(!(o instanceof PollLocations)) {
-    		return false;
-    	}
-    	PollLocations pl = (PollLocations) o;
-    	return this.location.getId() == pl.getLocation().getId();
+        if (!(o instanceof PollLocations)) {
+            return false;
+        }
+        PollLocations pl = (PollLocations) o;
+        return this.location.getId() == pl.getLocation().getId();
     }
 }
 

@@ -3,21 +3,14 @@ package at.qe.event_manager.model;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
-import org.springframework.data.domain.Persistable;
 
-/**
- * Entity representing users.
- * <p>
- * This class is part of the skeleton project provided for students of the
- * courses "Software Architecture" and "Software Engineering" offered by the
- * University of Innsbruck.
- */
+import org.springframework.data.domain.Persistable;
 
 @Entity
 public class Tag implements Persistable<String>, Serializable, Comparable<Tag> {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @Column(length = 100)
     private String text;
@@ -46,11 +39,11 @@ public class Tag implements Persistable<String>, Serializable, Comparable<Tag> {
     public int compareTo(Tag o) {
         return this.text.compareTo(o.text);
     }
-    
+
     @Override
     public boolean equals(Object tag) {
-    	if(!(tag instanceof Tag)) return false;
-    	return this.text.compareTo(((Tag)tag).text) == 0;
+        if (!(tag instanceof Tag)) return false;
+        return this.text.compareTo(((Tag) tag).text) == 0;
     }
 
     @Override

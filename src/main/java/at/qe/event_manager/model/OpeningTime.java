@@ -11,14 +11,6 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.domain.Persistable;
 
 
-/**
- * Entity representing users.
- * <p>
- * This class is part of the skeleton project provided for students of the
- * courses "Software Architecture" and "Software Engineering" offered by the
- * University of Innsbruck.
- */
-
 @Entity
 @OnDelete(action = OnDeleteAction.CASCADE)
 public class OpeningTime implements Persistable<Integer>, Serializable, Comparable<OpeningTime> {
@@ -92,11 +84,11 @@ public class OpeningTime implements Persistable<Integer>, Serializable, Comparab
     public int compareTo(OpeningTime o) {
         return this.openingTimeId.compareTo(o.getId());
     }
-    
+
     @Override
     public boolean equals(Object openingTime) {
-    	if(!(openingTime instanceof OpeningTime)) return false;
-    	return this.openingTimeId.compareTo(((OpeningTime)openingTime).getId()) == 0;
+        if (!(openingTime instanceof OpeningTime)) return false;
+        return this.openingTimeId.compareTo(((OpeningTime) openingTime).getId()) == 0;
     }
 
     @Override
