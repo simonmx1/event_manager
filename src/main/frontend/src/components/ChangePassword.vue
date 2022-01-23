@@ -30,7 +30,6 @@
 </template>
 
 <script>
-import api from "@/utils/api";
 
 export default {
   name: "ChangePassword",
@@ -51,7 +50,7 @@ export default {
     },
     changePassword() {
       if (this.password != null && this.password.length > 0) {
-        api.user.changePassword(this.username, this.password).then(response => {
+        this.$api.user.changePassword(this.username, this.password).then(response => {
           this.success = response.status === 200
           this.response = response.data
         })

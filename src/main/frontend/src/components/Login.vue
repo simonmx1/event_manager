@@ -63,7 +63,6 @@
 </template>
 
 <script>
-import api from "@/utils/api";
 import Register from './Register.vue';
 
 export default {
@@ -83,7 +82,7 @@ export default {
   }),
   methods: {
     login() {
-      api.user.login(this.username, this.password).then(response => {
+      this.$api.user.login(this.username, this.password).then(response => {
         response ? this.$router.push("/") : this.wrongCredentials = true
       })
     }

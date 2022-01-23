@@ -68,8 +68,6 @@
 </template>
 
 <script>
-import api from "@/utils/api";
-
 export default {
   name: "ParticipantsSelector",
   props: {
@@ -99,8 +97,8 @@ export default {
     },
   },
   mounted() {
-    api.user.getAll().then((response) => (this.availableParticipants = response))
-        .then(() => api.user.loggedIn()
+    this.$api.user.getAll().then((response) => (this.availableParticipants = response))
+        .then(() => this.$api.user.loggedIn()
             .then(response => this.availableParticipants.splice(
                 this.availableParticipants.findIndex(user => user.username === response[0]), 1))
         )

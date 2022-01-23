@@ -79,8 +79,7 @@ export default {
     loadOpeningTimes: true
   }),
   mounted() {
-    const week = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-    week.forEach(day => {
+    this.$date.getWeek().forEach(day => {
       this.weekdays.push({day: day, enabled: false, openingTimes: [{start: null, end: null, text: ''}]})
       this.timepicker.push([false])
     })
@@ -115,7 +114,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-
-</style>

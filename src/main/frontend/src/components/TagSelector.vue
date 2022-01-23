@@ -51,8 +51,6 @@
 </template>
 
 <script>
-import api from "@/utils/api";
-
 export default {
   name: "TagSelector",
   props: {
@@ -111,7 +109,7 @@ export default {
           .indexOf(query.toString().toLowerCase()) > -1
     },
     createItem(item) {
-      api.tag.create(item.text).then(() => this.getTags())
+      this.$api.tag.create(item.text).then(() => this.getTags())
     },
     deleteItem(item) {
       let index_model = this.model.findIndex((value) => value.text === item.text)
@@ -120,10 +118,10 @@ export default {
         this.model.splice(index_model, 1)
       }
       // this.$forceUpdate()
-      api.tag.delete(item.text).then(() => this.getTags())
+      this.$api.tag.delete(item.text).then(() => this.getTags())
     },
     getTags() {
-      api.tag.getAll().then(response => {
+      this.$api.tag.getAll().then(response => {
         this.items = response
       })
     },

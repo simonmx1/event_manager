@@ -60,7 +60,6 @@
 <script>
 import UserForm from "@/components/UserForm";
 import EditUser from "@/components/EditUser"
-import api from "@/utils/api";
 import ChangePassword from "@/components/ChangePassword";
 
 export default {
@@ -87,7 +86,7 @@ export default {
     },
     deleteUserConfirm() {
       this.deleteDialog = false
-      api.user.delete(this.user.username).then(response => {
+      this.$api.user.delete(this.user.username).then(response => {
         if (response !== false) {
           localStorage.removeItem('jwt')
           this.$router.push("/login")
@@ -95,9 +94,9 @@ export default {
       })
     },
     getUser() {
-      api.user.loggedIn().then((response) => {
+      this.$api.user.loggedIn().then((response) => {
         if (response !== false)
-          api.user.get(response[0]).then((user) => {
+          this.$api.user.get(response[0]).then((user) => {
             if (user !== false) this.user = user;
           });
       });

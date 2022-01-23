@@ -28,7 +28,6 @@
 </template>
 
 <script>
-import api from "@/utils/api";
 import UserForm from "@/components/UserForm";
 
 export default {
@@ -47,7 +46,7 @@ export default {
       this.$refs.form.validate()
     },
     register(event) {
-      api.user.register(event)
+      this.$api.user.register(event)
           .then(response => {
             this.success = response.status === 201;
             this.response = response.data

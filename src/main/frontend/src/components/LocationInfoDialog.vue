@@ -80,8 +80,8 @@
                 :key="id"
             >
               <v-list-item-title>
-                {{ formatWeekday(openingTime.weekday) }} <br>
-                {{ formatTime(openingTime.start) }} - {{ formatTime(openingTime.end) }}
+                {{ $date.formatWeekday(openingTime.weekday) }} <br>
+                {{ $date.formatTimeWithoutMillis(openingTime.start) }} - {{ $date.formatTimeWithoutMillis(openingTime.end) }}
               </v-list-item-title>
             </v-list-item>
           </v-list>
@@ -100,34 +100,5 @@ export default {
   data: () => ({
     showDialog: false
   }),
-  methods: {
-    formatWeekday(weekday) {
-      switch (weekday) {
-        case 0:
-          return 'Monday'
-        case 1:
-          return 'Tuesday'
-        case 2:
-          return 'Wednesday'
-        case 3:
-          return 'Thursday'
-        case 4:
-          return 'Friday'
-        case 5:
-          return 'Saturday'
-        case 6:
-          return 'Sunday'
-      }
-    },
-    formatTime(time) {
-      return time.substring(0, 5)
-    },
-    sortByWeekday(list) {
-      return list.sort((a, b) => (a.weekday !== b.weekday) ? a.weekday - b.weekday : (a.start > b.start ? 1 : -1))
-    },
-  },
-  mounted() {
-    console.log(this.currentLocation);
-  },
 };
 </script>

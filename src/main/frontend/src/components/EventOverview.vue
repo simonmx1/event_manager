@@ -119,25 +119,25 @@
                   <br>
                   From:
                   <div style="float: right">
-                    {{ formatTimeStamp(item.timeslot.start).date }} at {{ formatTimeStamp(item.timeslot.start).time }}
+                    {{ $date.formatTimestamp(item.timeslot.start).date }} at {{ $date.formatTimestamp(item.timeslot.start).time }}
                   </div>
                   <br>
                   To:
                   <div style="float: right">
-                    {{ formatTimeStamp(item.timeslot.end).date }} at {{ formatTimeStamp(item.timeslot.end).time }}
+                    {{ $date.formatTimestamp(item.timeslot.end).date }} at {{ $date.formatTimestamp(item.timeslot.end).time }}
                   </div>
                 </v-card-subtitle>
               </div>
               <div v-else>
                 <v-progress-linear style="margin-top: 15px"
-                                   :color="calculateColor(calculatePercent(item.pollEndDate))"
+                                   :color="$date.calculateColor($date.calculatePercent(item.pollEndDate))"
                                    rounded
-                                   :value="calculatePercent(item.pollEndDate)"
+                                   :value="$date.calculatePercent(item.pollEndDate)"
                 ></v-progress-linear>
                 <v-card-subtitle style="font-size: medium">
                   <b>Poll end time</b>
                   <div style="float: right">
-                    {{ formatTimeStamp(item.pollEndDate).date }} at {{ formatTimeStamp(item.pollEndDate).time }}
+                    {{ $date.formatTimestamp(item.pollEndDate).date }} at {{ $date.formatTimestamp(item.pollEndDate).time }}
                   </div>
                 </v-card-subtitle>
               </div>
@@ -215,7 +215,6 @@
 </template>
 
 <script>
-import api from "../utils/api";
 import LocationInfoDialog from "./LocationInfoDialog";
 import PollInfoDialog from "./PollInfoDialog"
 import PollForm from "./PollForm";
@@ -241,27 +240,6 @@ export default {
     }
   },
   methods: {
-    calculatePercent(timestamp) {
-      let dif = new Date(timestamp).getTime() - new Date().getTime()
-      let p = 100 - dif / 1000 / 3600 / 24 * 100
-      return dif < 86400000 ? p : dif < 0 ? 100 : 0
-    },
-    calculateColor(percent) {
-      if (percent >= 95.83) {//1 hour
-        return 'red'
-      } else if (percent >= 91.66) {//2 hours
-        return 'orange'
-      } else if (percent >= 87.5) {//3 hours
-        return '#e6c000'
-      } else {
-        return 'green'
-      }
-    },
-    formatTimeStamp(timestamp) {
-      const date = new Date(timestamp).toISOString().slice(0, 10)
-      const time = new Date(timestamp).toTimeString().slice(0, 8)
-      return {"date": date, "time": time}
-    },
     isCreator(creator) {
       return creator.username === this.currentUsername
     },
@@ -274,8 +252,8 @@ export default {
       this.currentEvent = null
     },
     getEvents() {
-      api.user.loggedIn().then(response => {
-        api.event.getAllFromUser(response[0])
+      this.$api.user.loggedIn().then(response => {
+        this.$api.event.getAllFromUser(response[0])
             .then(response => this.items = response)
             .then(() => this.items.forEach(() => this.pollDialog.push(false)))
             .then(() => this.loadedEvents = true)
@@ -283,12 +261,12 @@ export default {
     },
     savePoll(event) {
       const arrayLocations = this.getPollswithPoints(event.locations)
-      arrayLocations.forEach(pollLocation => api.pollLocations.edit(pollLocation, event.poll))
+      arrayLocations.forEach(pollLocation => this.$api.pollLocations.edit(pollLocation, event.poll))
       const arrayTimeslots = this.getPollswithPoints(event.timeslots)
-      arrayTimeslots.forEach(pollTimeslot => api.pollTimeslots.edit(pollTimeslot, event.poll))
+      arrayTimeslots.forEach(pollTimeslot => this.$api.pollTimeslots.edit(pollTimeslot, event.poll))
       event.disabledTimeslots.forEach(disabled => {
         disabled.points = 0;
-        api.pollTimeslots.edit(disabled, event.poll)
+        this.$api.pollTimeslots.edit(disabled, event.poll)
       })
     },
     confirmPoll() {
@@ -302,7 +280,7 @@ export default {
       return array
     },
     evaluateEvent(event) {
-      api.event.evaluatePolls(event.id).then(() => this.getEvents())
+      this.$api.event.evaluatePolls(event.id).then(() => this.getEvents())
     },
     closeCreateDialog() {
       this.getEvents()
@@ -318,9 +296,9 @@ export default {
       console.log(event.participants)
       event.participants.forEach((user, index) => event.participants[index] = user.username)
       event.locations.forEach((location, index) => event.locations[index] = location.id)
-      api.user.loggedIn().then(response => {
+      this.$api.user.loggedIn().then(response => {
         event.creatorUsername = response[0]
-      }).then(() => api.event.create(event).then(response => {
+      }).then(() => this.$api.event.create(event).then(response => {
         this.success = response.status === 201;
         this.response = response.data
         if (this.success)
@@ -328,7 +306,7 @@ export default {
       }))
     },
     deleteEventConfirm() {
-      api.event.delete(this.currentEvent.id).then(() => this.getEvents())
+      this.$api.event.delete(this.currentEvent.id).then(() => this.getEvents())
       this.currentEvent = null;
       this.deleteDialog = false
     },
@@ -339,7 +317,7 @@ export default {
     },
   },
   mounted() {
-    api.user.loggedIn().then(response => {
+    this.$api.user.loggedIn().then(response => {
       this.currentUsername = response[0]
     })
     this.getEvents()

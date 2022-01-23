@@ -27,14 +27,20 @@
         <div v-if="loadTimeslots">
           <v-row v-for="(timeslot, index) in currentEvent.timeslots" :key="index" ref="timeslots">
             <v-col class=".col-auto">
-              <v-datetime-picker :time-picker-props="{format:'24hr', allowedMinutes:allowedStepTimeSlot}"
-                                 label="Select Starttime" v-model="timeslot.start"></v-datetime-picker>
+              <v-datetime-picker
+                  :time-picker-props="{format:'24hr', allowedMinutes:allowedStepTimeSlot,}"
+                  :date-picker-props="{min: new Date().toISOString()}"
+                  label="Select Starttime"
+                  v-model="timeslot.start"></v-datetime-picker>
             </v-col>
             <v-col class=".col-auto">
               <v-datetime-picker :time-picker-props="{format:'24hr', allowedMinutes:allowedStepTimeSlot}"
                                  label="Select Endtime" v-model="timeslot.end"></v-datetime-picker>
             </v-col>
             <v-col v-if="index + 1 === currentEvent.timeslots.length" cols="auto" style="margin-top: 10px">
+              <v-btn v-if="currentEvent.timeslots.length > 1" icon @click="removeTimeslotInput(index)">
+                <v-icon>mdi-minus</v-icon>
+              </v-btn>
               <v-btn icon @click="addTimeslotInput()">
                 <v-icon>mdi-plus</v-icon>
               </v-btn>
@@ -49,6 +55,7 @@
         <v-divider/>
         <v-datetime-picker
             :time-picker-props="{format:'24hr', allowedMinutes:allowedStepTimeEnd}"
+            :date-picker-props="{min: new Date().toISOString(), max: getFirstTimeslotStart()}"
             label="Poll end time"
             v-model="currentEvent.pollEndDate"
             :text-field-props="{errorMessages: pollEndDateError}"/>
@@ -58,7 +65,6 @@
 </template>
 
 <script>
-import api from "@/utils/api";
 import LocationSelector from './LocationSelector.vue';
 import ParticipantsSelector from './ParticipantsSelector.vue';
 
@@ -93,17 +99,25 @@ export default {
     timeslotError: null,
   }),
   methods: {
+    getFirstTimeslotStart() {
+      let first = null
+      this.currentEvent.timeslots.forEach(timeslot => {
+        if (first != null && first) {
+          console.log(timeslot)
+        }
+      })
+      return first
+    },
     addTimeslotInput() {
-      this.event.timeslots.push({start: null, end: null})
+      this.currentEvent.timeslots.push({start: null, end: null})
     },
     removeTimeslotInput(index) {
-      this.event.timeslots.splice(index, 1)
+      this.currentEvent.timeslots.splice(index, 1)
       this.forceRerender()
     },
     forceRerender() {
-      // Removing my-component from the DOM
+      // Removing timeslot picker from the DOM
       this.loadTimeslots = false;
-
       this.$nextTick(() => {
         // Adding the component back in
         this.loadTimeslots = true;
@@ -146,6 +160,13 @@ export default {
       } else {
         this.eventNameError = null
       }
+      //this.currentEvent.timeslots.forEach(timeslot => )
+      if (this.currentEvent.pollEndDate == null) {
+        this.pollEndDateError = 'Please enter a end date for the poll of this event'
+        valid = false
+      } else {
+        this.pollEndDateError = null
+      }
       if (this.currentEvent.pollEndDate == null) {
         console.log("pollenddate: ", this.currentEvent.pollEndDate);
         this.pollEndDateError = 'Please enter a end date for the poll of this event'
@@ -160,12 +181,13 @@ export default {
       this.participantsError = null
       this.locationsError = null
       this.$refs.form.reset()
+      this.currentEvent = JSON.parse(JSON.stringify(this.event))
       this.$forceUpdate()
     }
   },
   mounted() {
-    this.currentEvent = this.event;
-    api.user.getAll().then(response => this.availableUsers = response)
+    this.currentEvent = JSON.parse(JSON.stringify(this.event))
+    this.$api.user.getAll().then(response => this.availableUsers = response)
   }
 }
 </script>

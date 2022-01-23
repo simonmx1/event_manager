@@ -40,7 +40,6 @@
 </template>
 
 <script>
-import api from "@/utils/api";
 import LocationInfoDialog from "@/components/LocationInfoDialog.vue"
 
 export default {
@@ -70,7 +69,7 @@ export default {
     }
   },
   mounted() {
-    api.location.getAll().then((response) => (this.availableLocations = response));
+    this.$api.location.getAll().then((response) => (this.availableLocations = response));
   }
 };
 </script>

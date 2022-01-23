@@ -67,14 +67,14 @@
                     </v-col>
                     <v-col cols="7">
                       <div style="float: right">
-                        {{ formatTimeStamp(item.timeslot.start).date }} at {{
-                          formatTimeStamp(item.timeslot.start).time
+                        {{ $date.formatTimestampPoll(item.timeslot.start).date }} at {{
+                          $date.formatTimestampPoll(item.timeslot.start).time
                         }}
                       </div>
                       <br>
                       <div style="float: right">
-                        {{ formatTimeStamp(item.timeslot.end).date }} at {{
-                          formatTimeStamp(item.timeslot.end).time
+                        {{ $date.formatTimestampPoll(item.timeslot.end).date }} at {{
+                          $date.formatTimestampPoll(item.timeslot.end).time
                         }}
                       </div>
                     </v-col>
@@ -117,13 +117,13 @@
                     </v-col>
                     <v-col cols="7">
                       <div style="float: right">
-                        {{ formatTimeStamp(item.timeslot.start).date }} at
-                        {{ formatTimeStamp(item.timeslot.start).time }}
+                        {{ $date.formatTimestampPoll(item.timeslot.start).date }} at
+                        {{ $date.formatTimestampPoll(item.timeslot.start).time }}
                       </div>
                       <br>
                       <div style="float: right">
-                        {{ formatTimeStamp(item.timeslot.end).date }} at
-                        {{ formatTimeStamp(item.timeslot.end).time }}
+                        {{ $date.formatTimestampPoll(item.timeslot.end).date }} at
+                        {{ $date.formatTimestampPoll(item.timeslot.end).time }}
                       </div>
                     </v-col>
                     <v-col cols="1">
@@ -148,7 +148,6 @@
 
 <script>
 import draggable from 'vuedraggable'
-import api from "../utils/api";
 import LocationInfoDialog from "@/components/LocationInfoDialog";
 
 export default {
@@ -166,8 +165,6 @@ export default {
     locations: null,
     timeslots: null,
     disabledTimeslots: [],
-    monthNames: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-    weekdayNames: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
   }),
   methods: {
     disableTimeslot(timeslot, index) {
@@ -178,20 +175,9 @@ export default {
       this.disabledTimeslots.splice(index, 1)
       this.timeslots.push(timeslot)
     },
-    formatTimeStamp(timestamp) {
-      const time = new Date(timestamp).toTimeString().slice(0, 8)
-      return {"date": this.formatDate(new Date(timestamp)), "time": time}
-    },
-    formatDate(date) {
-      const weekday = this.weekdayNames[date.getDay()]
-      const day = date.getDate();
-      const month = this.monthNames[date.getMonth()]
-      const year = date.getFullYear();
-      return weekday + ", " + day + " " + month + " " + year;
-    },
     getPoll() {
-      api.user.loggedIn()
-          .then(response => api.poll.get(this.event.id, response[0])
+      this.$api.user.loggedIn()
+          .then(response => this.$api.poll.get(this.event.id, response[0])
               .then(response => this.poll = response)
           )
           .then(() => {

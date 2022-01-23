@@ -28,7 +28,6 @@
 </template>
 
 <script>
-import api from "@/utils/api";
 import LocationForm from "@/components/LocationForm";
 
 export default {
@@ -47,7 +46,7 @@ export default {
       this.$refs.form.validate()
     },
     creation(event) {
-      api.location.create(event)
+      this.$api.location.create(event)
           .then(response => {
             this.success = response.status === 201;
             this.response = response.data

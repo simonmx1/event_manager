@@ -132,14 +132,14 @@
       </template>
       <template v-slot:item.timeslot="{ item }">
         <span v-if="item.timeslot">
-              {{ formatTimeSlot(item.timeslot) }}
+              {{ $date.formatTimeslot(item.timeslot) }}
         </span>
       </template>
       <template v-slot:item.evaluated="{ item }">
         <v-checkbox disabled v-model="item.evaluated"/>
       </template>
       <template v-slot:item.createDate="{ item }">
-        {{ formatDate(item.createDate) }}
+        {{ $date.dateFromTimestamp(item.createDate) }}
       </template>
       <template v-slot:item.actions="{ item }">
         <v-icon
@@ -163,7 +163,6 @@
 
 <script>
 import EventForm from "@/components/EventForm";
-import api from "@/utils/api";
 import LocationInfoDialog from "@/components/LocationInfoDialog";
 
 export default {
@@ -189,18 +188,6 @@ export default {
     ],
   }),
   methods: {
-    formatDate(date) {
-      return new Date(date).toISOString().slice(0, 10);
-    },
-    formatTimeSlot(timeslot) {
-      return this.formatTimeStamp(timeslot.start) + " - " + this.formatTimeStamp(timeslot.end)
-    },
-    formatTimeStamp(timestamp) {
-      //2023-01-02T19:15:00.000+00:00
-      const date = new Date(timestamp).toISOString().slice(0, 10)
-      const time = new Date(timestamp).toTimeString().slice(0, 8)
-      return time + " " + date
-    },
     closeCreateDialog() {
       this.getEvents()
       this.createDialog = false
@@ -217,25 +204,23 @@ export default {
       this.deleteDialog = true;
     },
     deleteEventConfirm() {
-      //api.deleteEvent(this.currentEvent.username).then(() => this.getEvents())
-      api.event.delete(this.currentEvent.id).then(() => this.getEvents())
+      this.$api.event.delete(this.currentEvent.id).then(() => this.getEvents())
       this.currentEvent = null;
       this.deleteDialog = false
     },
     getEvents() {
-      api.event.getAll().then(response => this.events = response).then(() => console.log(this.events))
+      this.$api.event.getAll().then(response => this.events = response)
     },
     tryCreate() {
       this.$refs.eventForm.sendData();
     },
     confirmCreate(event) {
-      console.log(event.participants)
       event.participants.forEach((user, index) => event.participants[index] = user.username)
       event.locations.forEach((location, index) => event.locations[index] = location.id)
-      api.user.loggedIn().then(response => {
+      this.$api.user.loggedIn().then(response => {
         event.creatorUsername = response[0]
       })
-          .then(() => api.event.create(event).then(response => {
+          .then(() => this.$api.event.create(event).then(response => {
             this.success = response.status === 201;
             this.response = response.data
             if (this.success)

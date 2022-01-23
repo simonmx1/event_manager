@@ -12,7 +12,3 @@ export default {
   components: {EventOverview},
 }
 </script>
-
-<style scoped>
-
-</style>

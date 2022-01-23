@@ -127,8 +127,8 @@
                 :key="id"
             >
               <v-list-item-title>
-                {{ formatWeekday(openingTime.weekday) }} <br>
-                {{ formatTime(openingTime.start) }} - {{ formatTime(openingTime.end) }}
+                {{ $date.formatWeekday(openingTime.weekday) }} <br>
+                {{ $date.formatTimeWithoutMillis(openingTime.start) }} - {{ $date.formatTimeWithoutMillis(openingTime.end) }}
               </v-list-item-title>
             </v-list-item>
           </v-list>
@@ -174,8 +174,6 @@
 </template>
 
 <script>
-
-import api from "@/utils/api";
 import CreateLocation from "@/components/CreateLocation";
 import EditLocation from "@/components/EditLocation";
 
@@ -200,18 +198,8 @@ export default {
       {text: 'Actions', value: 'actions'},
     ],
     locations: [],
-    weekdayNames: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
   }),
   methods: {
-    formatWeekday(weekday) {
-      return this.weekdayNames[weekday]
-    },
-    formatTime(time) {
-      return time.substring(0, 5)
-    },
-    sortByWeekday(list) {
-      return list.sort((a, b) => (a.weekday !== b.weekday) ? a.weekday - b.weekday : (a.start > b.start ? 1 : -1))
-    },
     sortTags(tags){
       return tags.sort((a, b) => (a.text).localeCompare(b.text))
     },
@@ -224,7 +212,7 @@ export default {
       this.deleteDialog = true;
     },
     deleteLocationConfirm() {
-      api.location.delete(this.currentLocation.locationId).then(() => this.getLocations())
+      this.$api.location.delete(this.currentLocation.locationId).then(() => this.getLocations())
       this.deleteDialog = false
     },
     locationCreated() {
@@ -232,9 +220,9 @@ export default {
       this.createDialog = false
     },
     getLocations() {
-      api.location.getAll().then(response => {
+      this.$api.location.getAll().then(response => {
         this.locations = response
-        this.locations.forEach(item => this.sortByWeekday(item.openingTimes))
+        this.locations.forEach(item => this.$date.sortByWeekday(item.openingTimes))
         this.locations.forEach(item => this.sortTags(item.tags))
       });
     }
@@ -244,7 +232,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-
-</style>

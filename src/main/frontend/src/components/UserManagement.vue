@@ -77,7 +77,7 @@
         </v-chip>
       </template>
       <template v-slot:item.createDate="{ item }">
-        {{ formatDate(item.createDate) }}
+        {{ $date.dateFromTimestamp(item.createDate) }}
       </template>
       <template v-slot:item.enabled="{ item }">
         <v-simple-checkbox
@@ -106,7 +106,6 @@
 </template>
 
 <script>
-import api from "@/utils/api";
 import Register from "@/components/Register";
 import EditUser from "@/components/EditUser";
 
@@ -146,9 +145,6 @@ export default {
           return '#359100';
       }
     },
-    formatDate(date) {
-      return new Date(date).toISOString().slice(0, 10);
-    },
     userCreated() {
       this.getUsers()
       this.createDialog = false
@@ -162,17 +158,17 @@ export default {
       this.deleteDialog = true;
     },
     deleteUserConfirm() {
-      api.user.delete(this.currentUser.username).then(() => this.getUsers())
+      this.$api.user.delete(this.currentUser.username).then(() => this.getUsers())
       this.currentUser = null;
       this.deleteDialog = false
     },
     getUsers() {
-      api.user.getAll().then(response => this.users = response)
+      this.$api.user.getAll().then(response => this.users = response)
     }
   },
   mounted() {
     this.getUsers()
-    api.user.loggedIn().then(response => {if (response !== false) {this.loggedInUser = response[0]}})
+    this.$api.user.loggedIn().then(response => {if (response !== false) {this.loggedInUser = response[0]}})
   }
 }
 </script>
