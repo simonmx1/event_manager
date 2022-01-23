@@ -1,7 +1,6 @@
 package at.qe.event_manager.ui.controllers;
 
 import at.qe.event_manager.model.User;
-import at.qe.event_manager.services.EventService;
 import at.qe.event_manager.services.MailService;
 import at.qe.event_manager.services.UserService;
 import java.io.Serializable;
@@ -28,9 +27,6 @@ public class UserManagementController implements Serializable {
     @Autowired
     private UserService userService;
     
-    @Autowired
-    private EventService eventService;
-
     @Autowired
     private PasswordEncoder passwordEncoder;
     
@@ -81,7 +77,6 @@ public class UserManagementController implements Serializable {
     public ResponseEntity<String> delete(@RequestBody String username) {
         if (isAuthorized(new JSONObject(username).getString("username"))) {
         	User user = userService.loadUserByUsername(new JSONObject(username).getString("username"));
-        	eventService.cleanUpForParticipantDeletion(user);
         	userService.deleteUser(user);
             MailService.sendUserDeleteMessage(user);
             return new ResponseEntity<>("User deleted successfully", HttpStatus.OK);

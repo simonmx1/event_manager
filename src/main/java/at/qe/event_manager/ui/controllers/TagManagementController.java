@@ -2,7 +2,6 @@ package at.qe.event_manager.ui.controllers;
 
 import at.qe.event_manager.model.Tag;
 import at.qe.event_manager.payload.response.MessageResponse;
-import at.qe.event_manager.services.LocationService;
 import at.qe.event_manager.services.TagService;
 import org.primefaces.shaded.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +18,6 @@ public class TagManagementController {
     @Autowired
     private TagService tagService;
     
-    @Autowired
-    private LocationService locationService;
-
     @GetMapping("/getAll")
     public Collection<Tag> getAll() {
         return tagService.getAllTags();
@@ -35,9 +31,7 @@ public class TagManagementController {
 
     @PostMapping("/delete")
     public ResponseEntity<MessageResponse> delete(@RequestBody String tag) {
-    	Tag t = tagService.loadTag(new JSONObject(tag).getString("text"));
-    	locationService.cleanUpForTagDeletion(t);
-        tagService.deleteTag(t);
+        tagService.deleteTag(tagService.loadTag(new JSONObject(tag).getString("text")));
         return ResponseEntity.ok(new MessageResponse("Tag deleted successfully!"));
     }
 

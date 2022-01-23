@@ -43,15 +43,7 @@ public class PollManagementController implements Serializable {
     @GetMapping("/get")
     @ResponseBody
     public Poll get(@RequestParam(name = "eventId") Integer eventId, @RequestParam(name = "username") String username) {
-        //Event event = eventService.loadEvent(eventId);
-        //WORKAROUND
-        //Event event = eventService.getAllEvents().stream().filter(e -> Objects.equals(e.getId(), eventId)).findFirst().get();
-        /*User user = userService.loadUserByUsername(username);
-        System.out.println(user.getUsername());
-        Poll p = pollService.loadPollByEventAndUser(event, user);
-        System.out.println(p);*/
-        Poll p =  pollService.loadPollByEventAndUser(eventService.loadEvent(eventId), userService.loadUserByUsername(username));
-        return p;
+        return pollService.loadPollByEventAndUser(eventService.loadEvent(eventId), userService.loadUserByUsername(username));
     }
 
     @PostMapping("/edit")

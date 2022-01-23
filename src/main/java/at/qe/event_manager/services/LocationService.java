@@ -26,6 +26,9 @@ public class LocationService implements Serializable {
 
 	@Autowired
     private LocationRepository locationRepository;
+	
+	@Autowired
+	private EventService eventService;
 
     /**
      * Returns a collection of all users.
@@ -81,6 +84,7 @@ public class LocationService implements Serializable {
      * @param user the user to delete
      */
     public void deleteLocation(Location location) {
+    	eventService.cleanUpForLocationDeletion(location);
         locationRepository.delete(location);
     }
 

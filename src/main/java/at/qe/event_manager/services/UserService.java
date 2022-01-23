@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 /**
@@ -31,7 +30,7 @@ public class UserService implements Serializable, UserDetailsService {
     private UserRepository userRepository;
 	
 	@Autowired
-    PasswordEncoder passwordEncoder;
+	private EventService eventService;
 
     /**
      * Returns a collection of all users.
@@ -97,6 +96,7 @@ public class UserService implements Serializable, UserDetailsService {
      */
     @PreAuthorize("hasAuthority('ROLE_ADMIN') or principal.username eq #user.getUsername")
     public void deleteUser(User user) {
+    	eventService.cleanUpForParticipantDeletion(user);
         userRepository.delete(user);
     }
 }

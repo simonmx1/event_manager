@@ -2,7 +2,6 @@ package at.qe.event_manager.ui.controllers;
 
 import at.qe.event_manager.model.Location;
 import at.qe.event_manager.payload.response.MessageResponse;
-import at.qe.event_manager.services.EventService;
 import at.qe.event_manager.services.LocationService;
 import java.io.Serializable;
 import java.util.Collection;
@@ -23,9 +22,6 @@ public class LocationManagementController implements Serializable {
 
 	@Autowired
     private LocationService locationService;
-	
-	@Autowired
-	private EventService eventService;
 	
     /**
      * Returns a list of all users.
@@ -55,9 +51,7 @@ public class LocationManagementController implements Serializable {
 
     @PostMapping("/delete")
     public ResponseEntity<MessageResponse> delete(@RequestBody String locationId) {
-        Location location = locationService.loadLocationByLocationId(new JSONObject(locationId).getInt("locationId"));
-        eventService.cleanUpForLocationDeletion(location);
-        locationService.deleteLocation(location);
+        locationService.deleteLocation(locationService.loadLocationByLocationId(new JSONObject(locationId).getInt("locationId")));
         return ResponseEntity.ok(new MessageResponse("Location deleted successfully!"));
     }
 
