@@ -1,5 +1,5 @@
 <template>
-  <v-combobox
+  <v-autocomplete
     prepend-icon="mdi-map-marker-plus"
     v-model="model"
     :items="availableLocations"
@@ -11,6 +11,7 @@
     multiple
     outlined
     dense
+    auto-select-first
   >
     <template v-slot:no-data>
       <v-container>
@@ -35,7 +36,7 @@
       
       <location-info-dialog :current-location="item"/>
     </template>
-  </v-combobox>
+  </v-autocomplete>
 </template>
 
 <script>
@@ -52,15 +53,24 @@ export default {
     availableLocations: [],
     model: [],
     search: null,
-    filter: null,
   }),
   methods: {
     sendData() {
-      this.$emit("confirm", this.model)
+      let locations = []
+      this.model.forEach(id => locations.push(this.availableLocations.find(location => location.id === id)))
+      this.$emit("confirm", locations)
+    },
+    filter(item, queryText, itemText) {
+      const hasValue = val => val != null ? val : ''
+      const query = hasValue(queryText)
+      const text = hasValue(itemText)
+
+      return item.name.toString().toLowerCase().indexOf(query.toString().toLowerCase()) > -1
+          || text.toString().toLowerCase().indexOf(query.toString().toLowerCase()) > -1;
     }
   },
   mounted() {
     api.location.getAll().then((response) => (this.availableLocations = response));
-  },
+  }
 };
 </script>

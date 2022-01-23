@@ -9,10 +9,11 @@
       :error-messages="errorMessage"
       persistent-hint
       label="Participants"
-      item-text="id"
+      item-text="username"
       multiple
       outlined
       dense
+      auto-select-first
   >
     <template v-slot:no-data>
       <v-container>
@@ -81,12 +82,12 @@ export default {
   }),
   methods: {
     async sendData() {
-      console.error(this.model)
-      await this.$emit("confirm", this.model)
+      let participants = []
+      this.model.forEach(username => participants.push(this.availableParticipants.find(participant => participant.username === username)))
+      await this.$emit("confirm", participants)
     },
     filter(item, queryText, itemText) {
       const hasValue = val => val != null ? val : ''
-
       const query = hasValue(queryText)
       const text = hasValue(itemText)
 
