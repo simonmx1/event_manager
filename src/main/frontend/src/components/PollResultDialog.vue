@@ -22,6 +22,7 @@
       >
         <v-col cols="2">
           <v-list-item-group
+              class="overflow-y-auto"
               v-model="selectedItem"
               color="primary"
           >
@@ -41,8 +42,8 @@
         <v-divider vertical></v-divider>
 
         <v-col
-            class="text-center"
             cols="9"
+            class="overflow-y-auto text-center"
             style="height: 500px"
         >
           <v-scroll-y-transition mode="out-in">
