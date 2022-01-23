@@ -22,6 +22,14 @@ public class PollLocations implements Serializable{
     private Location location;
 
     private Integer points;
+    
+    public PollLocations(){}
+    
+    public PollLocations(PollLocations pollLocationToBeCopied) {
+    	this.poll = pollLocationToBeCopied.getPoll();
+    	this.location = pollLocationToBeCopied.getLocation();
+    	this.points = pollLocationToBeCopied.getPoints();
+    }
 
     public Poll getPoll() {
         return poll;
