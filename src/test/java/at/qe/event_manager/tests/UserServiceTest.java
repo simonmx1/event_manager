@@ -7,10 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.transaction.annotation.Transactional;
+
 import at.qe.event_manager.model.User;
 import at.qe.event_manager.model.UserRole;
 import at.qe.event_manager.services.UserService;
@@ -72,6 +73,7 @@ public class UserServiceTest {
 	
 	@DirtiesContext
     @Test
+    @Transactional
     @WithMockUser(username = "admin", authorities = {"ROLE_ADMIN"})
     public void testDeleteUser() {
 		String username = "user2";
