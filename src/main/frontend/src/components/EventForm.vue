@@ -355,7 +355,7 @@ export default {
     },
     addOneHour(timestamp) {
       let date = new Date(timestamp)
-      date.setHours(date.getHours() + 1)
+      date.setHours(date.getHours() - 1)
       return date
     },
     addTimeslotInput() {
@@ -420,7 +420,7 @@ export default {
         this.pollEndDateError = 'Please enter a end date and time for the poll of this event'
         valid = false
       } else {
-        this.currentEvent.pollEndDate = this.pollEndDate.date + "T" + this.pollEndDate.time + ":00.000Z"
+        this.currentEvent.pollEndDate = this.addOneHour(this.pollEndDate.date + "T" + this.pollEndDate.time + ":00.000Z")
         this.pollEndDateError = null
       }
       this.timeslots.forEach(timeslot => {
@@ -437,8 +437,8 @@ export default {
     },
     timeslotConvert(timeslot) {
       return {
-        start: timeslot.date + 'T' + timeslot.start + ":00.000Z",
-        end: timeslot.date + 'T' + timeslot.end + ":00.000Z",
+        start: this.addOneHour(timeslot.date + 'T' + timeslot.start + ":00.000Z"),
+        end: this.addOneHour(timeslot.date + 'T' + timeslot.end + ":00.000Z"),
       }
     },
     clear() {
