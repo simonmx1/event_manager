@@ -2,26 +2,28 @@ package at.qe.event_manager.model;
 
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Persistable;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
+
 @Entity
 public class Poll implements Persistable<Integer>, Serializable, Comparable<Poll> {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
+    @Id
     @Column(name = "id", nullable = false)
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer pollId;
 
 
-    @OneToMany (mappedBy = "poll", fetch=FetchType.EAGER)
-    private Set<PollTimeslots> poll_timeslots;
+    @OneToMany(mappedBy = "poll", fetch = FetchType.EAGER)
+    private Set<PollTimeslots> pollTimeslots;
 
-    @OneToMany (mappedBy = "poll", fetch=FetchType.EAGER)
-    private Set<PollLocations> poll_locations;
+    @OneToMany(mappedBy = "poll", fetch = FetchType.EAGER)
+    private Set<PollLocations> pollLocations;
 
     @ManyToOne
     private User user;
@@ -33,31 +35,24 @@ public class Poll implements Persistable<Integer>, Serializable, Comparable<Poll
     @Temporal(TemporalType.TIMESTAMP)
     private Date createDate;
 
-    public Poll() {
-    }
-
-    public Integer getPollId() {
-        return pollId;
-    }
-
     public void setPollId(Integer pollId) {
         this.pollId = pollId;
     }
 
-    public Set<PollTimeslots> getPoll_timeslots() {
-        return poll_timeslots;
+    public Set<PollTimeslots> getPollTimeslots() {
+        return pollTimeslots;
     }
 
-    public void setPoll_timeslots(Set<PollTimeslots> poll_timeslots) {
-        this.poll_timeslots = poll_timeslots;
+    public void setPollTimeslots(Set<PollTimeslots> pollTimeslots) {
+        this.pollTimeslots = pollTimeslots;
     }
 
-    public Set<PollLocations> getPoll_locations() {
-        return poll_locations;
+    public Set<PollLocations> getPollLocations() {
+        return pollLocations;
     }
 
-    public void setPoll_locations(Set<PollLocations> poll_locations) {
-        this.poll_locations = poll_locations;
+    public void setPollLocations(Set<PollLocations> pollLocations) {
+        this.pollLocations = pollLocations;
     }
 
     public User getUser() {
@@ -86,7 +81,13 @@ public class Poll implements Persistable<Integer>, Serializable, Comparable<Poll
 
     @Override
     public int compareTo(@NotNull Poll poll) {
-        return this.pollId.compareTo(poll.pollId);
+        return this.pollId.compareTo(poll.getId());
+    }
+
+    @Override
+    public boolean equals(Object poll) {
+        if (!(poll instanceof Poll)) return false;
+        return this.pollId.compareTo(((Poll) poll).getId()) == 0;
     }
 
     @Override

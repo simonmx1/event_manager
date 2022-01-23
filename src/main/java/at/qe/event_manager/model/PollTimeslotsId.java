@@ -4,16 +4,16 @@ import java.io.Serializable;
 
 public class PollTimeslotsId implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-	
-	Integer poll;
-    Integer timeslot;
+    private static final long serialVersionUID = 1L;
+
+    private Integer poll;
+    private Integer timeslot;
 
     public Integer getPoll() {
         return poll;
     }
 
-    public void setPoll(int poll) {
+    public void setPollId(Integer poll) {
         this.poll = poll;
     }
 
@@ -21,17 +21,42 @@ public class PollTimeslotsId implements Serializable {
         return timeslot;
     }
 
-    public void setTimeslot(int timeslot) {
+    public void setTimeslotId(Integer timeslot) {
         this.timeslot = timeslot;
     }
 
     @Override
     public int hashCode() {
-        return super.hashCode();
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((poll == null) ? 0 : poll.hashCode());
+        result = prime * result + ((timeslot == null) ? 0 : timeslot.hashCode());
+        return result;
     }
 
     @Override
     public boolean equals(Object obj) {
-        return super.equals(obj);
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (!(obj instanceof PollTimeslotsId))
+            return false;
+
+        PollTimeslotsId other = (PollTimeslotsId) obj;
+
+        if (poll == null) {
+            if (other.poll != null)
+                return false;
+        } else if (!poll.equals(other.poll))
+            return false;
+
+        if (timeslot == null) {
+            if (other.timeslot != null)
+                return false;
+        } else if (!timeslot.equals(other.timeslot))
+            return false;
+
+        return true;
     }
 }

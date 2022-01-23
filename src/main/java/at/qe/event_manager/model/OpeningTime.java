@@ -11,14 +11,6 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.domain.Persistable;
 
 
-/**
- * Entity representing users.
- * <p>
- * This class is part of the skeleton project provided for students of the
- * courses "Software Architecture" and "Software Engineering" offered by the
- * University of Innsbruck.
- */
-
 @Entity
 @OnDelete(action = OnDeleteAction.CASCADE)
 public class OpeningTime implements Persistable<Integer>, Serializable, Comparable<OpeningTime> {
@@ -37,13 +29,6 @@ public class OpeningTime implements Persistable<Integer>, Serializable, Comparab
     @JoinColumn(name = "locationId")
     @JsonIgnore
     private Location location;
-
-/*
-    @ManyToOne
-    @JoinColumn(name = "location_id")
-    @JsonIgnore
-    private Location location;*/
-
 
     private int weekday; //monday=0 to sunday=6
 
@@ -75,10 +60,6 @@ public class OpeningTime implements Persistable<Integer>, Serializable, Comparab
         this.end = end;
     }
 
-    public Integer getOpeningTimeId() {
-        return openingTimeId;
-    }
-
     public void setOpeningTimeId(Integer openingTimeId) {
         this.openingTimeId = openingTimeId;
     }
@@ -101,12 +82,18 @@ public class OpeningTime implements Persistable<Integer>, Serializable, Comparab
 
     @Override
     public int compareTo(OpeningTime o) {
-        return this.openingTimeId.compareTo(o.getOpeningTimeId());
+        return this.openingTimeId.compareTo(o.getId());
+    }
+
+    @Override
+    public boolean equals(Object openingTime) {
+        if (!(openingTime instanceof OpeningTime)) return false;
+        return this.openingTimeId.compareTo(((OpeningTime) openingTime).getId()) == 0;
     }
 
     @Override
     public Integer getId() {
-        return getOpeningTimeId();
+        return openingTimeId;
     }
 
     @Override

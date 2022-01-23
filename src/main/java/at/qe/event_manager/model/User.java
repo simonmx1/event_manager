@@ -12,18 +12,12 @@ import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
 import org.springframework.data.domain.Persistable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-/**
- * Entity representing users.
- *
- * This class is part of the skeleton project provided for students of the
- * courses "Software Architecture" and "Software Engineering" offered by the
- * University of Innsbruck.
- */
 @Entity
 public class User implements Persistable<String>, Serializable, Comparable<User>, UserDetails {
 
@@ -113,8 +107,8 @@ public class User implements Persistable<String>, Serializable, Comparable<User>
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-    	ArrayList<SimpleGrantedAuthority> a = new ArrayList<>();
-    	a.add(new SimpleGrantedAuthority("ROLE_"+getRole().toString()));
+        ArrayList<SimpleGrantedAuthority> a = new ArrayList<>();
+        a.add(new SimpleGrantedAuthority("ROLE_" + getRole().toString()));
         return a;
     }
 
@@ -171,8 +165,8 @@ public class User implements Persistable<String>, Serializable, Comparable<User>
         return (null == createDate);
     }
 
-	@Override
-	public int compareTo(User o) {
-		return this.username.compareTo(o.getUsername());
-	}
+    @Override
+    public int compareTo(User o) {
+        return this.username.compareTo(o.getUsername());
+    }
 }

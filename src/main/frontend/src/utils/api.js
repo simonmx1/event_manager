@@ -28,6 +28,21 @@ export default {
                 return response
             }).catch(() => false);
         },
+        async changePassword(username, password) {
+            return await axios.post('/api/users/password', {
+                    'username': username,
+                    'password': password,
+                },
+                {
+                    headers: {
+                        "Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt')),
+                        "Content-Type": "application/json"
+                    }
+                }
+            ).then(response => {
+                return response
+            }).catch(() => false);
+        },
         async getAll() {
             return await axios.get('/api/users/getAll',
                 {headers: {"Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt'))}}
@@ -124,7 +139,9 @@ export default {
                     'menu': location.menu,
                     'geolocation': location.geolocation,
                     'tags': location.tags,
-                    'enabled': location.enabled
+                    'description': location.description,
+                    'enabled': location.enabled,
+                    'openingTimes': location.openingTimes
                 },
                 {
                     headers: {
@@ -143,6 +160,7 @@ export default {
                     'menu': location.menu,
                     'geolocation': location.geolocation,
                     'tags': location.tags,
+                    'description': location.description,
                     'enabled': location.enabled
                 },
                 {
@@ -206,21 +224,117 @@ export default {
                 return response.data;
             }).catch(() => false);
         },
+        async getAllFromUser(username) {
+            return await axios.get('/api/event/getAllFromUser?username=' + username,
+                {headers: {"Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt'))}}
+            ).then(response => {
+                return response.data;
+            }).catch(() => false);
+        },
         async create(event) {
-            console.log(event);
+            console.log(event)
             return await axios.post('/api/event/create', {
-                'name': event.name,
-                'creatorUsername': event.creatorUsername,
-                'participants': JSON.stringify(event.participants),
-                'locations': JSON.stringify(event.location),
-                'timeslots': JSON.stringify(event.timeslots),
-                'creatorIsPreferred': event.creatorIsPreferred,
-                'pollEndDate': event.pollEndDate
+                    'name': event.name,
+                    'creatorUsername': event.creatorUsername,
+                    'participants': JSON.stringify(event.participants),
+                    'locations': JSON.stringify(event.locations),
+                    'timeslots': JSON.stringify(event.timeslots),
+                    'creatorIsPreferred': event.creatorIsPreferred,
+                    'pollEndDate': event.pollEndDate
                 },
                 {headers: {"Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt'))}}
             ).then(response => {
                 return response
             }).catch(() => false);
+        },
+        async delete(eventId) {
+            return await axios.post('/api/event/delete', eventId,
+                {
+                    headers: {
+                        "Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt')),
+                        "Content-Type": "application/json"
+                    }
+                }
+            ).then(response => {
+                return response;
+            }).catch(() => false);
+        },
+        async evaluatePolls(eventId) {
+            return await axios.post('/api/event/evaluatePolls', eventId,
+                {
+                    headers: {
+                        "Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt')),
+                        "Content-Type": "application/json"
+                    }
+                }
+            ).then(response => {
+                return response;
+            }).catch(() => false);
+        },
+    },
+    poll: {
+        async get(eventId, username) {
+            return await axios.get('/api/poll/get?eventId=' + eventId + '&username=' + username,
+                {headers: {"Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt'))}}
+            ).then(response => {
+                return response.data;
+            }).catch(() => false);
+        },
+        async edit(poll) {
+            return await axios.post('/api/poll/edit', {
+                    'pollId': poll.pollId,
+                    'pollLocations': poll.pollLocations,
+                    'pollTimeslots': poll.pollTimeslots,
+                    'user': poll.user,
+                    'event': poll.event,
+                },
+                {
+                    headers: {
+                        "Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt')),
+                        "Content-Type": "application/json"
+                    }
+                }
+            ).then(response => {
+                return response
+            }).catch(() => false);
+        },
+    },
+    pollLocations: {
+        async edit(pollLocation, poll) {
+            return await axios.post('/api/pollLocations/edit', {
+                    'pollId': poll.id,
+                    'locationId': pollLocation.location.id,
+                    'points': pollLocation.points,
+                },
+
+                {
+                    headers: {
+                        "Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt')),
+                        "Content-Type": "application/json"
+                    }
+                }
+            ).then(response => {
+                return response
+            }).catch(() => false);
+        },
+    },
+    pollTimeslots: {
+        async edit(pollTimeslot, poll) {
+            return await axios.post('/api/pollTimeslots/edit', {
+                    'pollId': poll.id,
+                    'timeslotId': pollTimeslot.timeslot.id,
+                    'points': pollTimeslot.points,
+                },
+                {
+                    headers: {
+                        "Authorization": "Bearer " + JSON.parse(localStorage.getItem('jwt')),
+                        "Content-Type": "application/json"
+                    }
+                }
+            ).then(response => {
+                return response
+            }).catch(() => false);
         }
     }
+
 }

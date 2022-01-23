@@ -1,10 +1,6 @@
 <template>
-  <v-app app>
+  <v-app app style="background: #333">
     <v-app-bar app clipped-left>
-      <v-app-bar-nav-icon
-          app
-          v-if="sessionActive"
-          @click="drawer = !drawer"/>
       <v-img
           src="favicon.png"
           max-height="50"
@@ -18,56 +14,33 @@
         </v-app-bar-title>
       </div>
       <v-spacer/>
-      <v-menu v-if="sessionActive" offset-y>
-        <template v-slot:activator="{ on, attrs }">
-          <v-chip
-              color="primary"
-              dark
-              v-bind="attrs"
-              v-on="on"
-          >
-            <v-icon>mdi-account</v-icon>
-            {{ session }}
-          </v-chip>
-        </template>
-        <v-list>
-          <v-list-item>
-            <v-list-item-title @click="logout()">
-              <v-icon>mdi-logout</v-icon>
-              Logout
-            </v-list-item-title>
-          </v-list-item>
-          <v-list-item>
-            <v-list-item-title @click="settings()">
-              <v-icon>mdi-cog</v-icon>
-              Settings
-            </v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-    </v-app-bar>
-    <v-navigation-drawer app clipped temporary v-model="drawer">
       <v-list
-          dense
-          nav
-      >
+          v-for="item in navBarItems"
+          :key="item.title"
+          link
+          @click="closeDrawer()"
+          :to="item.url"
+      color="#0000">
         <v-list-item
-            v-for="item in navBarItems"
-            :key="item.title"
-            link
-            @click="closeDrawer()"
-            :to="item.url"
-        >
-          <v-list-item-icon>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-icon>
-
-          <v-list-item-content>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item-content>
+            :to="item.url">
+          {{ item.title }}
+          <v-icon style="margin-left: 5px;">{{ item.icon }}</v-icon>
         </v-list-item>
       </v-list>
-    </v-navigation-drawer>
+      <template v-if="sessionActive">
+        <v-divider vertical style="margin: 0 20px 0 10px"/>
+        {{ session }}
+        <v-btn icon @click="settings()">
+          <v-icon>mdi-cog</v-icon>
+        </v-btn>
+      </template>
+      <template v-if="sessionActive" style="margin: 5px">
+        <v-divider vertical style="margin: 0 10px 0 10px"/>
+        <v-btn icon @click="logout()">
+          <v-icon>mdi-export</v-icon>
+        </v-btn>
+      </template>
+    </v-app-bar>
     <v-container style="height: 100%">
       <router-view/>
     </v-container>
@@ -106,7 +79,7 @@ export default {
       permissions.getNavBarItems().then(response => this.navBarItems = response)
     },
     navToHome() {
-      (this.$route.path !== "/home") ? this.$router.push("/home") : null
+      (this.$route.path !== "/") ? this.$router.push("/") : null
     }
   },
   computed: {},

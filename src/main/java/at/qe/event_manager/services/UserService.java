@@ -28,13 +28,15 @@ public class UserService implements Serializable, UserDetailsService {
 	
 	@Autowired
     private UserRepository userRepository;
+	
+	@Autowired
+	private EventService eventService;
 
     /**
      * Returns a collection of all users.
      *
      * @return
      */
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public Collection<User> getAllUsers() {
         return userRepository.findAll();
     }
@@ -64,6 +66,9 @@ public class UserService implements Serializable, UserDetailsService {
         if (user.isNew()) {
             user.setCreateDate(new Date());
         }
+        if(user.getPassword() != null && user.getPassword().length() == 0) {
+        	user.setPassword(loadUserByUsername(user.getUsername()).getPassword());
+        }
         return userRepository.save(user);
     }
 
@@ -91,7 +96,7 @@ public class UserService implements Serializable, UserDetailsService {
      */
     @PreAuthorize("hasAuthority('ROLE_ADMIN') or principal.username eq #user.getUsername")
     public void deleteUser(User user) {
+    	eventService.cleanUpForParticipantDeletion(user);
         userRepository.delete(user);
-        // :TODO: write some audit log stating who and when this user was permanently deleted.
     }
 }

@@ -14,10 +14,10 @@ import java.util.Collection;
 @RestController
 @RequestMapping("/api/tag")
 public class TagManagementController {
-
+	
     @Autowired
     private TagService tagService;
-
+    
     @GetMapping("/getAll")
     public Collection<Tag> getAll() {
         return tagService.getAllTags();
@@ -30,13 +30,13 @@ public class TagManagementController {
     }
 
     @PostMapping("/delete")
-    public ResponseEntity<?> delete(@RequestBody String tag) {
+    public ResponseEntity<MessageResponse> delete(@RequestBody String tag) {
         tagService.deleteTag(tagService.loadTag(new JSONObject(tag).getString("text")));
         return ResponseEntity.ok(new MessageResponse("Tag deleted successfully!"));
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> create(@RequestBody Tag tag) {
+    public ResponseEntity<String> create(@RequestBody Tag tag) {
         if (tagService.createTag(tag) == null) {
             return new ResponseEntity<>("Error While creating the Tag!", HttpStatus.OK);
         } else {

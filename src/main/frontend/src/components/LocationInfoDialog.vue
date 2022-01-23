@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="showDialog" max-width="700px">
+  <v-dialog v-model="showDialog" max-width="800px">
     <template v-slot:activator="{ on, attrs }">
       <v-btn
           icon
@@ -10,7 +10,7 @@
         <v-icon> mdi-information-variant</v-icon>
       </v-btn>
     </template>
-    <v-card>
+    <v-card style="overflow: hidden"  class="pa-4">
       <v-card-title style="width: 100%">
         {{ currentLocation.name }}
         <v-spacer></v-spacer>
@@ -21,18 +21,20 @@
         </v-btn>
       </v-card-title>
       <v-row>
-        <v-col cols="6">
+        <v-col cols="12"
+               sm="6"
+               md="8">
           <v-list style="margin-left: 30px">
             <v-list-item-title>
-              Menu
+              <b>Menu</b>
             </v-list-item-title>
             <v-list-item>
               <a :href="'//' + currentLocation.menu" target="_blank">
                 {{ currentLocation.menu }}
               </a>
             </v-list-item>
-            <v-list-item-title>
-              Geo Location
+            <v-list-item-title style="margin-top: 10px">
+              <b>Geo Location</b>
             </v-list-item-title>
             <v-list-item>
               <a :href="'//' + currentLocation.location" target="_blank" style="text-decoration: none">
@@ -42,6 +44,9 @@
               </a>
             </v-list-item>
             <v-item-group>
+              <v-list-item-title style="margin-top: 10px">
+                <b>Tags</b>
+              </v-list-item-title>
               <v-item
                   v-for="(tag,id) in currentLocation.tags"
                   :key="id"
@@ -52,13 +57,20 @@
                   {{ tag.text }}
                 </v-chip>
               </v-item>
+              <v-list-item-title style="margin-top: 10px" v-if="currentLocation.description">
+                <b>Description</b>
+              </v-list-item-title>
+              <v-list-item v-if="currentLocation.description">
+                {{currentLocation.description}}
+              </v-list-item>
             </v-item-group>
           </v-list>
         </v-col>
         <v-divider
             vertical
         ></v-divider>
-        <v-col cols="6">
+        <v-col cols="6"
+               md="4">
           <th class="text-center" style="font-size: medium">
             Opening Times
           </th>
@@ -68,8 +80,8 @@
                 :key="id"
             >
               <v-list-item-title>
-                {{ formatWeekday(openingTime.weekday) }} <br>
-                {{ formatTime(openingTime.start) }} - {{ formatTime(openingTime.end) }}
+                {{ $date.formatWeekday(openingTime.weekday) }} <br>
+                {{ $date.formatTimeWithoutMillis(openingTime.start) }} - {{ $date.formatTimeWithoutMillis(openingTime.end) }}
               </v-list-item-title>
             </v-list-item>
           </v-list>
@@ -88,34 +100,5 @@ export default {
   data: () => ({
     showDialog: false
   }),
-  methods: {
-    formatWeekday(weekday) {
-      switch (weekday) {
-        case 0:
-          return 'Monday'
-        case 1:
-          return 'Tuesday'
-        case 2:
-          return 'Wednesday'
-        case 3:
-          return 'Thursday'
-        case 4:
-          return 'Friday'
-        case 5:
-          return 'Saturday'
-        case 6:
-          return 'Sunday'
-      }
-    },
-    formatTime(time) {
-      return time.substring(0, 5)
-    },
-    sortByWeekday(list) {
-      return list.sort((a, b) => (a.weekday !== b.weekday) ? a.weekday - b.weekday : (a.start > b.start ? 1 : -1))
-    },
-  },
-  mounted() {
-    console.log(this.currentLocation);
-  },
 };
 </script>

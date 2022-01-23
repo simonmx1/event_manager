@@ -5,7 +5,8 @@
       <user-form
           v-if="user != null"
           :user="user"
-          :accountSettings="true"
+          :account-settings="true"
+          :edit="true"
       ></user-form>
       <v-card-actions>
         <v-dialog v-model="editDialog" width="500" persistent>
@@ -19,6 +20,24 @@
                      :admin="false"
           />
         </v-dialog>
+        <v-dialog v-model="changePasswordDialog" width="500" persistent>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+                style="margin-left: 10px"
+                color="orange"
+                v-bind="attrs"
+                v-on="on"
+                @click="changePasswordDialog = true"
+            >Change Password
+            </v-btn>
+          </template>
+          <change-password
+              v-if="user != null"
+              @close="changePasswordDialog = false"
+              :username="user.username"
+          />
+        </v-dialog>
+
         <v-spacer></v-spacer>
         <v-dialog v-model="deleteDialog" max-width="500px">
           <v-card>
@@ -31,8 +50,9 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
+        <v-spacer></v-spacer>
+        <v-btn color="error" @click="deleteDialog = true">Delete Account</v-btn>
       </v-card-actions>
-      <v-btn color="error" style="float: right" @click="deleteDialog = true">Delete Account</v-btn>
     </v-card>
   </v-main>
 </template>
@@ -40,11 +60,12 @@
 <script>
 import UserForm from "@/components/UserForm";
 import EditUser from "@/components/EditUser"
-import api from "@/utils/api";
+import ChangePassword from "@/components/ChangePassword";
 
 export default {
   name: "AccountSettings",
   components: {
+    ChangePassword,
     UserForm,
     EditUser
   },
@@ -52,6 +73,7 @@ export default {
     user: null,
     editDialog: false,
     deleteDialog: false,
+    changePasswordDialog: false
   }),
   methods: {
     openEditDialog() {
@@ -64,7 +86,7 @@ export default {
     },
     deleteUserConfirm() {
       this.deleteDialog = false
-      api.user.delete(this.user.username).then(response => {
+      this.$api.user.delete(this.user.username).then(response => {
         if (response !== false) {
           localStorage.removeItem('jwt')
           this.$router.push("/login")
@@ -72,9 +94,9 @@ export default {
       })
     },
     getUser() {
-      api.user.loggedIn().then((response) => {
+      this.$api.user.loggedIn().then((response) => {
         if (response !== false)
-          api.user.get(response[0]).then((user) => {
+          this.$api.user.get(response[0]).then((user) => {
             if (user !== false) this.user = user;
           });
       });

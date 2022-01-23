@@ -11,9 +11,9 @@ import java.util.Set;
 @Entity
 public class Event implements Persistable<Integer>, Serializable, Comparable<Event> {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
+    @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer eventId;
@@ -28,10 +28,10 @@ public class Event implements Persistable<Integer>, Serializable, Comparable<Eve
     @JoinColumn(name = "creatorUsername")
     private User creator;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<User> participants;
 
-    @OneToMany(mappedBy = "event", fetch=FetchType.EAGER)
+    @OneToMany(mappedBy = "event", fetch = FetchType.EAGER)
     @JsonIgnore
     private Set<Poll> polls;
 
@@ -40,7 +40,7 @@ public class Event implements Persistable<Integer>, Serializable, Comparable<Eve
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createDate;
-    
+
     boolean creatorIsPreferred = false;
     boolean isEvaluated = false;
 
@@ -58,10 +58,6 @@ public class Event implements Persistable<Integer>, Serializable, Comparable<Eve
 
     public void setEventId(Integer eventId) {
         this.eventId = eventId;
-    }
-
-    public Integer getEventId() {
-        return eventId;
     }
 
     public String getName() {
@@ -138,7 +134,13 @@ public class Event implements Persistable<Integer>, Serializable, Comparable<Eve
 
     @Override
     public int compareTo(Event event) {
-        return this.eventId.compareTo(event.eventId);
+        return this.eventId.compareTo(event.getId());
+    }
+
+    @Override
+    public boolean equals(Object event) {
+        if (!(event instanceof Event)) return false;
+        return this.eventId.compareTo(((Event) event).getId()) == 0;
     }
 
     @Override

@@ -1,14 +1,20 @@
 package at.qe.event_manager.model;
 
+import java.io.Serializable;
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "pollLocations")
 @IdClass(PollLocationsId.class)
-public class PollLocations {
+public class PollLocations implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @ManyToOne
+    @JsonIgnore
     private Poll poll;
 
     @Id
@@ -16,6 +22,15 @@ public class PollLocations {
     private Location location;
 
     private Integer points;
+
+    public PollLocations() {
+    }
+
+    public PollLocations(PollLocations pollLocationToBeCopied) {
+        this.poll = pollLocationToBeCopied.getPoll();
+        this.location = pollLocationToBeCopied.getLocation();
+        this.points = pollLocationToBeCopied.getPoints();
+    }
 
     public Poll getPoll() {
         return poll;
@@ -40,18 +55,18 @@ public class PollLocations {
     public void setPoints(Integer points) {
         this.points = points;
     }
-    
-    public void addPoints(PollLocations poll_location) {
-        this.points += poll_location.getPoints();
+
+    public void addPoints(PollLocations pollLocation) {
+        this.points += pollLocation.getPoints();
     }
-    
+
     @Override
     public boolean equals(Object o) {
-    	if(o == null || !(o instanceof PollLocations)) {
-    		return false;
-    	}
-    	PollLocations pl = (PollLocations) o;
-    	return this.location.getId() == pl.getLocation().getId();
+        if (!(o instanceof PollLocations)) {
+            return false;
+        }
+        PollLocations pl = (PollLocations) o;
+        return this.location.getId() == pl.getLocation().getId();
     }
 }
 

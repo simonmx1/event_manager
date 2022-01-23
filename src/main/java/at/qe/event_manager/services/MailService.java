@@ -13,14 +13,18 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import org.springframework.stereotype.Service;
+import at.qe.event_manager.model.Event;
 import at.qe.event_manager.model.User;
 
+@Service
 public class MailService {
 	
 	private static final String SRC_MAIL_ADDR = "event.manager.g7t0@gmail.com";
 	private static final String PASSWORD = "g7t0passwd";
 	private static final Properties PROPERTIES = new Properties();
 	private static final Session SESSION;
+	private static final boolean ENABLED = false;
 	
 	private MailService() {}
 	
@@ -38,7 +42,7 @@ public class MailService {
 		});
 	}
 	
-	private static Message prepareMessage(String DST_MAIL_ADDR) throws MessagingException {
+	private static Message prepareMessage(final String DST_MAIL_ADDR) throws MessagingException {
 		Message msg = new MimeMessage(SESSION);
 		msg.setFrom(new InternetAddress(DST_MAIL_ADDR));
 		return msg;
@@ -77,8 +81,8 @@ public class MailService {
 			try {
 				// We set our own email address here, so that we don't
 				// send any emails to third-party mail addresses.
-				msg.setRecipient(Message.RecipientType.TO, new InternetAddress("event.manager.g7t0@gmail.com"));
-				Transport.send(msg);
+				msg.setRecipient(Message.RecipientType.TO, new InternetAddress(SRC_MAIL_ADDR));
+				if(ENABLED) Transport.send(msg);
 			} catch (MessagingException e) {
 				e.printStackTrace();
 			}
@@ -87,7 +91,7 @@ public class MailService {
 	
 	private static String generateContentString(User user, String content) {
 		StringBuilder contentBuilder = new StringBuilder();
-		contentBuilder.append(String.format("Hello %s %s!\n\n", user.getFirstName(), user.getLastName()));
+		contentBuilder.append(String.format("Hello %s %s!%n%n", user.getFirstName(), user.getLastName()));
 		contentBuilder.append(content);
 		contentBuilder.append("\n\nYour Event Manager Team");
 		return contentBuilder.toString();
@@ -104,6 +108,24 @@ public class MailService {
 		String subject = "Event Manager: Your User has been deleted";
 		String content = String.format("Your User Account with the username \"%s\" on \"Event Manager\" has been deleted!\n\n"
 				+ "If this was a mistake, please contact us!", user.getUsername());
+		sendMessage(buildMessage(user, subject, generateContentString(user, content)));
+	}
+	
+	public static void sendEventCreationMessage(User user, Event event) {
+		String subject = "Event Manager: You have been invited to an Event";
+		String content = String.format("The user with the username \"%s\" just created a new event \"%s\" on \"Event Manager\" "
+				+ "and has invited you to take part in this event.\n"
+				+ "You can now vote until \"%s\" when and where you think the event should take place.", event.getCreator().getUsername(),
+				event.getName(), event.getPollEndDate());
+		sendMessage(buildMessage(user, subject, generateContentString(user, content)));
+	}
+	
+	public static void sendEventEvaluationMessage(User user, Event event) {
+		String subject = String.format("Event Manager: Event: \"%s\", WHEN: \"%s\" - \"%s\", WHERE: \"%s\"",
+				event.getName(), event.getTimeslot().getStart(), event.getTimeslot().getEnd(), event.getLocation().getName());
+		String content = String.format("The voting time for the event \"%s\" on \"Event Manager\" has expired "
+				+ "and the polls of all participants have been evaluated.\nThe event will take place from \"%s\" until \"%s\" at \"%s\"."
+				, event.getName(), event.getTimeslot().getStart(), event.getTimeslot().getEnd(), event.getLocation().getName());
 		sendMessage(buildMessage(user, subject, generateContentString(user, content)));
 	}
 }

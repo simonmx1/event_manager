@@ -57,7 +57,7 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <v-dialog v-model="editDialog" max-width="500px">
+        <v-dialog v-model="editDialog" max-width="1000px" persistent>
           <edit-location
               v-if="currentLocation != null"
               @close="editDialog = false; currentLocation = null; getLocations()"
@@ -79,6 +79,29 @@
             mdi-map-search
           </v-icon>
         </a>
+      </template>
+      <template v-slot:item.description="{ item }">
+        <v-menu
+            transition="slide-y-transition"
+            bottom
+            offset-y
+        >
+          <template v-if="item.description" v-slot:activator="{ on, attrs }">
+            <v-btn
+                dark
+                v-bind="attrs"
+                v-on="on"
+                icon
+            >
+              <v-icon>
+                mdi-card-text
+              </v-icon>
+            </v-btn>
+          </template>
+          <v-card max-width="300px" class="pa-4">
+            {{item.description}}
+          </v-card>
+        </v-menu>
       </template>
       <template v-slot:item.openingTimes="{ item }">
         <v-menu
@@ -104,8 +127,8 @@
                 :key="id"
             >
               <v-list-item-title>
-                {{ formatWeekday(openingTime.weekday) }} <br>
-                {{ formatTime(openingTime.start) }} - {{ formatTime(openingTime.end) }}
+                {{ $date.formatWeekday(openingTime.weekday) }} <br>
+                {{ $date.formatTimeWithoutMillis(openingTime.start) }} - {{ $date.formatTimeWithoutMillis(openingTime.end) }}
               </v-list-item-title>
             </v-list-item>
           </v-list>
@@ -151,8 +174,6 @@
 </template>
 
 <script>
-
-import api from "@/utils/api";
 import CreateLocation from "@/components/CreateLocation";
 import EditLocation from "@/components/EditLocation";
 
@@ -171,36 +192,16 @@ export default {
       {text: 'Menu', align: 'left', value: 'menu'},
       {text: 'Geo Location', align: 'center', value: 'geolocation'},
       {text: 'Tags', align: 'left', value: 'tags'},
-      {text: 'Opening Times', align: 'left', value: 'openingTimes'},
-      {text: 'Enabled', align: 'left', value: 'enabled'},
+      {text: 'Description', align: 'center', value: 'description'},
+      {text: 'Opening Times', align: 'center', value: 'openingTimes'},
+      {text: 'Enabled', align: 'center', value: 'enabled'},
       {text: 'Actions', value: 'actions'},
     ],
-    locations: []
+    locations: [],
   }),
   methods: {
-    formatWeekday(weekday) {
-      switch (weekday) {
-        case 0:
-          return 'Monday'
-        case 1:
-          return 'Tuesday'
-        case 2:
-          return 'Wednesday'
-        case 3:
-          return 'Thursday'
-        case 4:
-          return 'Friday'
-        case 5:
-          return 'Saturday'
-        case 6:
-          return 'Sunday'
-      }
-    },
-    formatTime(time) {
-      return time.substring(0, 5)
-    },
-    sortByWeekday(list) {
-      return list.sort((a, b) => (a.weekday !== b.weekday) ? a.weekday - b.weekday : (a.start > b.start ? 1 : -1))
+    sortTags(tags){
+      return tags.sort((a, b) => (a.text).localeCompare(b.text))
     },
     openEditDialog(location) {
       this.currentLocation = location;
@@ -211,7 +212,7 @@ export default {
       this.deleteDialog = true;
     },
     deleteLocationConfirm() {
-      api.location.delete(this.currentLocation.locationId).then(() => this.getLocations())
+      this.$api.location.delete(this.currentLocation.locationId).then(() => this.getLocations())
       this.deleteDialog = false
     },
     locationCreated() {
@@ -219,9 +220,10 @@ export default {
       this.createDialog = false
     },
     getLocations() {
-      api.location.getAll().then(response => {
+      this.$api.location.getAll().then(response => {
         this.locations = response
-        this.locations.forEach(item => this.sortByWeekday(item.openingTimes))
+        this.locations.forEach(item => this.$date.sortByWeekday(item.openingTimes))
+        this.locations.forEach(item => this.sortTags(item.tags))
       });
     }
   },
@@ -230,7 +232,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-
-</style>

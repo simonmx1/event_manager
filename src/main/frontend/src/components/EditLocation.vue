@@ -35,7 +35,6 @@
 
 <script>
 
-import api from "@/utils/api";
 import LocationForm from "@/components/LocationForm";
 
 export default {
@@ -55,7 +54,7 @@ export default {
       this.$refs.form.validate()
     },
     edit(event) {
-      api.location.edit(event)
+      this.$api.location.edit(event)
           .then(response => {
             this.success = response.status === 200;
             this.response = response.data.msg

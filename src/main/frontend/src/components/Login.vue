@@ -43,11 +43,12 @@
                 persistent>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
-                    color="red lighten-2"
+                    color="primary"
                     dark
+                    text
                     v-bind="attrs"
                     v-on="on">
-                  Not A User? Register here!
+                  Register
                 </v-btn>
               </template>
               <register @close="dialog = false"/>
@@ -62,7 +63,6 @@
 </template>
 
 <script>
-import api from "@/utils/api";
 import Register from './Register.vue';
 
 export default {
@@ -82,8 +82,8 @@ export default {
   }),
   methods: {
     login() {
-      api.user.login(this.username, this.password).then(response => {
-        response ? this.$router.push("/home") : this.wrongCredentials = true
+      this.$api.user.login(this.username, this.password).then(response => {
+        response ? this.$router.push("/") : this.wrongCredentials = true
       })
     }
   }

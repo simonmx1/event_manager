@@ -1,14 +1,21 @@
 package at.qe.event_manager.model;
 
+import java.io.Serializable;
+
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "pollTimeslots")
 @IdClass(PollTimeslotsId.class)
-public class PollTimeslots {
+public class PollTimeslots implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @ManyToOne
+    @JsonIgnore
     private Poll poll;
 
     @Id
@@ -16,6 +23,15 @@ public class PollTimeslots {
     private Timeslot timeslot;
 
     private Integer points;
+
+    public PollTimeslots() {
+    }
+
+    public PollTimeslots(PollTimeslots pollTimeslotToBeCopied) {
+        this.poll = pollTimeslotToBeCopied.getPoll();
+        this.timeslot = pollTimeslotToBeCopied.getTimeslot();
+        this.points = pollTimeslotToBeCopied.getPoints();
+    }
 
     public Poll getPoll() {
         return poll;
@@ -40,17 +56,17 @@ public class PollTimeslots {
     public void setPoints(Integer points) {
         this.points = points;
     }
-    
-    public void addPoints(PollTimeslots poll_timeslot) {
-        this.points += poll_timeslot.getPoints();
+
+    public void addPoints(PollTimeslots pollTimeslot) {
+        this.points += pollTimeslot.getPoints();
     }
-    
+
     @Override
     public boolean equals(Object o) {
-    	if(o == null || !(o instanceof PollTimeslots)) {
-    		return false;
-    	}
-    	PollTimeslots pl = (PollTimeslots) o;
+        if (!(o instanceof PollTimeslots)) {
+            return false;
+        }
+        PollTimeslots pl = (PollTimeslots) o;
         return this.timeslot.getId() == pl.getTimeslot().getId();
     }
 }

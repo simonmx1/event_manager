@@ -15,6 +15,9 @@ public class TagService {
 
     @Autowired
     private TagRepository tagRepository;
+    
+    @Autowired
+    private LocationService locationService;
 
     /**
      * Returns a collection of all users.
@@ -48,6 +51,7 @@ public class TagService {
      * @param tag
      */
     public void deleteTag(Tag tag) {
+    	locationService.cleanUpForTagDeletion(tag);
         tagRepository.delete(tag);
     }
 

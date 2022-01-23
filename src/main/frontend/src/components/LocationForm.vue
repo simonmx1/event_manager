@@ -37,7 +37,17 @@
             prepend-icon="mdi-tag-multiple"
             @confirmed="getTags"
             ref="tagSelector"
+            style="padding-left: 20px; margin-left: 12px"
         />
+        <v-textarea
+            v-model="currentLocation.description"
+            :rules="descriptionRules"
+            prepend-icon="mdi-card-text"
+            name="description"
+            label="Description"
+            type="text"
+            counter="255"
+            outlined></v-textarea>
         <v-checkbox
             v-model="currentLocation.enabled"
             label="Enable Location"
@@ -48,7 +58,9 @@
       ></v-divider>
       <v-col cols="6">
         <opening-times-selector
+            ref="selector"
             prepend-icon="mdi-clock"
+            @confirm="confirmedOpeningTimes"
         />
       </v-col>
     </v-row>
@@ -69,6 +81,7 @@ export default {
         name: '',
         menu: '',
         geolocation: '',
+        description: '',
         tags: [],
         enabled: true,
       })
@@ -86,6 +99,9 @@ export default {
     geolocationRules: [
       v => !!v || 'Position is required',
     ],
+    descriptionRules: [
+      v => v.length <= 255 || 'Description max length is 255',
+    ],
     confirmTags: false
   }),
   methods: {
@@ -102,6 +118,12 @@ export default {
     getTags(tags) {
       this.currentLocation.tags = tags;
       this.$emit('validated', this.currentLocation)
+    },
+    getOpeningTimes() {
+      this.$refs.selector.sendData()
+    },
+    confirmedOpeningTimes(event) {
+      this.$emit('confirm', event)
     }
   },
   mounted() {
@@ -110,7 +132,3 @@ export default {
   },
 }
 </script>
-
-<style scoped>
-
-</style>

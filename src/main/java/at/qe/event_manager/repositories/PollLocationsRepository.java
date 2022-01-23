@@ -9,4 +9,5 @@ public interface PollLocationsRepository extends AbstractRepository<PollLocation
 
     @Query("SELECT pl FROM PollLocations pl WHERE :lid = pl.location.locationId AND :pid = pl.poll.pollId")
     PollLocations findFirstByIds(Integer pid, Integer lid);
+
 }

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import at.qe.event_manager.model.Location;
+import at.qe.event_manager.model.Tag;
 import at.qe.event_manager.model.User;
 import at.qe.event_manager.repositories.LocationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,9 @@ public class LocationService implements Serializable {
 
 	@Autowired
     private LocationRepository locationRepository;
+	
+	@Autowired
+	private EventService eventService;
 
     /**
      * Returns a collection of all users.
@@ -80,11 +84,18 @@ public class LocationService implements Serializable {
      * @param user the user to delete
      */
     public void deleteLocation(Location location) {
+    	eventService.cleanUpForLocationDeletion(location);
         locationRepository.delete(location);
-        // :TODO: write some audit log stating who and when this user was permanently deleted.
     }
 
     public Location loadLocationByLocationId(Integer locationId) {
         return locationRepository.findFirstByLocationId(locationId);
+    }
+    
+    public void cleanUpForTagDeletion(Tag tag) {
+    	// Delete Policy for Tag in Locations
+    	for(Location location : getAllLocations()) {
+    		location.getTags().remove(tag);
+    	}
     }
 }

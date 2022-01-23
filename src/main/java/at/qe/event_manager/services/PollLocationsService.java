@@ -33,6 +33,10 @@ public class PollLocationsService implements Serializable {
         return pollLocationsRepository.findAll();
     }
 
+    public PollLocations get(Integer pollId, Integer locationId) {
+        return pollLocationsRepository.findFirstByIds(pollId, locationId);
+    }
+
     /**
      * Loads a single user identified by its username.
      *
@@ -66,6 +70,5 @@ public class PollLocationsService implements Serializable {
      */
     public void deletePollLocations(PollLocations pollLocations) {
         pollLocationsRepository.delete(pollLocations);
-        // :TODO: write some audit log stating who and when this user was permanently deleted.
     }
 }

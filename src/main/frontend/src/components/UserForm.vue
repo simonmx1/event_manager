@@ -14,8 +14,8 @@
         type="text"
     ></v-text-field>
     <v-text-field
+        v-if="!editMode"
         v-model="currentUser.password"
-        :disabled="editMode || accountSettings"
         :rules="passwordRules"
         prepend-icon="mdi-lock"
         name="password"
@@ -138,7 +138,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-
-</style>

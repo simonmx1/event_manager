@@ -3,8 +3,9 @@ package at.qe.event_manager.services;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
-import at.qe.event_manager.model.Poll;
-import at.qe.event_manager.model.User;
+import java.util.Set;
+
+import at.qe.event_manager.model.*;
 import at.qe.event_manager.repositories.PollRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -25,6 +26,12 @@ public class PollService implements Serializable {
 	
 	@Autowired
     private PollRepository pollRepository;
+	
+	@Autowired
+    private PollLocationsService pollLocationsService;
+    
+    @Autowired
+    private PollTimeslotsService pollTimeslotsService;
 
     /**
      * Returns a collection of all users.
@@ -80,7 +87,38 @@ public class PollService implements Serializable {
      * @param user the user to delete
      */
     public void deletePoll(Poll poll) {
+    	poll.getPollLocations().forEach(pl -> pollLocationsService.deletePollLocations(pl));
+    	poll.getPollTimeslots().forEach(pt -> pollTimeslotsService.deletePollTimeslots(pt));
         pollRepository.delete(poll);
-        // :TODO: write some audit log stating who and when this user was permanently deleted.
+    }
+    
+    public void cleanUpForParticipantDeletion(User user) {
+    	// Delete Policy for User in Polls
+    	for(Poll poll : getAllPolls()) {
+    		if(poll.getUser().getUsername().compareTo(user.getUsername()) == 0) {
+    			poll.getPollLocations().forEach(pl -> pollLocationsService.deletePollLocations(pl));
+    			poll.getPollTimeslots().forEach(pt -> pollTimeslotsService.deletePollTimeslots(pt));
+    			deletePoll(poll);
+    		}
+    	}
+    }
+    
+    public void cleanUpForLocationDeletion(Location location) {
+    	// Delete Policy for Location in Polls
+    	for(Poll poll : getAllPolls()) {
+    		Set<PollLocations> pollLocations = poll.getPollLocations();
+    		for(PollLocations pollLocation : pollLocations) {
+    			if(pollLocation.getLocation().compareTo(location) == 0) {
+    				pollLocationsService.deletePollLocations(pollLocation);
+    			}
+    		}
+    		if (pollLocations.isEmpty()) {
+    			// :TODO: Event can't be held -> delete or somehow cancel event
+    		}
+    	}
+    }
+
+    public Poll loadPollByEventAndUser(Event event, User user) {
+        return pollRepository.findFirstByEventAndUser(event, user);
     }
 }
