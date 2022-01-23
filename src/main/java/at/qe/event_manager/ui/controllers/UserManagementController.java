@@ -34,7 +34,7 @@ public class UserManagementController implements Serializable {
     @Autowired
     private PasswordEncoder passwordEncoder;
     
-    private final String FORBIDDEN = "You shall not pass!";
+    private static final String FORBIDDEN = "You shall not pass!";
 
     /**
      * Returns a list of all users.
