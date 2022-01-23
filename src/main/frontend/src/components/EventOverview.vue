@@ -182,6 +182,14 @@
                   </v-menu>
                 </v-card-subtitle>
               </div>
+              <div>
+                <v-card-subtitle style="font-size: medium" v-if="item.evaluated">
+                  <b>Poll Result</b>
+                  <span style="float: right">
+                   <poll-result-dialog :current-event="item" style="float: right"></poll-result-dialog>
+                  </span>
+                </v-card-subtitle>
+              </div>
               <div v-if="isCreator(item.creator)">
                 <v-divider style="margin-top: 10px;"/>
                 <v-card-actions class="ma-1">
@@ -219,10 +227,11 @@ import LocationInfoDialog from "./LocationInfoDialog";
 import PollInfoDialog from "./PollInfoDialog"
 import PollForm from "./PollForm";
 import EventForm from "@/components/EventForm";
+import PollResultDialog from "@/components/PollResultDialog";
 
 export default {
   name: 'EventOverview',
-  components: {EventForm, PollForm, LocationInfoDialog, PollInfoDialog},
+  components: {PollResultDialog, EventForm, PollForm, LocationInfoDialog, PollInfoDialog},
   data() {
     return {
       currentUsername: null,
