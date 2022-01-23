@@ -5,7 +5,7 @@
         <v-toolbar-title> Create Location </v-toolbar-title>
       </v-toolbar>
       <v-card-text>
-        <location-form ref="form" :admin="admin" @validated="creation"/>
+        <location-form ref="form" :admin="admin" @validated="creation" @confirm="confirmedOpeningTimes"/>
         <v-alert
             v-if="typeof success !== 'undefined'"
             dense
@@ -40,13 +40,21 @@ export default {
     response: '',
     wrongLocationName: false,
     success: undefined,
+    location: null
   }),
   methods: {
     tryCreation() {
       this.$refs.form.validate()
     },
     creation(event) {
-      this.$api.location.create(event)
+      this.location = event
+      this.$refs.form.getOpeningTimes()
+
+    },
+    confirmedOpeningTimes(event) {
+      let l = JSON.parse(JSON.stringify(this.location))
+      l['openingTimes'] = event
+      this.$api.location.create(JSON.parse(JSON.stringify(l)))
           .then(response => {
             this.success = response.status === 201;
             this.response = response.data

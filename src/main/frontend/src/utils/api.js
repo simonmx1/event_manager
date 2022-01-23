@@ -140,7 +140,8 @@ export default {
                     'geolocation': location.geolocation,
                     'tags': location.tags,
                     'description': location.description,
-                    'enabled': location.enabled
+                    'enabled': location.enabled,
+                    'openingTimes': location.openingTimes
                 },
                 {
                     headers: {

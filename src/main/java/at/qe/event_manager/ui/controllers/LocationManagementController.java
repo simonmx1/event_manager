@@ -57,6 +57,7 @@ public class LocationManagementController implements Serializable {
 
     @PostMapping("/create")
     public ResponseEntity<String> createLocation(@RequestBody Location location) {
+        System.out.println(location);
         if (locationService.createLocation(location) == null) {
             return new ResponseEntity<>("Error While creating the Location!", HttpStatus.OK);
         } else {

@@ -110,7 +110,10 @@ export default {
       this.timepicker[dayIndex][timeIndex] = false
       this.$forceUpdate()
     },
-    allowedStep: m => m % 30 === 0
-  }
+    allowedStep: m => m % 30 === 0,
+    sendData() {
+      this.$emit('confirm', JSON.parse(JSON.stringify(this.weekdays)))
+    },
+  },
 }
 </script>

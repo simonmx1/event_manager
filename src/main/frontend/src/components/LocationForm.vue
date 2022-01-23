@@ -58,7 +58,9 @@
       ></v-divider>
       <v-col cols="6">
         <opening-times-selector
+            ref="selector"
             prepend-icon="mdi-clock"
+            @confirm="confirmedOpeningTimes"
         />
       </v-col>
     </v-row>
@@ -116,6 +118,12 @@ export default {
     getTags(tags) {
       this.currentLocation.tags = tags;
       this.$emit('validated', this.currentLocation)
+    },
+    getOpeningTimes() {
+      this.$refs.selector.sendData()
+    },
+    confirmedOpeningTimes(event) {
+      this.$emit('confirm', event)
     }
   },
   mounted() {
