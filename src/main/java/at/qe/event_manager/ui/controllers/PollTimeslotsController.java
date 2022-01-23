@@ -1,6 +1,5 @@
 package at.qe.event_manager.ui.controllers;
 
-import at.qe.event_manager.model.PollLocations;
 import at.qe.event_manager.model.PollTimeslots;
 import at.qe.event_manager.payload.request.PollTimeslotsRequest;
 import at.qe.event_manager.payload.response.MessageResponse;
