@@ -100,7 +100,7 @@
                     <v-card-actions>
                       <v-spacer></v-spacer>
                       <v-btn @click="closePollDialog(index)" color="red">Cancel</v-btn>
-                      <v-btn @click="confirmPoll()" color="primary">Save</v-btn>
+                      <v-btn @click="confirmPoll(index)" color="primary">Save</v-btn>
                     </v-card-actions>
                   </v-card>
                 </v-dialog>
@@ -278,8 +278,9 @@ export default {
         this.$api.pollTimeslots.edit(disabled, event.poll)
       })
     },
-    confirmPoll() {
+    confirmPoll(index) {
       this.$refs.pollForm[0].sendData()
+      this.closePollDialog(index)
     },
     getPollswithPoints(array) {
       let len = array.length
