@@ -154,6 +154,7 @@ export default {
             }).catch(() => false);
         },
         async edit(location) {
+            console.log(location.openingTimes);
             return await axios.post('/api/location/edit', {
                     'locationId': location.locationId,
                     'name': location.name,
@@ -161,7 +162,8 @@ export default {
                     'geolocation': location.geolocation,
                     'tags': location.tags,
                     'description': location.description,
-                    'enabled': location.enabled
+                    'enabled': location.enabled,
+                    'openingTimes': location.openingTimes
                 },
                 {
                     headers: {

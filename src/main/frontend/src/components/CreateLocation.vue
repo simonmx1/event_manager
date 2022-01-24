@@ -49,7 +49,6 @@ export default {
     creation(event) {
       this.location = event
       this.$refs.form.getOpeningTimes()
-
     },
     confirmedOpeningTimes(event) {
       let l = JSON.parse(JSON.stringify(this.location))
