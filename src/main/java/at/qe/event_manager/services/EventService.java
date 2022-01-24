@@ -22,184 +22,196 @@ import org.springframework.stereotype.Component;
 public class EventService implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	@Autowired
-    private EventRepository eventRepository;
-	
-    @Autowired
-    private PollRepository pollRepository;
-    
-    @Autowired
-    private PollService pollService;
-    
-    /**
-     * Returns a collection of all users.
-     *
-     * @return
-     */
-    public Collection<Event> getAllEvents() {
-        return eventRepository.findAll();
-    }
+	private EventRepository eventRepository;
 
-    public Collection<Event> getAllEventFromUser(User user){
-        return eventRepository.findAllByParticipants(user);
-    }
+	@Autowired
+	private PollRepository pollRepository;
 
-    /**
-     * Loads a single user identified by its username.
-     *
-     * @param username the username to search for
-     * @return the user with the given username
-     */
-    public Event loadEvent(Integer id) {
-        return eventRepository.findFirstByEventId(id);
-    }
+	@Autowired
+	private PollService pollService;
 
-    public Event saveEvent(Event event) {
-        if (event.isNew()) {
-            event.setCreateDate(new Date());
-        }
-        return eventRepository.save(event);
-    }
+	/**
+	 * Returns a collection of all users.
+	 *
+	 * @return
+	 */
+	public Collection<Event> getAllEvents() {
+		return eventRepository.findAll();
+	}
 
-    public Event createEvent(Event event) {
-        return saveEvent(event);
-    }
+	public Collection<Event> getAllEventFromUser(User user) {
+		return eventRepository.findAllByParticipants(user);
+	}
 
-    /**
-     * Deletes the user.
-     *
-     * @param user the user to delete
-     */
-    public void deleteEvent(Event event) {
-    	if(!event.getPolls().isEmpty()) {
-    		event.getPolls().forEach(p -> pollService.deletePoll(p));
-    	}
-        eventRepository.delete(event);
-    }
-    
-    public void cleanUpForParticipantDeletion(User user) {
-    	// Delete Policy for User in Events
-    	for(Event event : getAllEvents()) {
-    		if(event.getCreator().getUsername().compareTo(user.getUsername()) == 0) {
-    			// :TODO: delete Event or somehow cancel event
-    		}
-        	Set<User> participants = event.getParticipants();
-        	if(participants.contains(user)) {
-        		participants.remove(user);
-        		if(participants.size() < 2) {
-        			// :TODO: Event can't be held
-        			// :TODO: Send Mail to last participant
-        		}
-        	}
-        }
-    	pollService.cleanUpForParticipantDeletion(user);
-    }
-    
-    public void cleanUpForLocationDeletion(Location location) {
+	/**
+	 * Loads a single user identified by its username.
+	 *
+	 * @param username the username to search for
+	 * @return the user with the given username
+	 */
+	public Event loadEvent(Integer id) {
+		return eventRepository.findFirstByEventId(id);
+	}
+
+	public Event saveEvent(Event event) {
+		if (event.isNew()) {
+			event.setCreateDate(new Date());
+		}
+		return eventRepository.save(event);
+	}
+
+	public Event createEvent(Event event) {
+		return saveEvent(event);
+	}
+
+	/**
+	 * Deletes the user.
+	 *
+	 * @param user the user to delete
+	 */
+	public void deleteEvent(Event event) {
+		if (!event.getPolls().isEmpty()) {
+			event.getPolls().forEach(p -> pollService.deletePoll(p));
+		}
+		eventRepository.delete(event);
+	}
+
+	public void cleanUpForParticipantDeletion(User user) {
+		// Delete Policy for User in Events
+		for (Event event : getAllEvents()) {
+			if (event.getCreator().getUsername().compareTo(user.getUsername()) == 0) {
+				if (!event.isEvaluated() || (event.getTimeslot() != null && event.getTimeslot().getStart().compareTo(new Date()) > 0)) {
+					// :TODO: send Mail that creator is being deleted
+				}
+				deleteEvent(event);
+			} else {
+				Set<User> participants = event.getParticipants();
+				if (participants.contains(user)) {
+					participants.remove(user);
+					if (participants.size() < 2) {
+						if (!event.isEvaluated() || (event.getTimeslot() != null && event.getTimeslot().getStart().compareTo(new Date()) > 0)) {
+							// :TODO: send Mail that event can't be held -> user size < 2
+						}
+						deleteEvent(event);
+					}
+				}
+			}
+		}
+		pollService.cleanUpForParticipantDeletion(user);
+	}
+
+	public void cleanUpForLocationDeletion(Location location) {
 //    	for(Event event : getAllEvents()) {
 //    		if(event.getLocation().compareTo(location) == 0) {
-    			// :TODO: delete Event or somehow cancel event
+		// :TODO: delete Event or somehow cancel event
 //    		}
 //    	}
-    	pollService.cleanUpForLocationDeletion(location);
-    }
-    
-    public void evaluatePolls(Event event) {
-    	ArrayList<PollLocations> locationsWithComputedPoints = new ArrayList<>();
-    	ArrayList<PollTimeslots> timeslotsWithComputedPoints = new ArrayList<>();
-    	computePointsOfPolls(event, locationsWithComputedPoints, timeslotsWithComputedPoints);
-    	Comparator<PollLocations> pollLocationsComparator = new PollLocationsComparator();
-        Comparator<PollTimeslots> pollTimeslotsComparator = new PollTimeslotsComparator();
-        locationsWithComputedPoints.sort(pollLocationsComparator);
-        timeslotsWithComputedPoints.sort(pollTimeslotsComparator);
-        if (timeslotsWithComputedPoints.get(0).getPoints() == 0) {
-            // :TODO: sent email to participants, event is evaluated but will not be held -> delete event
-            event.setEvaluated(true);
-        } else {
-            if (locationsWithComputedPoints.size() > 1 && pollLocationsComparator.compare(locationsWithComputedPoints.get(0), locationsWithComputedPoints.get(1)) == 0) {
-                ArrayList<PollLocations> locationsWithSameMaxPoints = new ArrayList<>();
-                for (PollLocations pollLocation : locationsWithComputedPoints) {
-                    if (pollLocationsComparator.compare(pollLocation, locationsWithComputedPoints.get(0)) == 0) {
-                        locationsWithSameMaxPoints.add(pollLocation);
-                    }
-                }
-                if (event.isCreatorIsPreferred()) {
-                    ArrayList<PollLocations> locationsChoosenByCreator = new ArrayList<>(pollRepository.findFirstByEventAndUser(event, event.getCreator()).getPollLocations());
-                    for (PollLocations pl : locationsWithSameMaxPoints) {
-                        for (PollLocations plCreator : locationsChoosenByCreator) {
-                            if (pl.equals(plCreator)) {
-                                locationsWithSameMaxPoints.set(locationsWithSameMaxPoints.indexOf(pl), plCreator);
-                            }
-                        }
-                    }
-                    locationsWithSameMaxPoints.sort(pollLocationsComparator);
-                    event.setLocation(locationsWithSameMaxPoints.get(0).getLocation());
-                } else {
-                    Random random = new Random();
-                    int min = 0;
-                    int max = locationsWithSameMaxPoints.size() - 1;
-                    int index = random.nextInt(max + min) + min;
-                    event.setLocation(locationsWithSameMaxPoints.get(index).getLocation());
-                }
-            } else {
-                event.setLocation(locationsWithComputedPoints.get(0).getLocation());
-            }
-            if (timeslotsWithComputedPoints.size() > 1 && timeslotsWithComputedPoints.get(0).getPoints() == timeslotsWithComputedPoints.get(1).getPoints()) {
-                ArrayList<PollTimeslots> timeslotsWithSameMaxPoints = new ArrayList<>();
-                for (PollTimeslots pollTimeslot : timeslotsWithComputedPoints) {
-                    if (pollTimeslotsComparator.compare(pollTimeslot, timeslotsWithComputedPoints.get(0)) == 0) {
-                        timeslotsWithSameMaxPoints.add(pollTimeslot);
-                    }
-                }
-                if (event.isCreatorIsPreferred()) {
-                    ArrayList<PollTimeslots> timeslotsChoosenByCreator = new ArrayList<>(pollRepository.findFirstByEventAndUser(event, event.getCreator()).getPollTimeslots());
-                    for (PollTimeslots pt : timeslotsWithSameMaxPoints) {
-                        for (PollTimeslots ptCreator : timeslotsChoosenByCreator) {
-                            if (pt.equals(ptCreator)) {
-                                timeslotsWithSameMaxPoints.set(timeslotsWithSameMaxPoints.indexOf(pt), ptCreator);
-                            }
-                        }
-                    }
-                    timeslotsWithSameMaxPoints.sort(pollTimeslotsComparator);
-                    event.setTimeslot(timeslotsWithSameMaxPoints.get(0).getTimeslot());
-                } else {
-                    Random random = new Random();
-                    int min = 0;
-                    int max = timeslotsWithSameMaxPoints.size() - 1;
-                    int index = random.nextInt(max + min) + min;
-                    event.setTimeslot(timeslotsWithSameMaxPoints.get(index).getTimeslot());
-                }
-            } else {
-                event.setTimeslot(timeslotsWithComputedPoints.get(0).getTimeslot());
-            }
-            event.setEvaluated(true);
-            event.getParticipants().forEach(user -> MailService.sendEventEvaluationMessage(user, event));
-        }
-        eventRepository.save(event);
-    }
-    
-    private void computePointsOfPolls(Event event, List<PollLocations> locationsWithComputedPoints, List<PollTimeslots> timeslotsWithComputedPoints) {
-    	for(Poll poll : event.getPolls()) {
-    		for(PollLocations pollLocation : poll.getPollLocations()) {
-    			if(!locationsWithComputedPoints.contains(pollLocation)) {
-    				locationsWithComputedPoints.add(new PollLocations(pollLocation));
-    			}
-    			else {
-    				locationsWithComputedPoints.get(locationsWithComputedPoints.indexOf(pollLocation)).addPoints(pollLocation);
-    			}
-    		}
-    		for(PollTimeslots pollTimeslot : poll.getPollTimeslots()) {
-    			if(!timeslotsWithComputedPoints.contains(pollTimeslot)) {
-    				timeslotsWithComputedPoints.add(new PollTimeslots(pollTimeslot));
-    			}
-                else if (timeslotsWithComputedPoints.get(timeslotsWithComputedPoints.indexOf(pollTimeslot)).getPoints() == 0 || pollTimeslot.getPoints() == 0){
-                	timeslotsWithComputedPoints.get(timeslotsWithComputedPoints.indexOf(pollTimeslot)).setPoints(0);
-                }
-    			else {
-    				timeslotsWithComputedPoints.get(timeslotsWithComputedPoints.indexOf(pollTimeslot)).addPoints(pollTimeslot);
-    			}
-    		}
-    	}
-    }
+		pollService.cleanUpForLocationDeletion(location);
+	}
+
+	public void evaluatePolls(Event event) {
+		ArrayList<PollLocations> locationsWithComputedPoints = new ArrayList<>();
+		ArrayList<PollTimeslots> timeslotsWithComputedPoints = new ArrayList<>();
+		computePointsOfPolls(event, locationsWithComputedPoints, timeslotsWithComputedPoints);
+		Comparator<PollLocations> pollLocationsComparator = new PollLocationsComparator();
+		Comparator<PollTimeslots> pollTimeslotsComparator = new PollTimeslotsComparator();
+		locationsWithComputedPoints.sort(pollLocationsComparator);
+		timeslotsWithComputedPoints.sort(pollTimeslotsComparator);
+		if (timeslotsWithComputedPoints.get(0).getPoints() == 0) {
+			// :TODO: sent email to participants, event is evaluated but will not be held ->
+			// delete event
+			event.setEvaluated(true);
+		} else {
+			if (locationsWithComputedPoints.size() > 1 && pollLocationsComparator
+					.compare(locationsWithComputedPoints.get(0), locationsWithComputedPoints.get(1)) == 0) {
+				ArrayList<PollLocations> locationsWithSameMaxPoints = new ArrayList<>();
+				for (PollLocations pollLocation : locationsWithComputedPoints) {
+					if (pollLocationsComparator.compare(pollLocation, locationsWithComputedPoints.get(0)) == 0) {
+						locationsWithSameMaxPoints.add(pollLocation);
+					}
+				}
+				if (event.isCreatorIsPreferred()) {
+					ArrayList<PollLocations> locationsChoosenByCreator = new ArrayList<>(
+							pollRepository.findFirstByEventAndUser(event, event.getCreator()).getPollLocations());
+					for (PollLocations pl : locationsWithSameMaxPoints) {
+						for (PollLocations plCreator : locationsChoosenByCreator) {
+							if (pl.equals(plCreator)) {
+								locationsWithSameMaxPoints.set(locationsWithSameMaxPoints.indexOf(pl), plCreator);
+							}
+						}
+					}
+					locationsWithSameMaxPoints.sort(pollLocationsComparator);
+					event.setLocation(locationsWithSameMaxPoints.get(0).getLocation());
+				} else {
+					Random random = new Random();
+					int min = 0;
+					int max = locationsWithSameMaxPoints.size() - 1;
+					int index = random.nextInt(max + min) + min;
+					event.setLocation(locationsWithSameMaxPoints.get(index).getLocation());
+				}
+			} else {
+				event.setLocation(locationsWithComputedPoints.get(0).getLocation());
+			}
+			if (timeslotsWithComputedPoints.size() > 1 && timeslotsWithComputedPoints.get(0)
+					.getPoints() == timeslotsWithComputedPoints.get(1).getPoints()) {
+				ArrayList<PollTimeslots> timeslotsWithSameMaxPoints = new ArrayList<>();
+				for (PollTimeslots pollTimeslot : timeslotsWithComputedPoints) {
+					if (pollTimeslotsComparator.compare(pollTimeslot, timeslotsWithComputedPoints.get(0)) == 0) {
+						timeslotsWithSameMaxPoints.add(pollTimeslot);
+					}
+				}
+				if (event.isCreatorIsPreferred()) {
+					ArrayList<PollTimeslots> timeslotsChoosenByCreator = new ArrayList<>(
+							pollRepository.findFirstByEventAndUser(event, event.getCreator()).getPollTimeslots());
+					for (PollTimeslots pt : timeslotsWithSameMaxPoints) {
+						for (PollTimeslots ptCreator : timeslotsChoosenByCreator) {
+							if (pt.equals(ptCreator)) {
+								timeslotsWithSameMaxPoints.set(timeslotsWithSameMaxPoints.indexOf(pt), ptCreator);
+							}
+						}
+					}
+					timeslotsWithSameMaxPoints.sort(pollTimeslotsComparator);
+					event.setTimeslot(timeslotsWithSameMaxPoints.get(0).getTimeslot());
+				} else {
+					Random random = new Random();
+					int min = 0;
+					int max = timeslotsWithSameMaxPoints.size() - 1;
+					int index = random.nextInt(max + min) + min;
+					event.setTimeslot(timeslotsWithSameMaxPoints.get(index).getTimeslot());
+				}
+			} else {
+				event.setTimeslot(timeslotsWithComputedPoints.get(0).getTimeslot());
+			}
+			event.setEvaluated(true);
+			event.getParticipants().forEach(user -> MailService.sendEventEvaluationMessage(user, event));
+		}
+		eventRepository.save(event);
+	}
+
+	private void computePointsOfPolls(Event event, List<PollLocations> locationsWithComputedPoints,
+			List<PollTimeslots> timeslotsWithComputedPoints) {
+		for (Poll poll : event.getPolls()) {
+			for (PollLocations pollLocation : poll.getPollLocations()) {
+				if (!locationsWithComputedPoints.contains(pollLocation)) {
+					locationsWithComputedPoints.add(new PollLocations(pollLocation));
+				} else {
+					locationsWithComputedPoints.get(locationsWithComputedPoints.indexOf(pollLocation))
+							.addPoints(pollLocation);
+				}
+			}
+			for (PollTimeslots pollTimeslot : poll.getPollTimeslots()) {
+				if (!timeslotsWithComputedPoints.contains(pollTimeslot)) {
+					timeslotsWithComputedPoints.add(new PollTimeslots(pollTimeslot));
+				} else if (timeslotsWithComputedPoints.get(timeslotsWithComputedPoints.indexOf(pollTimeslot))
+						.getPoints() == 0 || pollTimeslot.getPoints() == 0) {
+					timeslotsWithComputedPoints.get(timeslotsWithComputedPoints.indexOf(pollTimeslot)).setPoints(0);
+				} else {
+					timeslotsWithComputedPoints.get(timeslotsWithComputedPoints.indexOf(pollTimeslot))
+							.addPoints(pollTimeslot);
+				}
+			}
+		}
+	}
 }
