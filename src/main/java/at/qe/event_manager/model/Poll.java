@@ -8,29 +8,39 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
+/**
+ * Entity representing poll.
+ * <p>
+ * This class models a poll of a user with the vote.
+ */
 @Entity
 public class Poll implements Persistable<Integer>, Serializable, Comparable<Poll> {
 
     private static final long serialVersionUID = 1L;
 
+    /** The ID of the poll (primary-key) */
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer pollId;
 
-
+    /** The pollTimeslots which have the points */
     @OneToMany(mappedBy = "poll", fetch = FetchType.EAGER)
     private Set<PollTimeslots> pollTimeslots;
 
+    /** The pollLocations which have the points */
     @OneToMany(mappedBy = "poll", fetch = FetchType.EAGER)
     private Set<PollLocations> pollLocations;
 
+    /** The user which vote this poll */
     @ManyToOne
     private User user;
 
+    /** The event for which the poll applies */
     @ManyToOne
     private Event event;
 
+    /** The date on which the poll is created */
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createDate;
