@@ -66,6 +66,9 @@ export default {
 
       return item.name.toString().toLowerCase().indexOf(query.toString().toLowerCase()) > -1
           || text.toString().toLowerCase().indexOf(query.toString().toLowerCase()) > -1;
+    },
+    clear() {
+      this.model = [];
     }
   },
   mounted() {

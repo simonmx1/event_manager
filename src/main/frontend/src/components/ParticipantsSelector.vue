@@ -95,6 +95,9 @@ export default {
           || item.lastName.toString().toLowerCase().indexOf(query.toString().toLowerCase()) > -1
           || text.toString().toLowerCase().indexOf(query.toString().toLowerCase()) > -1;
     },
+    clear() {
+      this.model = []
+    }
   },
   mounted() {
     this.$api.user.getAll().then((response) => (this.availableParticipants = response))
