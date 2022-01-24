@@ -20,7 +20,6 @@ public class LocationCreationRequest {
     private List<OpeningTime> openingTimes = new ArrayList<>();
 
     public LocationCreationRequest(Integer locationId, String name, String menu, Date createDate, String geolocation, String description, boolean enabled, Set<Tag> tags, JSONArray openingTimes) {
-        System.out.println("Test");
     	this.locationId = locationId;
         this.name = name;
         this.menu = menu;

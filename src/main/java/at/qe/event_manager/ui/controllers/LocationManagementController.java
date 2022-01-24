@@ -65,6 +65,12 @@ public class LocationManagementController implements Serializable {
         for(OpeningTime op : location.getOpeningTimes()) {
             op.setLocation(location);
         }
+        location.setName(locationRequest.getName());
+        location.setMenu(locationRequest.getMenu());
+        location.setGeolocation(locationRequest.getGeolocation());
+        location.setDescription(locationRequest.getDescription());
+        location.setEnabled(locationRequest.isEnabled());
+        location.setTags(locationRequest.getTags());
         if(locationService.saveLocation(location) == null) {
             return ResponseEntity.ok(new MessageResponse("Error: Location does not exist!"));
         } else {
