@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.*;
 import javax.persistence.*;
 
+import at.qe.event_manager.payload.request.LocationCreationRequest;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.domain.Persistable;
@@ -39,6 +40,20 @@ public class Location implements Persistable<Integer>, Serializable, Comparable<
 
     @OneToMany(mappedBy = "location", cascade = CascadeType.ALL)
     private List<OpeningTime> openingTimes;
+
+    public Location() {}
+
+    public Location (LocationCreationRequest location) {
+        this.name = location.getName();
+        this.menu = location.getMenu();
+        this.createDate = location.getCreateDate();
+        this.geolocation = location.getGeolocation();
+        this.description = location.getDescription();
+        this.enabled = location.isEnabled();
+        this.tags = location.getTags();
+        this.openingTimes = location.getOpeningTimes();
+
+    }
 
     public String getDescription() {
         return description;

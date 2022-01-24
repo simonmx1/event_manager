@@ -1,6 +1,8 @@
 package at.qe.event_manager.ui.controllers;
 
 import at.qe.event_manager.model.Location;
+import at.qe.event_manager.model.OpeningTime;
+import at.qe.event_manager.payload.request.LocationCreationRequest;
 import at.qe.event_manager.payload.response.MessageResponse;
 import at.qe.event_manager.services.LocationService;
 import java.io.Serializable;
@@ -56,8 +58,11 @@ public class LocationManagementController implements Serializable {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<String> createLocation(@RequestBody Location location) {
-        System.out.println(location);
+    public ResponseEntity<String> createLocation(@RequestBody LocationCreationRequest locationRequest) {
+        Location location = new Location(locationRequest);
+        for(OpeningTime op : location.getOpeningTimes()) {
+            op.setLocation(location);
+        }
         if (locationService.createLocation(location) == null) {
             return new ResponseEntity<>("Error While creating the Location!", HttpStatus.OK);
         } else {
