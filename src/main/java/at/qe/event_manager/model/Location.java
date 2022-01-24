@@ -32,7 +32,7 @@ public class Location implements Persistable<Integer>, Serializable, Comparable<
     /** The link to the menu */
     private String menu;
 
-    /** The user who creates the location */
+    /** The date on which the location is created */
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createDate;
