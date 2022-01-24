@@ -15,6 +15,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import org.springframework.stereotype.Service;
 import at.qe.event_manager.model.Event;
+import at.qe.event_manager.model.Location;
 import at.qe.event_manager.model.User;
 
 @Service
@@ -24,7 +25,7 @@ public class MailService {
 	private static final String PASSWORD = "g7t0passwd";
 	private static final Properties PROPERTIES = new Properties();
 	private static final Session SESSION;
-	private static final boolean ENABLED = false;
+	private static final boolean ENABLED = true;
 	
 	private MailService() {}
 	
@@ -79,9 +80,6 @@ public class MailService {
 		@Override
 		public void run() {
 			try {
-				// We set our own email address here, so that we don't
-				// send any emails to third-party mail addresses.
-				msg.setRecipient(Message.RecipientType.TO, new InternetAddress(SRC_MAIL_ADDR));
 				if(ENABLED) Transport.send(msg);
 			} catch (MessagingException e) {
 				e.printStackTrace();
@@ -120,6 +118,13 @@ public class MailService {
 		sendMessage(buildMessage(user, subject, generateContentString(user, content)));
 	}
 	
+	public static void sendEventDeletionMessage(User user, Event event) {
+		String subject = String.format("Event Manager: Event: \"%s\" has been cancelled", event.getName());
+		String content = String.format("The event \"%s\" has just been deleted on \"Event Manager\" and will therefore not take place.\n"
+				+ "If this was a mistake, please contact us!", event.getName());
+		sendMessage(buildMessage(user, subject, generateContentString(user, content)));
+	}
+	
 	public static void sendEventEvaluationMessage(User user, Event event) {
 		String subject = String.format("Event Manager: Event: \"%s\", WHEN: \"%s\" - \"%s\", WHERE: \"%s\"",
 				event.getName(), event.getTimeslot().getStart(), event.getTimeslot().getEnd(), event.getLocation().getName());
@@ -131,23 +136,40 @@ public class MailService {
 	
 	public static void sendEventCreatorDeletionMessage(User user, Event event) {
 		String subject = String.format("Event Manager: Event: \"%s\" has been cancelled", event.getName());
-		String content = String.format("");
+		String content = String.format("The creator \"%s %s\" with the username \"%s\" of the event \"%s\" has been deleted on \"Event Manager\".\n"
+				+ "Therefore the event \"%s\" has also been deleted.", event.getCreator().getFirstName(), event.getCreator().getLastName(),
+				event.getCreator().getUsername(), event.getName(), event.getName());
 		sendMessage(buildMessage(user, subject, generateContentString(user, content)));
 	}
 	
-	public static void sendEventNotEnoughParticipantsMessage(User user, Event event) {
-		
+	public static void sendEventNotEnoughParticipantsMessage(User user, Event event, User deletedUser) {
+		String subject = String.format("Event Manager: Event: \"%s\" has been cancelled", event.getName());
+		String content = String.format("The participant \"%s %s\" with the username \"%s\" of the event \"%s\" has been deleted on \"Event Manager\".\n"
+				+ "You are now the only participant in this event. For this reason it will be deleted.", deletedUser.getFirstName(), deletedUser.getLastName(),
+				deletedUser.getUsername(), event.getName());
+		sendMessage(buildMessage(user, subject, generateContentString(user, content)));
 	}
 	
 	public static void sendEventNotEnoughLocationsMessage(User user, Event event) {
-		
+		String subject = String.format("Event Manager: Event: \"%s\" has been cancelled", event.getName());
+		String content = String.format("All locations that were available for selection in the voting of the event \"%s\" on \"Event Manager\""
+				+ "have been deleted. For this reason, this event cannot take place and therefore it will be deleted.", event.getName());
+		sendMessage(buildMessage(user, subject, generateContentString(user, content)));
 	}
 	
-	public static void sendEventLocationDeletionMessage(User user, Event event) {
-		
+	public static void sendEventLocationDeletionMessage(User user, Event event, Location location) {
+		String subject = String.format("Event Manager: Event: \"%s\" has been cancelled", event.getName());
+		String content = String.format("Unfortunately, the location with the name \"%s\" selected in the voting of the event \"name\""
+				+ "has been deleted on \"Event Manager\". For this reason, this event cannot take place and therefore it will be deleted.",
+				location.getName(), event.getName());
+		sendMessage(buildMessage(user, subject, generateContentString(user, content)));
 	}
 	
 	public static void sendEventNoCompatibleTimeslotAvailableMessage(User user, Event event) {
-		
+		String subject = String.format("Event Manager: Event: \"%s\" has been cancelled", event.getName());
+		String content = String.format("Unfortunately, no timeslots were found in the voting of the event \"%s\" on \"Event Manager\", in which all "
+				+ "participants of the event can also participate. For this reason, this event cannot take place and therefore it will be deleted.",
+				event.getName());
+		sendMessage(buildMessage(user, subject, generateContentString(user, content)));
 	}
 }

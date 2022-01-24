@@ -3,10 +3,7 @@ package at.qe.event_manager.model;
 import java.io.Serializable;
 import java.util.*;
 import javax.persistence.*;
-
 import at.qe.event_manager.payload.request.LocationCreationRequest;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.domain.Persistable;
 
 /**
