@@ -15,7 +15,6 @@ import org.springframework.data.domain.Persistable;
  * This class models a location with the information about menu, geolocation, description and tags.
  */
 @Entity
-@OnDelete(action = OnDeleteAction.CASCADE)
 public class Location implements Persistable<Integer>, Serializable, Comparable<Location> {
 
     private static final long serialVersionUID = 1L;

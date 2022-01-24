@@ -5,8 +5,14 @@ import at.qe.event_manager.model.OpeningTime;
 import at.qe.event_manager.payload.request.LocationCreationRequest;
 import at.qe.event_manager.payload.response.MessageResponse;
 import at.qe.event_manager.services.LocationService;
+import at.qe.event_manager.services.OpeningTimeService;
+
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
 import org.primefaces.shaded.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +30,9 @@ public class LocationManagementController implements Serializable {
 
 	@Autowired
     private LocationService locationService;
+	
+	@Autowired
+	private OpeningTimeService openingTimeService;
 	
     /**
      * Returns a list of all users.
@@ -44,7 +53,11 @@ public class LocationManagementController implements Serializable {
 
     @PostMapping("/edit")
     public ResponseEntity<MessageResponse> edit(@RequestBody LocationCreationRequest locationRequest) {
-        Location location = new Location(locationRequest);
+        Location location = locationService.loadLocationByLocationId(locationRequest.getLocationId());
+        for(OpeningTime openingTime : location.getOpeningTimes()) {
+        	openingTimeService.deleteOpeningTime(openingTime);
+        }
+        location.setOpeningTimes(locationRequest.getOpeningTimes());
         for(OpeningTime op : location.getOpeningTimes()) {
             op.setLocation(location);
         }

@@ -163,7 +163,7 @@ export default {
                     'tags': location.tags,
                     'description': location.description,
                     'enabled': location.enabled,
-                    'openingTimes': location.openingTimes
+                    'openingTimes': JSON.stringify(location.openingTimes)
                 },
                 {
                     headers: {
