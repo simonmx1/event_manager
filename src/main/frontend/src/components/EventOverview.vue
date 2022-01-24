@@ -195,9 +195,6 @@
                 <v-card-actions class="ma-1">
                   <v-btn text color="orange" @click="evaluateEvent(item)" v-if="!item.evaluated">Evaluate Poll</v-btn>
                   <v-spacer/>
-                  <v-btn icon small v-if="!item.evaluated">
-                    <v-icon small>mdi-pencil</v-icon>
-                  </v-btn>
                   <v-btn icon small @click="deleteDialog = true, currentEvent = item">
                     <v-icon small>mdi-delete</v-icon>
                   </v-btn>

@@ -145,13 +145,6 @@
         <v-icon
             small
             class="mr-2"
-            @click="openEditDialog(item)"
-        >
-          mdi-pencil
-        </v-icon>
-        <v-icon
-            small
-            class="mr-2"
             @click="openDeleteDialog(item)"
         >
           mdi-delete
@@ -194,10 +187,6 @@ export default {
       this.$refs.eventForm.clear()
       this.success = undefined
       this.response = null
-    },
-    openEditDialog(user) {
-      this.currentEvent = user;
-      this.editDialog = true;
     },
     openDeleteDialog(user) {
       this.currentEvent = user;
