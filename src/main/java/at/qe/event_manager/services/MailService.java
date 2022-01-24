@@ -128,4 +128,26 @@ public class MailService {
 				, event.getName(), event.getTimeslot().getStart(), event.getTimeslot().getEnd(), event.getLocation().getName());
 		sendMessage(buildMessage(user, subject, generateContentString(user, content)));
 	}
+	
+	public static void sendEventCreatorDeletionMessage(User user, Event event) {
+		String subject = String.format("Event Manager: Event: \"%s\" has been cancelled", event.getName());
+		String content = String.format("");
+		sendMessage(buildMessage(user, subject, generateContentString(user, content)));
+	}
+	
+	public static void sendEventNotEnoughParticipantsMessage(User user, Event event) {
+		
+	}
+	
+	public static void sendEventNotEnoughLocationsMessage(User user, Event event) {
+		
+	}
+	
+	public static void sendEventLocationDeletionMessage(User user, Event event) {
+		
+	}
+	
+	public static void sendEventNoCompatibleTimeslotAvailableMessage(User user, Event event) {
+		
+	}
 }

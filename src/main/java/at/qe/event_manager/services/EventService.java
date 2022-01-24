@@ -75,9 +75,9 @@ public class EventService implements Serializable {
 	 * @param user the user to delete
 	 */
 	public void deleteEvent(Event event) {
-		if (!event.isEvaluated() || (event.getTimeslot() != null && event.getTimeslot().getStart().compareTo(new Date()) > 0)) {
-			// :TODO: send Mail that creator is being deleted
-		}
+//		if (!event.isEvaluated() || (event.getTimeslot() != null && event.getTimeslot().getStart().compareTo(new Date()) > 0)) {
+//			// :TODO: send Mail that creator is being deleted
+//		}
 		if (!event.getPolls().isEmpty()) {
 			event.getPolls().forEach(p -> pollService.deletePoll(p));
 		}
@@ -89,7 +89,12 @@ public class EventService implements Serializable {
 		for (Event event : getAllEvents()) {
 			if (event.getCreator().getUsername().compareTo(user.getUsername()) == 0) {
 				if (!event.isEvaluated() || (event.getTimeslot() != null && event.getTimeslot().getStart().compareTo(new Date()) > 0)) {
-					// :TODO: send Mail that creator is being deleted
+					for(User participant : event.getParticipants()) {
+						if(user.compareTo(participant) != 0) {
+							// :TODO: send Mail that creator has been deleted
+							MailService.sendEventCreatorDeletionMessage(participant, event);
+						}
+					}
 				}
 				deleteEvent(event);
 			} else {
@@ -98,7 +103,8 @@ public class EventService implements Serializable {
 					participants.remove(user);
 					if (participants.size() < 2) {
 						if (!event.isEvaluated() || (event.getTimeslot() != null && event.getTimeslot().getStart().compareTo(new Date()) > 0)) {
-							// :TODO: send Mail that event can't be held -> user size < 2
+							// :TODO: send Mail that participants = 1 -> to last user -> event is being canceld
+							MailService.sendEventNotEnoughParticipantsMessage(user, event);
 						}
 						deleteEvent(event);
 					}
@@ -113,7 +119,9 @@ public class EventService implements Serializable {
     		if(event.isEvaluated() && event.getLocation().compareTo(location) == 0) {
     			if(event.getTimeslot().getStart().compareTo(new Date()) > 0) {
     				// :TODO: send mail that event can't be held, because Location was deleted
-    				System.out.println("Location was deleted");
+    				for(User participant : event.getParticipants()) {
+    					MailService.sendEventLocationDeletionMessage(participant, event);
+    				}
     			}
     			deleteEvent(event);
     		}
@@ -134,6 +142,9 @@ public class EventService implements Serializable {
     			Event event = poll.getEvent();
     			if (!event.isEvaluated() || (event.getTimeslot() != null && event.getTimeslot().getStart().compareTo(new Date()) > 0)) {
 					// :TODO: send Mail that Event can't be held because pollLocation size = 0
+    				for(User participant : event.getParticipants()) {
+    					MailService.sendEventNotEnoughLocationsMessage(participant, event);
+    				}
 				}
     			deleteEvent(event);
     		}
@@ -150,6 +161,9 @@ public class EventService implements Serializable {
 		timeslotsWithComputedPoints.sort(pollTimeslotsComparator);
 		if (timeslotsWithComputedPoints.get(0).getPoints() == 0) {
 			// :TODO: sent email to participants, event is evaluated but will not be held ->
+			for(User participant : event.getParticipants()) {
+				MailService.sendEventNoCompatibleTimeslotAvailableMessage(participant, event);
+			}
 			deleteEvent(event);
 		} else {
 			if (locationsWithComputedPoints.size() > 1 && pollLocationsComparator
