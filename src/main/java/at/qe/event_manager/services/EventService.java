@@ -31,6 +31,9 @@ public class EventService implements Serializable {
 
 	@Autowired
 	private PollService pollService;
+	
+	@Autowired
+	private PollLocationsService pollLocationsService;
 
 	/**
 	 * Returns a collection of all users.
@@ -103,13 +106,36 @@ public class EventService implements Serializable {
 	}
 
 	public void cleanUpForLocationDeletion(Location location) {
-//    	for(Event event : getAllEvents()) {
-//    		if(event.getLocation().compareTo(location) == 0) {
-		// :TODO: delete Event or somehow cancel event
-//    		}
-//    	}
-		pollService.cleanUpForLocationDeletion(location);
+    	for(Event event : getAllEvents()) {
+    		if(event.isEvaluated() && event.getLocation().compareTo(location) == 0) {
+    			if(event.getTimeslot().getStart().compareTo(new Date()) > 0) {
+    				// :TODO: send mail that event can't be held, because Location was deleted
+    				System.out.println("Location was deleted");
+    			}
+    			deleteEvent(event);
+    		}
+    	}
+		cleanUpPollsForLocationDeletion(location);
 	}
+	
+	private void cleanUpPollsForLocationDeletion(Location location) {
+    	// Delete Policy for Location in Polls
+    	for(Poll poll : pollService.getAllPolls()) {
+    		Set<PollLocations> pollLocations = poll.getPollLocations();
+    		for(PollLocations pollLocation : pollLocations) {
+    			if(pollLocation.getLocation().compareTo(location) == 0) {
+    				pollLocationsService.deletePollLocations(pollLocation);
+    			}
+    		}
+    		if (pollLocations.size() <= 1) {
+    			Event event = poll.getEvent();
+    			if (!event.isEvaluated() || (event.getTimeslot() != null && event.getTimeslot().getStart().compareTo(new Date()) > 0)) {
+					// :TODO: send Mail that Event can't be held because pollLocation size = 0
+				}
+    			deleteEvent(event);
+    		}
+    	}
+    }
 
 	public void evaluatePolls(Event event) {
 		ArrayList<PollLocations> locationsWithComputedPoints = new ArrayList<>();
