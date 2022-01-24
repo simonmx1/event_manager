@@ -18,26 +18,42 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+/**
+ * Entity representing user.
+ * <p>
+ * This class models a user with the username, firstname, lastname, password, email and role.
+ */
 @Entity
 public class User implements Persistable<String>, Serializable, Comparable<User>, UserDetails {
 
     private static final long serialVersionUID = 1L;
 
+    /** The username of the user (primary-key) */
     @Id
     @Column(length = 100)
     private String username;
+
+    /** The password of the user */
     private String password;
 
+    /** The date on which the user is created */
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createDate;
 
+    /** The firstname of the user */
     private String firstName;
+
+    /** The lastname of the user */
     private String lastName;
+
+    /** The email of the user for the notification */
     private String email;
 
+    /** Is the user enabled */
     boolean enabled = true;
 
+    /** The role of the user decides of the authorisations*/
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
