@@ -75,6 +75,9 @@ public class EventService implements Serializable {
 	 * @param user the user to delete
 	 */
 	public void deleteEvent(Event event) {
+		if (!event.isEvaluated() || (event.getTimeslot() != null && event.getTimeslot().getStart().compareTo(new Date()) > 0)) {
+			// :TODO: send Mail that creator is being deleted
+		}
 		if (!event.getPolls().isEmpty()) {
 			event.getPolls().forEach(p -> pollService.deletePoll(p));
 		}
@@ -147,8 +150,7 @@ public class EventService implements Serializable {
 		timeslotsWithComputedPoints.sort(pollTimeslotsComparator);
 		if (timeslotsWithComputedPoints.get(0).getPoints() == 0) {
 			// :TODO: sent email to participants, event is evaluated but will not be held ->
-			// delete event
-			event.setEvaluated(true);
+			deleteEvent(event);
 		} else {
 			if (locationsWithComputedPoints.size() > 1 && pollLocationsComparator
 					.compare(locationsWithComputedPoints.get(0), locationsWithComputedPoints.get(1)) == 0) {
@@ -212,8 +214,8 @@ public class EventService implements Serializable {
 			}
 			event.setEvaluated(true);
 			event.getParticipants().forEach(user -> MailService.sendEventEvaluationMessage(user, event));
+			eventRepository.save(event);
 		}
-		eventRepository.save(event);
 	}
 
 	private void computePointsOfPolls(Event event, List<PollLocations> locationsWithComputedPoints,

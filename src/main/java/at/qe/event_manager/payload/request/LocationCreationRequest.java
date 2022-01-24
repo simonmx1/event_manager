@@ -4,13 +4,8 @@ import at.qe.event_manager.model.OpeningTime;
 import at.qe.event_manager.model.Tag;
 import org.primefaces.shaded.json.JSONArray;
 import org.primefaces.shaded.json.JSONObject;
-import org.springframework.format.annotation.DateTimeFormat;
-
 import java.sql.Time;
-import java.time.Instant;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.util.*;
 
 public class LocationCreationRequest {
@@ -39,12 +34,15 @@ public class LocationCreationRequest {
         for (int i = 0; i < openingTimes.length(); i++) {
             JSONObject object = openingTimes.getJSONObject(i);
             if (object.getBoolean("enabled")) {
-                OpeningTime ot = new OpeningTime();
-                ot.setWeekday(DayOfWeek.valueOf(object.getString("day")).getValue());
-                ot.setStart(Time.valueOf(LocalTime.parse(object.getJSONArray("openingTimes").getJSONObject(0).getString("start"))));
-                ot.setEnd(Time.valueOf(LocalTime.parse(object.getJSONArray("openingTimes").getJSONObject(0).getString("end"))));
-                ot.setCreateDate(new Date());
-                list.add(ot);
+                JSONArray openingTimesPerDay = object.getJSONArray("openingTimes");
+                for(int j = 0; j < openingTimesPerDay.length(); j++) {
+                	OpeningTime ot = new OpeningTime();
+                    ot.setWeekday(DayOfWeek.valueOf(object.getString("day")).getValue());
+                    ot.setStart(Time.valueOf(LocalTime.parse(openingTimesPerDay.getJSONObject(j).getString("start"))));
+                    ot.setEnd(Time.valueOf(LocalTime.parse(openingTimesPerDay.getJSONObject(j).getString("end"))));
+                    ot.setCreateDate(new Date());
+                    list.add(ot);
+                }
             }
         }
     }
