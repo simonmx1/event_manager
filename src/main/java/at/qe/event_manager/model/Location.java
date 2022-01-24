@@ -9,35 +9,49 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.domain.Persistable;
 
-
+/**
+ * Entity representing location.
+ * <p>
+ * This class models a location with the information about menu, geolocation, description and tags.
+ */
 @Entity
 @OnDelete(action = OnDeleteAction.CASCADE)
 public class Location implements Persistable<Integer>, Serializable, Comparable<Location> {
 
     private static final long serialVersionUID = 1L;
 
+    /** The Id of the location (primary-key) */
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer locationId;
 
+    /** The name of the location */
     private String name;
+
+    /** The link to the menu */
     private String menu;
 
+    /** The date on which the location is created */
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createDate;
 
+    /** The link to the location on GoogleMaps */
     private String geolocation;
 
+    /** The description of the event */
     private String description;
 
+    /** Is the location enabled */
     boolean enabled = true;
 
+    /** Tags which describe the location more detailed */
     @ManyToMany
     @JoinTable(name = "locationTags")
     private Set<Tag> tags;
 
+    /** The openingTimes of the location every weekday */
     @OneToMany(mappedBy = "location", cascade = CascadeType.ALL)
     private List<OpeningTime> openingTimes;
 
