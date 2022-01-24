@@ -48,7 +48,7 @@ public class LocationServiceTest {
         assertNull(locationService.loadLocationByLocationId(locationId), "Deleted Location \"" + location + "\" could still be loaded from test data source via locationService.loadLocationByLocationId");
 
         for (Location remainingLocation : locationService.getAllLocations()) {
-            assertNotEquals(location.getLocationId(), remainingLocation.getMenu(), "Deleted Location \"" + location + "\" could still be loaded from test data source via locationService.getAllLocations()");
+            assertNotEquals(location.getLocationId(), remainingLocation.getLocationId(), "Deleted Location \"" + location + "\" could still be loaded from test data source via locationService.getAllLocations()");
         }
     }
 
