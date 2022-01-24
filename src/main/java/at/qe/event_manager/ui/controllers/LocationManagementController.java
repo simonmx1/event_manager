@@ -49,7 +49,7 @@ public class LocationManagementController implements Serializable {
     }
 
     @PostMapping("/edit")
-    public ResponseEntity<MessageResponse> edit(@RequestBody LocationCreationRequest locationRequest) {
+    public ResponseEntity<String> edit(@RequestBody LocationCreationRequest locationRequest) {
         Location location = locationService.loadLocationByLocationId(locationRequest.getLocationId());
         Iterator<OpeningTime> iterator = location.getOpeningTimes().iterator();
         Set<OpeningTime> openingTimes = new HashSet<>();
@@ -72,9 +72,9 @@ public class LocationManagementController implements Serializable {
         location.setEnabled(locationRequest.isEnabled());
         location.setTags(locationRequest.getTags());
         if(locationService.saveLocation(location) == null) {
-            return ResponseEntity.ok(new MessageResponse("Error: Location does not exist!"));
+            return new ResponseEntity<>("Error: Location does not exist!", HttpStatus.OK);
         } else {
-            return ResponseEntity.ok(new MessageResponse("Location edited successfully!"));
+            return new ResponseEntity<>("Location edited successfully!", HttpStatus.CREATED);
         }
     }
 
