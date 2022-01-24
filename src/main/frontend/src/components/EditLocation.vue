@@ -11,7 +11,8 @@
             :admin="admin"
             :location="location"
             :edit="true"
-            @validated="edit"/>
+            @validated="edit"
+            @confirm="confirmedOpeningTimes"/>
         <v-alert
             v-if="typeof success !== 'undefined'"
             dense
@@ -48,18 +49,24 @@ export default {
     response: '',
     wrongLocationName: false,
     success: undefined,
+    editedLocation: null
   }),
   methods: {
     tryEdit() {
       this.$refs.form.validate()
     },
     edit(event) {
-      this.$api.location.edit(event)
+      this.editedLocation = event
+      this.$refs.form.getOpeningTimes()
+    },
+    confirmedOpeningTimes(event) {
+      let l = JSON.parse(JSON.stringify(this.editedLocation))
+      l['openingTimes'] = event
+      this.$api.location.edit(JSON.parse(JSON.stringify(l)))
           .then(response => {
-            this.success = response.status === 200;
-            this.response = response.data.msg
+            this.success = response.status === 201;
+            this.response = response.data
           })
-
     },
     closeDialog() {
       this.$refs.form.clear()
@@ -67,6 +74,7 @@ export default {
       this.response = ''
       this.success = undefined
       this.wrongLocationName = false
+      this.editedLocation = null
     }
   }
 }

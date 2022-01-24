@@ -43,7 +43,11 @@ public class LocationManagementController implements Serializable {
     }
 
     @PostMapping("/edit")
-    public ResponseEntity<MessageResponse> edit(@RequestBody Location location) {
+    public ResponseEntity<MessageResponse> edit(@RequestBody LocationCreationRequest locationRequest) {
+        Location location = new Location(locationRequest);
+        for(OpeningTime op : location.getOpeningTimes()) {
+            op.setLocation(location);
+        }
         if(locationService.saveLocation(location) == null) {
             return ResponseEntity.ok(new MessageResponse("Error: Location does not exist!"));
         } else {

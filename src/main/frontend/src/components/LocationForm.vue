@@ -61,6 +61,7 @@
             ref="selector"
             prepend-icon="mdi-clock"
             @confirm="confirmedOpeningTimes"
+            :opening-times="location.openingTimes"
         />
       </v-col>
     </v-row>
@@ -84,6 +85,7 @@ export default {
         description: '',
         tags: [],
         enabled: true,
+        openingTimes: []
       })
     },
   },
@@ -113,6 +115,7 @@ export default {
     clear() {
       this.$refs.form.resetValidation()
       this.$refs.tagSelector.clear()
+      this.$refs.selector.clear()
       this.currentLocation = JSON.parse(JSON.stringify(this.location));
     },
     getTags(tags) {
