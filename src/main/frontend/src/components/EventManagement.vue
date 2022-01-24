@@ -214,6 +214,8 @@ export default {
             this.response = response.data
             if (this.success)
               this.$refs.eventForm.clear()
+            else
+              this.$refs.eventForm.resetConfirmedData()
           }))
 
     }
