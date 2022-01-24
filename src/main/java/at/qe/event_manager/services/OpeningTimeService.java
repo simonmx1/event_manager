@@ -1,7 +1,9 @@
 package at.qe.event_manager.services;
 
 import java.io.Serializable;
+import java.util.List;
 
+import at.qe.event_manager.model.Location;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -17,9 +19,13 @@ public class OpeningTimeService implements Serializable {
 	
 	@Autowired
 	private OpeningTimeRepository openingTimeRepository;
-	
+
 	public OpeningTime loadOpeningTimeByOpeningTimeId(Integer openingTimeId) {
 		return openingTimeRepository.findFirstByOpeningTimeId(openingTimeId);
+	}
+	
+	public List<OpeningTime> loadOpeningTimesByLocationId(Location location) {
+		return openingTimeRepository.findAllByLocation(location);
 	}
 	
 	public void deleteOpeningTime(OpeningTime openingTime) {

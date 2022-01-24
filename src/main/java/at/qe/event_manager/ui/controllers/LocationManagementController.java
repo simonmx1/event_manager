@@ -8,10 +8,7 @@ import at.qe.event_manager.services.LocationService;
 import at.qe.event_manager.services.OpeningTimeService;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 import org.primefaces.shaded.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +51,14 @@ public class LocationManagementController implements Serializable {
     @PostMapping("/edit")
     public ResponseEntity<MessageResponse> edit(@RequestBody LocationCreationRequest locationRequest) {
         Location location = locationService.loadLocationByLocationId(locationRequest.getLocationId());
-        for(OpeningTime openingTime : location.getOpeningTimes()) {
+        Iterator<OpeningTime> iterator = location.getOpeningTimes().iterator();
+        Set<OpeningTime> openingTimes = new HashSet<>();
+        openingTimes.addAll(location.getOpeningTimes());
+        while(iterator.hasNext()) {
+            iterator.next();
+            iterator.remove();
+        }
+        for(OpeningTime openingTime : openingTimes) {
         	openingTimeService.deleteOpeningTime(openingTime);
         }
         location.setOpeningTimes(locationRequest.getOpeningTimes());
