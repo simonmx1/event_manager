@@ -2,7 +2,6 @@ package at.qe.event_manager.tests;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.orm.jpa.JpaSystemException;
@@ -31,7 +30,7 @@ public class UserServiceTest {
 	@Test
 	@WithMockUser(username = "admin", authorities = {"ROLE_ADMIN"})
     public void testInitUserData() {
-		assertEquals(4, userService.getAllUsers().size(), "Insufficient amount of users initialized for test data source");
+		assertTrue(userService.getAllUsers().size() >= 4, "Insufficient amount of users initialized for test data source");
 		for(User user : userService.getAllUsers()) {
 			if ("admin".equals(user.getUsername())) {
 				assertEquals(UserRole.ADMIN, user.getRole(), "User \"" + user + "\" does not have role ADMIN");
@@ -65,8 +64,6 @@ public class UserServiceTest {
 				assertNotNull(user.getFirstName(), "User \"" + user + "\" does not have a firstname defined");
 				assertNotNull(user.getLastName(), "User \"" + user + "\" does not have a lastname defined");
 				assertNotNull(user.getEmail(), "User \"" + user + "\" does not have a email defined");
-            } else {
-                Assertions.fail("Unknown user \"" + user.getUsername() + "\" loaded from test data source via UserService.getAllUsers");
             }
 		}
 	}
@@ -79,12 +76,13 @@ public class UserServiceTest {
 		String username = "user2";
         User adminUser = userService.loadUserByUsername("admin");
         assertNotNull(adminUser, "Admin user could not be loaded from test data source");
+        int userSize = userService.getAllUsers().size();
         User toBeDeletedUser = userService.loadUserByUsername(username);
         assertNotNull(toBeDeletedUser, "User \"" + username + "\" could not be loaded from test data source");
-
+        
         userService.deleteUser(toBeDeletedUser);
-
-        assertEquals(3, userService.getAllUsers().size(), "No user has been deleted after calling UserService.deleteUser");
+        
+        assertEquals(userSize-1, userService.getAllUsers().size(), "No user has been deleted after calling UserService.deleteUser");
         User deletedUser = userService.loadUserByUsername(username);
         assertNull(deletedUser, "Deleted User \"" + username + "\" could still be loaded from test data source via UserService.loadUserByUsername");
 
@@ -100,6 +98,7 @@ public class UserServiceTest {
         String username = "user1";
         User adminUser = userService.loadUserByUsername("admin");
         assertNotNull(adminUser, "Admin user could not be loaded from test data source");
+        int userSize = userService.getAllUsers().size();
         User toBeUpdatedUser = userService.loadUserByUsername(username);
         assertNotNull(toBeUpdatedUser, "User \"" + username + "\" could not be loaded from test data source");
 
@@ -107,7 +106,7 @@ public class UserServiceTest {
         userService.saveUser(toBeUpdatedUser);
 
         User freshlyLoadedUser = userService.loadUserByUsername("user1");
-        assertEquals(4, userService.getAllUsers().size(), "Size of users did change in database. User was inserted, not updated");
+        assertEquals(userSize, userService.getAllUsers().size(), "Size of users did change in database. User was inserted, not updated");
         assertNotNull(freshlyLoadedUser, "User \"" + username + "\" could not be loaded from test data source after being saved");
         assertEquals("changed-email@whatever.wherever", freshlyLoadedUser.getEmail(), "User \"" + username + "\" does not have a the correct email attribute stored being saved");
     }
@@ -118,6 +117,7 @@ public class UserServiceTest {
     public void testCreateUser() {
         User adminUser = userService.loadUserByUsername("admin");
         assertNotNull(adminUser, "Admin user could not be loaded from test data source");
+        int userSize = userService.getAllUsers().size();
 
         String username = "newuser";
         String password = "passwd";
@@ -135,7 +135,7 @@ public class UserServiceTest {
         userService.saveUser(toBeCreatedUser);
 
         User freshlyCreatedUser = userService.loadUserByUsername(username);
-        assertEquals(5, userService.getAllUsers().size(), "No user has been added after calling UserService.saveUser");
+        assertEquals(userSize+1, userService.getAllUsers().size(), "No user has been added after calling UserService.saveUser");
         assertNotNull(freshlyCreatedUser, "New user could not be loaded from test data source after being saved");
         assertEquals(username, freshlyCreatedUser.getUsername(), "New user could not be loaded from test data source after being saved");
         assertEquals(password, freshlyCreatedUser.getPassword(), "User \"" + username + "\" does not have a the correct password attribute stored being saved");
