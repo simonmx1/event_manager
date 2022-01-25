@@ -209,7 +209,7 @@ public class EventService implements Serializable {
 				event.setLocation(locationsWithComputedPoints.get(0).getLocation());
 			}
 			if (timeslotsWithComputedPoints.size() > 1 && timeslotsWithComputedPoints.get(0)
-					.getPoints() == timeslotsWithComputedPoints.get(1).getPoints()) {
+					.getPoints().compareTo(timeslotsWithComputedPoints.get(1).getPoints()) == 0) {
 				ArrayList<PollTimeslots> timeslotsWithSameMaxPoints = new ArrayList<>();
 				for (PollTimeslots pollTimeslot : timeslotsWithComputedPoints) {
 					if (pollTimeslotsComparator.compare(pollTimeslot, timeslotsWithComputedPoints.get(0)) == 0) {

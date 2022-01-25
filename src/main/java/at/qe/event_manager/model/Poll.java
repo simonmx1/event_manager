@@ -109,4 +109,9 @@ public class Poll implements Persistable<Integer>, Serializable, Comparable<Poll
     public boolean isNew() {
         return createDate == null;
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

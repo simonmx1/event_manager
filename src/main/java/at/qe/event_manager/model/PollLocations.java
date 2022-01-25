@@ -76,5 +76,10 @@ public class PollLocations implements Serializable {
         PollLocations pl = (PollLocations) o;
         return this.location.getId() == pl.getLocation().getId();
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }
 

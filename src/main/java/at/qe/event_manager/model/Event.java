@@ -169,4 +169,8 @@ public class Event implements Persistable<Integer>, Serializable, Comparable<Eve
         return (createDate == null);
     }
 
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

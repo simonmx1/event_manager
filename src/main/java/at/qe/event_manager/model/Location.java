@@ -157,4 +157,9 @@ public class Location implements Persistable<Integer>, Serializable, Comparable<
     public boolean isNew() {
         return (null == createDate);
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

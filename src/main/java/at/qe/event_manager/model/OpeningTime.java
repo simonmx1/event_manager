@@ -115,4 +115,8 @@ public class OpeningTime implements Persistable<Integer>, Serializable, Comparab
         return (null == createDate);
     }
 
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

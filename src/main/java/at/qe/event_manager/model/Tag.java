@@ -62,4 +62,9 @@ public class Tag implements Persistable<String>, Serializable, Comparable<Tag> {
     public boolean isNew() {
         return (null == createDate);
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

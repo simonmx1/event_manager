@@ -77,4 +77,9 @@ public class Timeslot implements Persistable<Integer>, Serializable, Comparable<
     public boolean isNew() {
         return createDate == null;
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

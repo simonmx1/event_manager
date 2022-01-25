@@ -77,4 +77,9 @@ public class PollTimeslots implements Serializable {
         PollTimeslots pl = (PollTimeslots) o;
         return this.timeslot.getId() == pl.getTimeslot().getId();
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }
