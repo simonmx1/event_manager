@@ -38,17 +38,6 @@ public class LocationService implements Serializable {
     public Collection<Location> getAllLocations() {
         return locationRepository.findAll();
     }
-
-    /**
-     * Loads a single user identified by its username.
-     *
-     * @param username the username to search for
-     * @return the user with the given username
-     */
-    public Location loadLocation(Integer locationId) {
-        return locationRepository.findFirstByLocationId(locationId);
-    }
-
     /**
      * Saves the user. This method will also set {@link User#createDate} for new
      * entities or {@link User#updateDate} for updated entities. The user

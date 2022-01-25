@@ -56,8 +56,8 @@ public class EventManagementController {
 
 	@PostMapping("/create")
 	public ResponseEntity<String> create(@RequestBody EventCreationRequest eventCreationRequest) {
-		if (!checkTimeslotsWithLocationOpeningTimes(eventCreationRequest.getLocations(),
-				eventCreationRequest.getTimeslots())) {
+		if (Boolean.FALSE.equals(checkTimeslotsWithLocationOpeningTimes(eventCreationRequest.getLocations(),
+				eventCreationRequest.getTimeslots()))) {
 			return new ResponseEntity<>("At least one Timeslot is not matching with at least one Location opening time",
 					HttpStatus.OK);
 		}

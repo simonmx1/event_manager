@@ -34,7 +34,7 @@ public class UserServiceTest {
 		assertEquals(4, userService.getAllUsers().size(), "Insufficient amount of users initialized for test data source");
 		for(User user : userService.getAllUsers()) {
 			if ("admin".equals(user.getUsername())) {
-				assertEquals(user.getRole(), UserRole.ADMIN, "User \"" + user + "\" does not have role ADMIN");
+				assertEquals(UserRole.ADMIN, user.getRole(), "User \"" + user + "\" does not have role ADMIN");
 				assertNotNull(user.getUsername(), "User \"" + user + "\" does not have a username defined");
 				assertNotNull(user.getPassword(), "User \"" + user + "\" does not have a password defined");
 				assertNotNull(user.getCreateDate(), "User \"" + user + "\" does not have a createDate defined");
@@ -42,7 +42,7 @@ public class UserServiceTest {
 				assertNotNull(user.getLastName(), "User \"" + user + "\" does not have a lastname defined");
 				assertNotNull(user.getEmail(), "User \"" + user + "\" does not have a email defined");
             } else if ("user1".equals(user.getUsername())) {
-            	assertEquals(user.getRole(), UserRole.USER, "User \"" + user + "\" does not have role USER");
+            	assertEquals( UserRole.USER, user.getRole(), "User \"" + user + "\" does not have role USER");
             	assertNotNull(user.getUsername(), "User \"" + user + "\" does not have a username defined");
 				assertNotNull(user.getPassword(), "User \"" + user + "\" does not have a password defined");
 				assertNotNull(user.getCreateDate(), "User \"" + user + "\" does not have a createDate defined");
@@ -50,7 +50,7 @@ public class UserServiceTest {
 				assertNotNull(user.getLastName(), "User \"" + user + "\" does not have a lastname defined");
 				assertNotNull(user.getEmail(), "User \"" + user + "\" does not have a email defined");
             } else if ("user2".equals(user.getUsername())) {
-            	assertEquals(user.getRole(), UserRole.LOCATION_MANAGER, "User \"" + user + "\" does not have role LOCATION_MANAGER");
+            	assertEquals(UserRole.LOCATION_MANAGER, user.getRole(), "User \"" + user + "\" does not have role LOCATION_MANAGER");
             	assertNotNull(user.getUsername(), "User \"" + user + "\" does not have a username defined");
 				assertNotNull(user.getPassword(), "User \"" + user + "\" does not have a password defined");
 				assertNotNull(user.getCreateDate(), "User \"" + user + "\" does not have a createDate defined");
@@ -58,7 +58,7 @@ public class UserServiceTest {
 				assertNotNull(user.getLastName(), "User \"" + user + "\" does not have a lastname defined");
 				assertNotNull(user.getEmail(), "User \"" + user + "\" does not have a email defined");
             } else  if ("elvis".equals(user.getUsername())) {
-            	assertEquals(user.getRole(), UserRole.USER, "User \"" + user + "\" does not have role USER");
+            	assertEquals(UserRole.USER, user.getRole(), "User \"" + user + "\" does not have role USER");
             	assertNotNull(user.getUsername(), "User \"" + user + "\" does not have a username defined");
 				assertNotNull(user.getPassword(), "User \"" + user + "\" does not have a password defined");
 				assertNotNull(user.getCreateDate(), "User \"" + user + "\" does not have a createDate defined");
@@ -142,7 +142,7 @@ public class UserServiceTest {
         assertEquals(fName, freshlyCreatedUser.getFirstName(), "User \"" + username + "\" does not have a the correct firstName attribute stored being saved");
         assertEquals(lName, freshlyCreatedUser.getLastName(), "User \"" + username + "\" does not have a the correct lastName attribute stored being saved");
         assertEquals(email, freshlyCreatedUser.getEmail(), "User \"" + username + "\" does not have a the correct email attribute stored being saved");
-        assertEquals(freshlyCreatedUser.getRole(), UserRole.USER, "User \"" + username + "\" does not have role USER");
+        assertEquals(UserRole.USER,freshlyCreatedUser.getRole(), "User \"" + username + "\" does not have role USER");
         assertNotNull(freshlyCreatedUser.getCreateDate(), "User \"" + username + "\" does not have a createDate defined after being saved");
     }
 	

@@ -1,6 +1,8 @@
 package at.qe.event_manager.services;
 
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.mail.Authenticator;
 import javax.mail.BodyPart;
 import javax.mail.Message;
@@ -21,7 +23,8 @@ import at.qe.event_manager.model.User;
 
 @Service
 public class MailService {
-	
+
+	private static final Logger LOGGER = Logger.getLogger(MailService.class.getName());
 	private static final String SRC_MAIL_ADDR = "event.manager.g7t0@gmail.com";
 	private static final String PASSWORD = "g7t0passwd";
 	private static final Properties PROPERTIES = new Properties();
@@ -62,7 +65,7 @@ public class MailService {
 			multipart.addBodyPart(msgBodyPart);
 			msg.setContent(multipart);
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, e.toString());
 		}
 		return msg;
 	}
@@ -90,7 +93,7 @@ public class MailService {
 			} catch (SendFailedException e) {
 				catchSendErrorAndPotentiallyTryAgain(e);
 			} catch (Exception e) {
-				e.printStackTrace();
+				LOGGER.log(Level.SEVERE, e.toString());
 			}
 		}
 		
@@ -98,14 +101,13 @@ public class MailService {
 			try {
 				if(numberOfTries < 5) {
 					Thread.sleep(4000);
-					System.out.println("Send Again: " + numberOfTries);
 					run();
 				}
 				else {
-					e.printStackTrace();
+					LOGGER.log(Level.WARNING, e.toString());
 				}
 			} catch (InterruptedException e1) {
-				e1.printStackTrace();
+				LOGGER.log(Level.SEVERE, e1.toString());
 			}
 		}
 	}

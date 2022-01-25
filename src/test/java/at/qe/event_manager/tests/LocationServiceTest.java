@@ -57,15 +57,15 @@ public class LocationServiceTest {
     @WithMockUser(username = "admin", authorities = {"ROLE_ADMIN"})
     public void testUpdateLocation() {
         Integer locationId = 1;
-        Location location = locationService.loadLocation(locationId);
+        Location location = locationService.loadLocationByLocationId(locationId);
         assertNotNull(location, "Location could not be loaded from test data source");
-        Location toBeUpdatedLocation = locationService.loadLocation(locationId);
+        Location toBeUpdatedLocation = locationService.loadLocationByLocationId(locationId);
         assertNotNull(location, "Location \"" + location + "\" could not be loaded from test data source");
 
         toBeUpdatedLocation.setName("TestName");
         locationService.saveLocation(toBeUpdatedLocation);
 
-        Location freshlyLoadedLocation = locationService.loadLocation(locationId);
+        Location freshlyLoadedLocation = locationService.loadLocationByLocationId(locationId);
         assertEquals(5, locationService.getAllLocations().size(), "Size of locations did change in database. Location was inserted, not updated");
         assertNotNull(freshlyLoadedLocation, "Location \"" + location + "\" could not be loaded from test data source after being saved");
         assertEquals("TestName", freshlyLoadedLocation.getName(), "Location \"" + location + "\" does not have a the correct name attribute stored being saved");
