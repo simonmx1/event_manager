@@ -7,6 +7,7 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.PasswordAuthentication;
+import javax.mail.SendFailedException;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
@@ -71,7 +72,9 @@ public class MailService {
 	}
 	
 	private static class ThreadMailService extends Thread{
-		Message msg;
+		private Message msg;
+		
+		private Integer numberOfTries = 0;
 		
 		public ThreadMailService(Message msg) {
 			this.msg = msg;
@@ -80,9 +83,29 @@ public class MailService {
 		@Override
 		public void run() {
 			try {
-				if(ENABLED) Transport.send(msg);
-			} catch (MessagingException e) {
+				if(ENABLED) {
+					numberOfTries++;
+					Transport.send(msg);
+				}
+			} catch (SendFailedException e) {
+				catchSendErrorAndPotentiallyTryAgain(e);
+			} catch (Exception e) {
 				e.printStackTrace();
+			}
+		}
+		
+		private void catchSendErrorAndPotentiallyTryAgain(SendFailedException e) {
+			try {
+				if(numberOfTries < 5) {
+					Thread.sleep(4000);
+					System.out.println("Send Again: " + numberOfTries);
+					run();
+				}
+				else {
+					e.printStackTrace();
+				}
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
 			}
 		}
 	}
@@ -152,14 +175,14 @@ public class MailService {
 	
 	public static void sendEventNotEnoughLocationsMessage(User user, Event event) {
 		String subject = String.format("Event Manager: Event: \"%s\" has been cancelled", event.getName());
-		String content = String.format("All locations that were available for selection in the voting of the event \"%s\" on \"Event Manager\""
+		String content = String.format("All locations that were available for selection in the voting of the event \"%s\" on \"Event Manager\" "
 				+ "have been deleted. For this reason, this event cannot take place and therefore it will be deleted.", event.getName());
 		sendMessage(buildMessage(user, subject, generateContentString(user, content)));
 	}
 	
 	public static void sendEventLocationDeletionMessage(User user, Event event, Location location) {
 		String subject = String.format("Event Manager: Event: \"%s\" has been cancelled", event.getName());
-		String content = String.format("Unfortunately, the location with the name \"%s\" selected in the voting of the event \"name\""
+		String content = String.format("Unfortunately, the location with the name \"%s\" selected in the voting of the event \"name\" "
 				+ "has been deleted on \"Event Manager\". For this reason, this event cannot take place and therefore it will be deleted.",
 				location.getName(), event.getName());
 		sendMessage(buildMessage(user, subject, generateContentString(user, content)));

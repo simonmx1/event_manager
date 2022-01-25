@@ -142,14 +142,17 @@ public class EventService implements Serializable {
     	// Delete Policy for Location in Polls
     	for(Poll poll : pollService.getAllPolls()) {
     		Set<PollLocations> pollLocations = poll.getPollLocations();
-    		for(PollLocations pollLocation : pollLocations) {
+    		Iterator<PollLocations> iterator = pollLocations.iterator();
+    		while(iterator.hasNext()) {
+    			PollLocations pollLocation = iterator.next();
     			if(pollLocation.getLocation().compareTo(location) == 0) {
+    				iterator.remove();
     				pollLocationsService.deletePollLocations(pollLocation);
     			}
     		}
-    		if (pollLocations.size() <= 1) {
+    		if (pollLocations.isEmpty()) {
     			Event event = poll.getEvent();
-    			if (!event.isEvaluated() || (event.getTimeslot() != null && event.getTimeslot().getStart().compareTo(new Date()) > 0)) {
+    			if (!event.isEvaluated()) {
 					// send Mail that Event can't be held because pollLocation size = 0
     				for(User participant : event.getParticipants()) {
     					MailService.sendEventNotEnoughLocationsMessage(participant, event);
