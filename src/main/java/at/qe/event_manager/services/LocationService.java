@@ -5,9 +5,11 @@ import java.util.Collection;
 import java.util.Date;
 import at.qe.event_manager.model.Location;
 import at.qe.event_manager.model.Tag;
+import at.qe.event_manager.model.User;
 import at.qe.event_manager.repositories.LocationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 /**
@@ -51,6 +53,7 @@ public class LocationService implements Serializable {
      * @param location the location to save
      * @return the saved location
      */
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_LOCATION_MANAGER')")
     public Location saveLocation(Location location) {
         if (location.isNew()) {
             location.setCreateDate(new Date());
@@ -64,6 +67,7 @@ public class LocationService implements Serializable {
      * @param location the location to create
      * @return the created location
      */
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_LOCATION_MANAGER')")
     public Location createLocation(Location location) {
         return saveLocation(location);
     }
@@ -73,6 +77,7 @@ public class LocationService implements Serializable {
      *
      * @param location the location to delete
      */
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_LOCATION_MANAGER')")
     public void deleteLocation(Location location) {
     	eventService.cleanUpForLocationDeletion(location);
         locationRepository.delete(location);
@@ -84,6 +89,11 @@ public class LocationService implements Serializable {
      *
      * @param tag the tag to delete from locations
      */
+    public Location loadLocationByLocationId(Integer locationId) {
+        return locationRepository.findFirstByLocationId(locationId);
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_LOCATION_MANAGER')")
     public void cleanUpForTagDeletion(Tag tag) {
     	// Delete Policy for Tag in Locations
     	for(Location location : getAllLocations()) {

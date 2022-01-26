@@ -2,12 +2,12 @@ package at.qe.event_manager.services;
 
 import java.io.Serializable;
 import java.util.*;
-
 import at.qe.event_manager.model.*;
 import at.qe.event_manager.repositories.EventRepository;
 import at.qe.event_manager.repositories.PollRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 /**
@@ -79,6 +79,7 @@ public class EventService implements Serializable {
 	 *
 	 * @param event the event to delete
 	 */
+	@PreAuthorize("hasAuthority('ROLE_ADMIN') or principal.username eq #event.getCreator.getUsername")
 	public void deleteEvent(Event event) {
 		deleteEventWrapper(event, true);
 	}

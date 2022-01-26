@@ -29,7 +29,7 @@ public class MailService {
 	private static final String PASSWORD = "g7t0passwd";
 	private static final Properties PROPERTIES = new Properties();
 	private static final Session SESSION;
-	private static final boolean ENABLED = true;
+	private static boolean enabled = true;
 	
 	private MailService() {}
 	
@@ -45,6 +45,10 @@ public class MailService {
 				return new PasswordAuthentication(SRC_MAIL_ADDR, PASSWORD);
 			}
 		});
+	}
+	
+	public static void disable() {
+		enabled = false;
 	}
 	
 	private static Message prepareMessage(final String DST_MAIL_ADDR) throws MessagingException {
@@ -65,7 +69,7 @@ public class MailService {
 			multipart.addBodyPart(msgBodyPart);
 			msg.setContent(multipart);
 		} catch (MessagingException e) {
-			LOGGER.log(Level.SEVERE, e.toString());
+			LOGGER.log(Level.SEVERE, e.getMessage());
 		}
 		return msg;
 	}
@@ -86,14 +90,14 @@ public class MailService {
 		@Override
 		public void run() {
 			try {
-				if(ENABLED) {
+				if(enabled) {
 					numberOfTries++;
 					Transport.send(msg);
 				}
 			} catch (SendFailedException e) {
 				catchSendErrorAndPotentiallyTryAgain(e);
 			} catch (Exception e) {
-				LOGGER.log(Level.SEVERE, e.toString());
+				LOGGER.log(Level.SEVERE, e.getMessage());
 			}
 		}
 		
@@ -104,10 +108,10 @@ public class MailService {
 					run();
 				}
 				else {
-					LOGGER.log(Level.WARNING, e.toString());
+					LOGGER.log(Level.WARNING, e.getMessage());
 				}
 			} catch (InterruptedException e1) {
-				LOGGER.log(Level.SEVERE, e1.toString());
+				LOGGER.log(Level.SEVERE, e1.getMessage());
 			}
 		}
 	}
