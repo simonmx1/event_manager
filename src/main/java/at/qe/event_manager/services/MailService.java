@@ -29,7 +29,7 @@ public class MailService {
 	private static final String PASSWORD = "g7t0passwd";
 	private static final Properties PROPERTIES = new Properties();
 	private static final Session SESSION;
-	private static final boolean ENABLED = true;
+	private static boolean enabled = true;
 	
 	private MailService() {}
 	
@@ -45,6 +45,10 @@ public class MailService {
 				return new PasswordAuthentication(SRC_MAIL_ADDR, PASSWORD);
 			}
 		});
+	}
+	
+	public static void disable() {
+		enabled = false;
 	}
 	
 	private static Message prepareMessage(final String DST_MAIL_ADDR) throws MessagingException {
@@ -86,7 +90,7 @@ public class MailService {
 		@Override
 		public void run() {
 			try {
-				if(ENABLED) {
+				if(enabled) {
 					numberOfTries++;
 					Transport.send(msg);
 				}

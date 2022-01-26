@@ -4,7 +4,10 @@ import at.qe.event_manager.model.Location;
 import at.qe.event_manager.model.OpeningTime;
 import at.qe.event_manager.model.Tag;
 import at.qe.event_manager.services.LocationService;
+import at.qe.event_manager.services.MailService;
 import at.qe.event_manager.services.TagService;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import java.sql.Time;
@@ -35,7 +38,12 @@ public class LocationServiceTest {
     
     @Autowired
     TagService tagService;
-
+    
+    @BeforeEach
+	public void disableMailService() {
+		MailService.disable();
+	}
+    
     @Test
     public void testInitLocationData() {
     	assertTrue(locationService.getAllLocations().size() >= 5, "Insufficient amount of locations initialized for test data source");

@@ -2,6 +2,8 @@ package at.qe.event_manager.tests;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.orm.jpa.JpaSystemException;
@@ -13,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import at.qe.event_manager.model.User;
 import at.qe.event_manager.model.UserRole;
+import at.qe.event_manager.services.MailService;
 import at.qe.event_manager.services.UserService;
 
 /**
@@ -26,6 +29,11 @@ public class UserServiceTest {
 	
 	@Autowired
 	UserService userService;
+	
+	@BeforeEach
+	public void disableMailService() {
+		MailService.disable();
+	}
 	
 	@Test
 	@WithMockUser(username = "admin", authorities = {"ROLE_ADMIN"})
