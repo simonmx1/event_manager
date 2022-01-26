@@ -1,7 +1,6 @@
 package at.qe.event_manager.configs;
 
 import at.qe.event_manager.model.User;
-import at.qe.event_manager.services.MailService;
 import at.qe.event_manager.services.UserService;
 import at.qe.event_manager.util.JwtUtil;
 
@@ -24,7 +23,7 @@ import java.util.logging.Logger;
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
-    private static final Logger LOGGER = Logger.getLogger(MailService.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(JwtRequestFilter.class.getName());
 
     @Autowired
     private UserService userService;
@@ -48,7 +47,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             } catch (IllegalArgumentException e) {
                 LOGGER.log(Level.SEVERE, e.getMessage());
             } catch (ExpiredJwtException e) {
-                LOGGER.log(Level.WARNING, "This Token is expired: " + e.getMessage());
+                LOGGER.log(Level.WARNING, String.format("This Token is expired: %s", e.getMessage()));
             }
         }
 

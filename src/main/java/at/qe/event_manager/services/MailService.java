@@ -65,7 +65,7 @@ public class MailService {
 			multipart.addBodyPart(msgBodyPart);
 			msg.setContent(multipart);
 		} catch (MessagingException e) {
-			LOGGER.log(Level.SEVERE, e.toString());
+			LOGGER.log(Level.SEVERE, e.getMessage());
 		}
 		return msg;
 	}
@@ -93,7 +93,7 @@ public class MailService {
 			} catch (SendFailedException e) {
 				catchSendErrorAndPotentiallyTryAgain(e);
 			} catch (Exception e) {
-				LOGGER.log(Level.SEVERE, e.toString());
+				LOGGER.log(Level.SEVERE, e.getMessage());
 			}
 		}
 		
@@ -104,10 +104,10 @@ public class MailService {
 					run();
 				}
 				else {
-					LOGGER.log(Level.WARNING, e.toString());
+					LOGGER.log(Level.WARNING, e.getMessage());
 				}
 			} catch (InterruptedException e1) {
-				LOGGER.log(Level.SEVERE, e1.toString());
+				LOGGER.log(Level.SEVERE, e1.getMessage());
 			}
 		}
 	}
