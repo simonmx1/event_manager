@@ -3,7 +3,6 @@ package at.qe.event_manager.tests;
 import at.qe.event_manager.model.Location;
 import at.qe.event_manager.model.OpeningTime;
 import at.qe.event_manager.model.Tag;
-import at.qe.event_manager.model.User;
 import at.qe.event_manager.services.LocationService;
 import at.qe.event_manager.services.TagService;
 import org.junit.jupiter.api.Test;
