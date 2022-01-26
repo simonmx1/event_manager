@@ -36,7 +36,7 @@ public class PollTimeslotsController implements Serializable {
 
     @PostMapping("/edit")
     public ResponseEntity<MessageResponse> edit(@RequestBody PollTimeslotsRequest pt) {
-        PollTimeslots pollTimeslots = pollTimeslotsService.get(pt.getPollId(), pt.getTimeslotId());
+        PollTimeslots pollTimeslots = pollTimeslotsService.loadPollTimeslot(pt.getPollId(), pt.getTimeslotId());
         pollTimeslots.setPoints(pt.getPoints());
         if(pollTimeslotsService.savePollTimeslots(pollTimeslots) == null) {
             return ResponseEntity.ok(new MessageResponse("Error: Poll does not exist!"));

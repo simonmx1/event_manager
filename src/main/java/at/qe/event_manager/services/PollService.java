@@ -10,11 +10,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
- * Service for accessing and manipulating user data.
- * <p>
- * This class is part of the skeleton project provided for students of the
- * courses "Software Architecture" and "Software Engineering" offered by the
- * University of Innsbruck.
+ * Service for accessing and manipulating poll data.
  */
 @Component
 @Scope("application")
@@ -30,34 +26,42 @@ public class PollService implements Serializable {
     
     @Autowired
     private PollTimeslotsService pollTimeslotsService;
-    
+
     /**
-     * Returns a collection of all users.
+     * Loads all polls from the database
      *
-     * @return
+     * @return a Collection of all polls
      */
     public Collection<Poll> getAllPolls() {
         return pollRepository.findAll();
     }
 
     /**
-     * Loads a single user identified by its username.
+     * Loads a single poll identified by its id.
      *
-     * @param username the username to search for
-     * @return the user with the given username
+     * @param id the pollId to search for
+     * @return the poll with the given id
      */
-    public Poll loadPoll(Integer id) {
+    public Poll loadPollByPollId(Integer id) {
         return pollRepository.findById(id);
     }
 
     /**
-     * Saves the user. This method will also set {@link User#createDate} for new
-     * entities or {@link User#updateDate} for updated entities. The user
-     * requesting this operation will also be stored as {@link User#createDate}
-     * or {@link User#updateUser} respectively.
+     * Loads a single poll identified by its event and user.
      *
-     * @param user the user to save
-     * @return the updated user
+     * @param event, user the event and user to search for
+     * @return the poll with the given event and user
+     */
+    public Poll loadPollByEventAndUser(Event event, User user) {
+        return pollRepository.findFirstByEventAndUser(event, user);
+    }
+
+    /**
+     * Saves the given poll. This method will also set the event createDate for new
+     * entities.
+     *
+     * @param poll the event to save
+     * @return the saved poll
      */
     public Poll savePoll(Poll poll) {
         if (poll.isNew()) {
@@ -67,29 +71,22 @@ public class PollService implements Serializable {
     }
 
     /**
-     * Saves the user. This method will also set {@link User#createDate} for new
-     * entities or {@link User#updateDate} for updated entities. The user
-     * requesting this operation will also be stored as {@link User#createDate}
-     * or {@link User#updateUser} respectively.
+     * Deletes the poll.
      *
-     * @param user the user to save
-     * @return the updated user
-     */
-    public Poll createPoll(Poll poll) {
-        return savePoll(poll);
-    }
-
-    /**
-     * Deletes the user.
-     *
-     * @param user the user to delete
+     * @param poll the event to delete
      */
     public void deletePoll(Poll poll) {
     	poll.getPollLocations().forEach(pl -> pollLocationsService.deletePollLocations(pl));
     	poll.getPollTimeslots().forEach(pt -> pollTimeslotsService.deletePollTimeslots(pt));
         pollRepository.delete(poll);
     }
-    
+
+    /**
+     * Delete policy for the Polls, where the given user is owner.
+     * Deletes the users Polls.
+     *
+     * @param user the user of the Poll
+     */
     public void cleanUpForParticipantDeletion(User user) {
     	// Delete Policy for User in Polls
     	for(Poll poll : getAllPolls()) {
@@ -99,9 +96,5 @@ public class PollService implements Serializable {
     			deletePoll(poll);
     		}
     	}
-    }
-    
-    public Poll loadPollByEventAndUser(Event event, User user) {
-        return pollRepository.findFirstByEventAndUser(event, user);
     }
 }

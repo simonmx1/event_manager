@@ -9,11 +9,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
- * Service for accessing and manipulating user data.
- * <p>
- * This class is part of the skeleton project provided for students of the
- * courses "Software Architecture" and "Software Engineering" offered by the
- * University of Innsbruck.
+ * Service for accessing and manipulating PollTimeslots data.
  */
 @Component
 @Scope("application")
@@ -25,48 +21,32 @@ public class PollTimeslotsService implements Serializable {
     private PollTimeslotsRepository pollTimeslotsRepository;
 
     /**
-     * Returns a collection of all users.
+     * Loads all pollTimeslots from the database
      *
-     * @return
+     * @return a Collection of all PollTimeslots
      */
     public Collection<PollTimeslots> getAllPollTimeslots() {
         return pollTimeslotsRepository.findAll();
     }
 
-    public PollTimeslots get(Integer pollId, Integer timeslotId) {
+    public PollTimeslots loadPollTimeslot(Integer pollId, Integer timeslotId) {
         return pollTimeslotsRepository.findFirstByIds(pollId, timeslotId);
     }
 
     /**
-     * Loads a single user identified by its username.
+     * Saves the given pollTimeslot.
      *
-     * @param username the username to search for
-     * @return the user with the given username
-     */
-    public PollTimeslots loadPollTimeslots(Integer pid, Integer tid) {
-        return pollTimeslotsRepository.findFirstByIds(pid, tid);
-    }
-
-    /**
-     * @param user the user to save
-     * @return the updated user
+     * @param pollTimeslots the event to save
+     * @return the saved PollTimeslots
      */
     public PollTimeslots savePollTimeslots(PollTimeslots pollTimeslots) {
         return pollTimeslotsRepository.save(pollTimeslots);
     }
 
     /**
-     * @param user the user to save
-     * @return the updated user
-     */
-    public PollTimeslots createPollTimeslots(PollTimeslots pollTimeslots) {
-        return savePollTimeslots(pollTimeslots);
-    }
-
-    /**
-     * Deletes the user.
+     * Deletes the PollTimeslots.
      *
-     * @param user the user to delete
+     * @param pollTimeslots the event to delete
      */
     public void deletePollTimeslots(PollTimeslots pollTimeslots) {
         pollTimeslotsRepository.delete(pollTimeslots);

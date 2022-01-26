@@ -36,7 +36,7 @@ public class PollLocationsController implements Serializable {
 
     @GetMapping("/getAll")
     public Collection<PollLocations> getAll(Poll poll) {
-        return pollService.loadPoll(poll.getId()).getPollLocations();
+        return pollService.loadPollByPollId(poll.getId()).getPollLocations();
     }
 
     @PostMapping("/edit")

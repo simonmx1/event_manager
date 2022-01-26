@@ -15,10 +15,6 @@ import org.springframework.stereotype.Component;
 
 /**
  * Service for accessing and manipulating user data.
- * <p>
- * This class is part of the skeleton project provided for students of the
- * courses "Software Architecture" and "Software Engineering" offered by the
- * University of Innsbruck.
  */
 @Component
 @Scope("application")
@@ -33,9 +29,9 @@ public class UserService implements Serializable, UserDetailsService {
 	private EventService eventService;
 
     /**
-     * Returns a collection of all users.
+     * Loads all users from the database
      *
-     * @return
+     * @return a Collection of all users
      */
     public Collection<User> getAllUsers() {
         return userRepository.findAll();
@@ -53,13 +49,11 @@ public class UserService implements Serializable, UserDetailsService {
     }
 
     /**
-     * Saves the user. This method will also set {@link User#createDate} for new
-     * entities or {@link User#updateDate} for updated entities. The user
-     * requesting this operation will also be stored as {@link User#createDate}
-     * or {@link User#updateUser} respectively.
+     * Saves the given user. This method will also set the event createDate for new
+     * entities.
      *
      * @param user the user to save
-     * @return the updated user
+     * @return the saved user
      */
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public User saveUser(User user) {
@@ -73,13 +67,10 @@ public class UserService implements Serializable, UserDetailsService {
     }
 
     /**
-     * Saves the user. This method will also set {@link User#createDate} for new
-     * entities or {@link User#updateDate} for updated entities. The user
-     * requesting this operation will also be stored as {@link User#createDate}
-     * or {@link User#updateUser} respectively.
+     * Creates the user, if the user is not already created.
      *
-     * @param user the user to save
-     * @return the updated user
+     * @param user the user to create
+     * @return the updated create
      */
     public User createUser(User user) {
         if (!this.getAllUsers().contains(user)) {

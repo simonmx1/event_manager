@@ -10,6 +10,10 @@ import org.springframework.stereotype.Component;
 
 import at.qe.event_manager.model.Event;
 
+/**
+ * The Scheduler looks up every 5 minutes for events which PollEndTime is in the Past and sends them to evaluation.
+ */
+
 @Component
 public class SchedulerEventService {
 	

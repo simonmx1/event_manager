@@ -9,11 +9,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
- * Service for accessing and manipulating user data.
- * <p>
- * This class is part of the skeleton project provided for students of the
- * courses "Software Architecture" and "Software Engineering" offered by the
- * University of Innsbruck.
+ * Service for accessing and manipulating PollLocations data.
  */
 @Component
 @Scope("application")
@@ -44,8 +40,7 @@ public class PollLocationsService implements Serializable {
     }
 
     /**
-     * Saves the given event. This method will also set the event createDate for new
-     * entities.
+     * Saves the given pollLocation.
      *
      * @param pollLocations the event to save
      * @return the saved PollLocations
