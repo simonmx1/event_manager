@@ -193,9 +193,9 @@ public class EventServiceTest {
         assertEquals(name, freshlyCreatedEvent.getName(), "New event could not be loaded from test data source after being saved");
         assertEquals(creator, freshlyCreatedEvent.getCreator(), "Event \"" + name + "\" does not have a the correct creator attribute stored being saved");
         assertNotNull(event.getParticipants(), "Event \"" + name + "\" does not have Participants stored when being saved");
-        assertTrue(event.getParticipants().size() == 2, "Event \"" + name + "\" does not have enough Participants stored when being saved");
+        assertEquals(2, event.getParticipants().size(), "Event \"" + name + "\" does not have enough Participants stored when being saved");
         assertNotNull(event.getPolls(), "Event \"" + name + "\" does not have Polls stored when being saved");
-        assertTrue(event.getPolls().size() == 2, "Event \"" + name + "\" does not have enough Polls stored when being saved");
+		assertEquals( 2, event.getPolls().size(), "Event \"" + name + "\" does not have enough Polls stored when being saved");
         assertNotNull(freshlyCreatedEvent.getCreateDate(), "Event \"" + name + "\" does not have a createDate defined after being saved");
 	}
 	
