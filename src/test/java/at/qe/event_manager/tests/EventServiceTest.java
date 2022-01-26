@@ -33,6 +33,7 @@ import at.qe.event_manager.services.MailService;
 import at.qe.event_manager.services.PollLocationsService;
 import at.qe.event_manager.services.PollService;
 import at.qe.event_manager.services.PollTimeslotsService;
+import at.qe.event_manager.services.SchedulerEventService;
 import at.qe.event_manager.services.TimeslotService;
 import at.qe.event_manager.services.UserService;
 
@@ -67,8 +68,9 @@ public class EventServiceTest {
 	PollLocationsService pollLocationsService;
 	
 	@BeforeEach
-	public void disableMailService() {
+	public void disableMailServiceAndSchedulerEventService() {
 		MailService.disable();
+		SchedulerEventService.disable();
 	}
 	
 	@Test

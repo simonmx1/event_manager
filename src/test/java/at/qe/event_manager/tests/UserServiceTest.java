@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import at.qe.event_manager.model.User;
 import at.qe.event_manager.model.UserRole;
 import at.qe.event_manager.services.MailService;
+import at.qe.event_manager.services.SchedulerEventService;
 import at.qe.event_manager.services.UserService;
 
 /**
@@ -31,8 +32,9 @@ public class UserServiceTest {
 	UserService userService;
 	
 	@BeforeEach
-	public void disableMailService() {
+	public void disableMailServiceAndSchedulerEventService() {
 		MailService.disable();
+		SchedulerEventService.disable();
 	}
 	
 	@Test

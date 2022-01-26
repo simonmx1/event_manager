@@ -16,15 +16,23 @@ public class SchedulerEventService {
 	@Autowired
 	EventService eventService;
 	
+	private static boolean enabled = true;
+	
+	public static void disable() {
+		enabled = false;
+	}
+	
 	@Scheduled(fixedRate = 5000*60)
 	@Async
 	public void scheduleEventEvaluation() {
-		for(Event event : eventService.getAllEvents()) {
-			if (!event.isEvaluated()) {
-				LocalDateTime currentDateTime = LocalDateTime.now();
-				LocalDateTime pollEndDate = LocalDateTime.ofInstant(event.getPollEndDate().toInstant(), ZoneId.systemDefault());
-				if (currentDateTime.compareTo(pollEndDate) > 0) {
-					eventService.evaluatePolls(event);
+		if(enabled) {
+			for(Event event : eventService.getAllEvents()) {
+				if (!event.isEvaluated()) {
+					LocalDateTime currentDateTime = LocalDateTime.now();
+					LocalDateTime pollEndDate = LocalDateTime.ofInstant(event.getPollEndDate().toInstant(), ZoneId.systemDefault());
+					if (currentDateTime.compareTo(pollEndDate) > 0) {
+						eventService.evaluatePolls(event);
+					}
 				}
 			}
 		}

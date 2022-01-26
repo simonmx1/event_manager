@@ -5,6 +5,7 @@ import at.qe.event_manager.model.OpeningTime;
 import at.qe.event_manager.model.Tag;
 import at.qe.event_manager.services.LocationService;
 import at.qe.event_manager.services.MailService;
+import at.qe.event_manager.services.SchedulerEventService;
 import at.qe.event_manager.services.TagService;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -40,8 +41,9 @@ public class LocationServiceTest {
     TagService tagService;
     
     @BeforeEach
-	public void disableMailService() {
+	public void disableMailServiceAndSchedulerEventService() {
 		MailService.disable();
+		SchedulerEventService.disable();
 	}
     
     @Test
