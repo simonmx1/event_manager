@@ -25,48 +25,39 @@ public class PollLocationsService implements Serializable {
     private PollLocationsRepository pollLocationsRepository;
 
     /**
-     * Returns a collection of all users.
+     * Loads all pollLocations from the database
      *
-     * @return
+     * @return a Collection of all PollLocations
      */
     public Collection<PollLocations> getAllPollLocations() {
         return pollLocationsRepository.findAll();
     }
 
-    public PollLocations get(Integer pollId, Integer locationId) {
+    /**
+     * Loads a single pollLocations identified by the pollId and the locationId.
+     *
+     * @param pollId, locationId the pollId and locationId to search for
+     * @return the PollLocations with the given pollId and locationId
+     */
+    public PollLocations loadPollLocation(Integer pollId, Integer locationId) {
         return pollLocationsRepository.findFirstByIds(pollId, locationId);
     }
 
     /**
-     * Loads a single user identified by its username.
+     * Saves the given event. This method will also set the event createDate for new
+     * entities.
      *
-     * @param username the username to search for
-     * @return the user with the given username
-     */
-    public PollLocations loadPollLocations(Integer pid, Integer lid) {
-        return pollLocationsRepository.findFirstByIds(pid, lid);
-    }
-
-    /**
-     * @param user the user to save
-     * @return the updated user
+     * @param pollLocations the event to save
+     * @return the saved PollLocations
      */
     public PollLocations savePollLocations(PollLocations pollLocations) {
         return pollLocationsRepository.save(pollLocations);
     }
 
     /**
-     * @param user the user to save
-     * @return the updated user
-     */
-    public PollLocations createPollLocations(PollLocations pollLocations) {
-        return savePollLocations(pollLocations);
-    }
-
-    /**
-     * Deletes the user.
+     * Deletes the PollLocation.
      *
-     * @param user the user to delete
+     * @param pollLocations the event to delete
      */
     public void deletePollLocations(PollLocations pollLocations) {
         pollLocationsRepository.delete(pollLocations);

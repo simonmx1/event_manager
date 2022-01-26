@@ -24,6 +24,7 @@ import java.util.logging.Logger;
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
+    /** Logger which let us put some error output in the console, without using System.out */
     private static final Logger LOGGER = Logger.getLogger(MailService.class.getName());
 
     @Autowired
@@ -32,6 +33,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Autowired
     private JwtUtil jwtUtil;
 
+
+    /**
+     * This method checks if the user is authorized to use our components.
+     *
+     * @param request the request from the frontend, response the response, which the backend sends to the frontend, chain all filters
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain chain) throws ServletException, IOException {

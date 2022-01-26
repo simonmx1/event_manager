@@ -80,17 +80,4 @@ public class EventCreationRequest {
     public void setPollEndDate(String pollEndDate) {
         this.pollEndDate = pollEndDate;
     }
-
-    @Override
-    public String toString() {
-        return "EventCreationRequest{" +
-                "name='" + name + '\'' +
-                ", creatorUsername='" + creatorUsername + '\'' +
-                ", participants=" + participants +
-                ", locations=" + locations +
-                ", timeslots=" + timeslots +
-                ", creatorIsPreferred=" + creatorIsPreferred +
-                ", pollEndDate='" + pollEndDate + '\'' +
-                '}';
-    }
 }

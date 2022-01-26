@@ -5,11 +5,7 @@ import at.qe.event_manager.model.Location;
 import org.springframework.data.jpa.repository.Query;
 
 /**
- * Repository for managing {@link User} entities.
- * <p>
- * This class is part of the skeleton project provided for students of the
- * courses "Software Architecture" and "Software Engineering" offered by the
- * University of Innsbruck.
+ * Repository for managing {@link Location} entities.
  */
 
 public interface LocationRepository extends AbstractRepository<Location, Integer>, Serializable {

@@ -11,11 +11,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
- * Service for accessing and manipulating user data.
- * <p>
- * This class is part of the skeleton project provided for students of the
- * courses "Software Architecture" and "Software Engineering" offered by the
- * University of Innsbruck.
+ * Service for accessing and manipulating Event data.
  */
 @Component
 @Scope("application")
@@ -36,28 +32,41 @@ public class EventService implements Serializable {
 	private PollLocationsService pollLocationsService;
 
 	/**
-	 * Returns a collection of all users.
+	 * Loads all events from the database
 	 *
-	 * @return
+	 * @return a Collection of all events
 	 */
 	public Collection<Event> getAllEvents() {
 		return eventRepository.findAll();
 	}
 
+	/**
+	 * Loads all events from the database, in which the given user is participant
+	 *
+	 * @param user the participant from the events returned
+	 * @return a Collection of events
+	 */
 	public Collection<Event> getAllEventFromUser(User user) {
 		return eventRepository.findAllByParticipants(user);
 	}
 
 	/**
-	 * Loads a single user identified by its username.
+	 * Loads a single event identified by its id.
 	 *
-	 * @param username the username to search for
-	 * @return the user with the given username
+	 * @param id the eventId to search for
+	 * @return the event with the given id
 	 */
-	public Event loadEvent(Integer id) {
+	public Event loadEventByEventId(Integer id) {
 		return eventRepository.findFirstByEventId(id);
 	}
 
+	/**
+	 * Saves the given event. This method will also set the event createDate for new
+	 * entities.
+	 *
+	 * @param event the event to save
+	 * @return the saved event
+	 */
 	public Event saveEvent(Event event) {
 		if (event.isNew()) {
 			event.setCreateDate(new Date());
@@ -65,14 +74,10 @@ public class EventService implements Serializable {
 		return eventRepository.save(event);
 	}
 
-	public Event createEvent(Event event) {
-		return saveEvent(event);
-	}
-
 	/**
-	 * Deletes the user.
+	 * Deletes the event.
 	 *
-	 * @param user the user to delete
+	 * @param event the event to delete
 	 */
 	public void deleteEvent(Event event) {
 		deleteEventWrapper(event, true);
@@ -91,6 +96,15 @@ public class EventService implements Serializable {
 		eventRepository.delete(event);
 	}
 
+	/**
+	 * Delete policy for the Events, where the given user is participant.
+	 * If the given user is creator of the event, the event will be deleted and an email will be sent to all participants.
+	 * If the given user is just participant, the user will be deleted from the participants list and it will be checked,
+	 * if the participants are greater than 1, otherwise the event will be canceled and the remaining user will be informed
+	 * by email.
+	 *
+	 * @param user the user to delete from participants
+	 */
 	public void cleanUpForParticipantDeletion(User user) {
 		// Delete Policy for User in Events
 		for (Event event : getAllEvents()) {
@@ -123,6 +137,14 @@ public class EventService implements Serializable {
 		pollService.cleanUpForParticipantDeletion(user);
 	}
 
+	/**
+	 * Delete policy for the Events, where the given Location is part of it.
+	 * If the event is evaluated, it is in the future and the location in which the event will be held is gets deleted,
+	 * the event will be canceled, otherwise if the event wasn't evaluated, the PollLocations with the given location
+	 * will be deleted.
+	 *
+	 * @param location the location to delete from events.
+	 */
 	public void cleanUpForLocationDeletion(Location location) {
     	for(Event event : getAllEvents()) {
     		if(event.isEvaluated() && event.getLocation().compareTo(location) == 0) {
@@ -137,7 +159,14 @@ public class EventService implements Serializable {
     	}
 		cleanUpPollsForLocationDeletion(location);
 	}
-	
+
+	/**
+	 * Delete policy PollLocations, in which the given location is part of it.
+	 * The given location, will be deleted from all PollLocation and after it, it will be checked, if there is any location
+	 * left for the poll, otherwise all the participants will be informed, that the event can't ve held.
+	 *
+	 * @param location the location to delete from PollLocations.
+	 */
 	private void cleanUpPollsForLocationDeletion(Location location) {
     	// Delete Policy for Location in Polls
     	for(Poll poll : pollService.getAllPolls()) {
@@ -163,6 +192,15 @@ public class EventService implements Serializable {
     	}
     }
 
+	/**
+	 * This method evaluates all Polls from the given event.
+	 * If there is no Timeslot, in which the event can be held, all users will be informed, that the event can't be held.
+	 * Then there are 2 options to evaluate the Polls:
+	 * 	- randomize, when at tie: the winner will be evaluated random, either from Locations or Timeslots.
+	 * 	- the creator chooses, when at tie: the winner will be evaluated with the Poll from the creator.
+	 *
+	 * @param event the event to evaluate.
+	 */
 	public void evaluatePolls(Event event) {
 		ArrayList<PollLocations> locationsWithComputedPoints = new ArrayList<>();
 		ArrayList<PollTimeslots> timeslotsWithComputedPoints = new ArrayList<>();
@@ -187,10 +225,10 @@ public class EventService implements Serializable {
 					}
 				}
 				if (event.isCreatorIsPreferred()) {
-					ArrayList<PollLocations> locationsChoosenByCreator = new ArrayList<>(
+					ArrayList<PollLocations> locationsChosenByCreator = new ArrayList<>(
 							pollRepository.findFirstByEventAndUser(event, event.getCreator()).getPollLocations());
 					for (PollLocations pl : locationsWithSameMaxPoints) {
-						for (PollLocations plCreator : locationsChoosenByCreator) {
+						for (PollLocations plCreator : locationsChosenByCreator) {
 							if (pl.equals(plCreator)) {
 								locationsWithSameMaxPoints.set(locationsWithSameMaxPoints.indexOf(pl), plCreator);
 							}
@@ -217,10 +255,10 @@ public class EventService implements Serializable {
 					}
 				}
 				if (event.isCreatorIsPreferred()) {
-					ArrayList<PollTimeslots> timeslotsChoosenByCreator = new ArrayList<>(
+					ArrayList<PollTimeslots> timeslotsChosenByCreator = new ArrayList<>(
 							pollRepository.findFirstByEventAndUser(event, event.getCreator()).getPollTimeslots());
 					for (PollTimeslots pt : timeslotsWithSameMaxPoints) {
-						for (PollTimeslots ptCreator : timeslotsChoosenByCreator) {
+						for (PollTimeslots ptCreator : timeslotsChosenByCreator) {
 							if (pt.equals(ptCreator)) {
 								timeslotsWithSameMaxPoints.set(timeslotsWithSameMaxPoints.indexOf(pt), ptCreator);
 							}
@@ -244,6 +282,15 @@ public class EventService implements Serializable {
 		}
 	}
 
+	/**
+	 * This method will add the sum of each Location and Timeslot to a List of PollTimeslots with the sum up points
+	 * or PollLocations with the sum up points.
+	 *
+	 * @param event the event to evaluate the Polls.
+	 *        locationsWithComputedPoints List of the PollLocations
+	 *        timeslotsWithComputedPoints List of the PollTimeslots
+	 *
+	 */
 	private void computePointsOfPolls(Event event, List<PollLocations> locationsWithComputedPoints,
 			List<PollTimeslots> timeslotsWithComputedPoints) {
 		for (Poll poll : event.getPolls()) {

@@ -7,6 +7,10 @@ import at.qe.event_manager.model.Location;
 import org.springframework.data.jpa.repository.Query;
 import at.qe.event_manager.model.OpeningTime;
 
+/**
+ * Repository for managing {@link OpeningTime} entities.
+ */
+
 public interface OpeningTimeRepository extends AbstractRepository<OpeningTime, Integer>, Serializable {
 	
 	@Query("SELECT ot FROM OpeningTime ot WHERE :openingTimeId = ot.openingTimeId")

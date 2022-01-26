@@ -5,18 +5,13 @@ import java.util.Collection;
 import java.util.Date;
 import at.qe.event_manager.model.Location;
 import at.qe.event_manager.model.Tag;
-import at.qe.event_manager.model.User;
 import at.qe.event_manager.repositories.LocationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
- * Service for accessing and manipulating user data.
- * <p>
- * This class is part of the skeleton project provided for students of the
- * courses "Software Architecture" and "Software Engineering" offered by the
- * University of Innsbruck.
+ * Service for accessing and manipulating location data.
  */
 @Component
 @Scope("application")
@@ -31,21 +26,30 @@ public class LocationService implements Serializable {
 	private EventService eventService;
 
     /**
-     * Returns a collection of all users.
+     * Loads all location from the database
      *
-     * @return
+     * @return Collection of all locations
      */
     public Collection<Location> getAllLocations() {
         return locationRepository.findAll();
     }
+
     /**
-     * Saves the user. This method will also set {@link User#createDate} for new
-     * entities or {@link User#updateDate} for updated entities. The user
-     * requesting this operation will also be stored as {@link User#createDate}
-     * or {@link User#updateUser} respectively.
+     * Loads a single location identified by its id.
      *
-     * @param user the user to save
-     * @return the updated user
+     * @param locationId the locationId to search for
+     * @return the location with the given id
+     */
+    public Location loadLocationByLocationId(Integer locationId) {
+        return locationRepository.findFirstByLocationId(locationId);
+    }
+
+    /**
+     * Saves the given location. This method will also set the location createDate for new
+     * entities.
+     *
+     * @param location the location to save
+     * @return the saved location
      */
     public Location saveLocation(Location location) {
         if (location.isNew()) {
@@ -55,32 +59,31 @@ public class LocationService implements Serializable {
     }
 
     /**
-     * Saves the user. This method will also set {@link User#createDate} for new
-     * entities or {@link User#updateDate} for updated entities. The user
-     * requesting this operation will also be stored as {@link User#createDate}
-     * or {@link User#updateUser} respectively.
+     * Creates the given location.
      *
-     * @param user the user to save
-     * @return the updated user
+     * @param location the location to create
+     * @return the created location
      */
     public Location createLocation(Location location) {
         return saveLocation(location);
     }
 
     /**
-     * Deletes the user.
+     * Deletes the location.
      *
-     * @param user the user to delete
+     * @param location the location to delete
      */
     public void deleteLocation(Location location) {
     	eventService.cleanUpForLocationDeletion(location);
         locationRepository.delete(location);
     }
 
-    public Location loadLocationByLocationId(Integer locationId) {
-        return locationRepository.findFirstByLocationId(locationId);
-    }
-    
+    /**
+     * Delete policy for the Location, where the given Tag is set.
+     * Removes the Tag from the List of Tags in the location.
+     *
+     * @param tag the tag to delete from locations
+     */
     public void cleanUpForTagDeletion(Tag tag) {
     	// Delete Policy for Tag in Locations
     	for(Location location : getAllLocations()) {

@@ -51,7 +51,7 @@ public class EventManagementController {
 	@GetMapping("/get")
 	@ResponseBody
 	public Event get(@RequestParam(name = "id") Integer id) {
-		return eventService.loadEvent(id);
+		return eventService.loadEventByEventId(id);
 	}
 
 	@PostMapping("/create")
@@ -160,13 +160,13 @@ public class EventManagementController {
 
 	@PostMapping("/delete")
 	public ResponseEntity<MessageResponse> delete(@RequestBody Integer id) {
-		eventService.deleteEvent(eventService.loadEvent(id));
+		eventService.deleteEvent(eventService.loadEventByEventId(id));
 		return ResponseEntity.ok(new MessageResponse("Event deleted successfully!"));
 	}
 
 	@PostMapping("/evaluatePolls")
 	public ResponseEntity<MessageResponse> evaluatePolls(@RequestBody Integer id) {
-		eventService.evaluatePolls(eventService.loadEvent(id));
+		eventService.evaluatePolls(eventService.loadEventByEventId(id));
 		return ResponseEntity.ok(new MessageResponse("Event evaluated successfully!"));
 	}
 }
