@@ -37,14 +37,13 @@ public class LocationServiceTest {
     TagService tagService;
 
     @Test
-    @WithMockUser(username = "user2", authorities = {"ROLE_LOCATION_MANAGER"})
     public void testInitLocationData() {
     	assertTrue(locationService.getAllLocations().size() >= 5, "Insufficient amount of locations initialized for test data source");
         for(Location location : locationService.getAllLocations()) {
-            assertNotNull(location.getName(), "Location \"" + location + "\" does not have name defined");
-            assertNotNull(location.getCreateDate(), "Location \"" + location + "\" does not have createDate defined");
-            assertNotNull(location.getGeolocation(), "Location \"" + location + "\" does not have geoLocation defined");
-            assertNotNull(location.getMenu(), "Location \"" + location + "\" does not have menu defined");
+            assertNotNull(location.getName(), "Location does not have name defined");
+            assertNotNull(location.getCreateDate(), "Location \"" + location.getName() + "\" does not have createDate defined");
+            assertNotNull(location.getGeolocation(), "Location \"" + location.getName() + "\" does not have geoLocation defined");
+            assertNotNull(location.getMenu(), "Location \"" + location.getName() + "\" does not have menu defined");
         }
     }
 

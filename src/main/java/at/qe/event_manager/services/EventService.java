@@ -2,7 +2,6 @@ package at.qe.event_manager.services;
 
 import java.io.Serializable;
 import java.util.*;
-
 import at.qe.event_manager.model.*;
 import at.qe.event_manager.repositories.EventRepository;
 import at.qe.event_manager.repositories.PollRepository;
