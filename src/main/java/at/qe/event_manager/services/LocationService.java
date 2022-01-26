@@ -9,6 +9,7 @@ import at.qe.event_manager.model.User;
 import at.qe.event_manager.repositories.LocationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 /**
@@ -47,6 +48,7 @@ public class LocationService implements Serializable {
      * @param user the user to save
      * @return the updated user
      */
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_LOCATION_MANAGER')")
     public Location saveLocation(Location location) {
         if (location.isNew()) {
             location.setCreateDate(new Date());
@@ -63,6 +65,7 @@ public class LocationService implements Serializable {
      * @param user the user to save
      * @return the updated user
      */
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_LOCATION_MANAGER')")
     public Location createLocation(Location location) {
         return saveLocation(location);
     }
@@ -72,6 +75,7 @@ public class LocationService implements Serializable {
      *
      * @param user the user to delete
      */
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_LOCATION_MANAGER')")
     public void deleteLocation(Location location) {
     	eventService.cleanUpForLocationDeletion(location);
         locationRepository.delete(location);
@@ -81,6 +85,7 @@ public class LocationService implements Serializable {
         return locationRepository.findFirstByLocationId(locationId);
     }
     
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_LOCATION_MANAGER')")
     public void cleanUpForTagDeletion(Tag tag) {
     	// Delete Policy for Tag in Locations
     	for(Location location : getAllLocations()) {
