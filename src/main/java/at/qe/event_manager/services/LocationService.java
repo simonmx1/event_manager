@@ -83,16 +83,6 @@ public class LocationService implements Serializable {
         locationRepository.delete(location);
     }
 
-    /**
-     * Delete policy for the Location, where the given Tag is set.
-     * Removes the Tag from the List of Tags in the location.
-     *
-     * @param tag the tag to delete from locations
-     */
-    public Location loadLocationByLocationId(Integer locationId) {
-        return locationRepository.findFirstByLocationId(locationId);
-    }
-
     @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_LOCATION_MANAGER')")
     public void cleanUpForTagDeletion(Tag tag) {
     	// Delete Policy for Tag in Locations

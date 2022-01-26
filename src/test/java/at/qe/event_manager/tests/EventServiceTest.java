@@ -94,14 +94,14 @@ public class EventServiceTest {
     @WithMockUser(username = "admin", authorities = {"ROLE_ADMIN"})
     public void testDeleteEvent() {
 		Integer eventId = 1;
-        Event event = eventService.loadEvent(eventId);
+        Event event = eventService.loadEventByEventId(eventId);
         assertNotNull(event, "Event could not be loaded from test data source");
         int eventSize = eventService.getAllEvents().size();
 
         eventService.deleteEvent(event);
 
         assertEquals(eventSize-1, eventService.getAllEvents().size(), "No event has been deleted after calling eventService.deleteEvent");
-        assertNull(eventService.loadEvent(eventId), "Deleted Event \"" + event + "\" could still be loaded from test data source via eventService.loadEvent");
+        assertNull(eventService.loadEventByEventId(eventId), "Deleted Event \"" + event + "\" could still be loaded from test data source via eventService.loadEvent");
 
         for (Event remainingEvent : eventService.getAllEvents()) {
             assertNotEquals(event.getId(), remainingEvent.getId(), "Deleted Event \"" + event + "\" could still be loaded from test data source via eventService.getAllEvents()");
@@ -187,7 +187,7 @@ public class EventServiceTest {
 		event.setPolls(polls);
 		event = eventService.saveEvent(event);
 		
-		Event freshlyCreatedEvent = eventService.loadEvent(event.getId());
+		Event freshlyCreatedEvent = eventService.loadEventByEventId(event.getId());
 		assertEquals(eventSize+1, eventService.getAllEvents().size(), "No event has been added after calling EventService.saveEvent");
 		assertNotNull(freshlyCreatedEvent, "New event could not be loaded from test data source after being saved");
         assertEquals(name, freshlyCreatedEvent.getName(), "New event could not be loaded from test data source after being saved");
@@ -202,7 +202,7 @@ public class EventServiceTest {
 	@Test
     @WithMockUser(username = "elvis", authorities = {"ROLE_USER"})
     public void testUnauthorizedDeleteLocation() {
-    	Event toNotBeSavedEvent = eventService.loadEvent(2);
+    	Event toNotBeSavedEvent = eventService.loadEventByEventId(2);
     	assertEquals("admin", toNotBeSavedEvent.getCreator().getUsername());
 		assertThrows(AccessDeniedException.class, () -> eventService.deleteEvent(toNotBeSavedEvent),
 				 "Call to LocationService.deleteLocation should not work without proper authorization");
