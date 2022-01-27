@@ -5,9 +5,7 @@ import at.qe.event_manager.repositories.TimeslotRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Date;
 
 /**
@@ -21,7 +19,17 @@ public class TimeslotService implements Serializable {
 
     @Autowired
     private TimeslotRepository timeslotRepository;
-
+    
+    /**
+     * Loads a single timeslot identified by its id.
+     *
+     * @param timeslotId the timeslotId to search for
+     * @return the timeslot with the given id
+     */
+    public Timeslot loadTimeslotByLocationId(Integer timeslotId) {
+        return timeslotRepository.findFirstById(timeslotId);
+    }
+    
     /**
      * Saves the given Timeslot. This method will also set the event createDate for new
      * entities.

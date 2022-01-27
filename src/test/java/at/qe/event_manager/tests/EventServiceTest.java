@@ -207,4 +207,14 @@ public class EventServiceTest {
 		assertThrows(AccessDeniedException.class, () -> eventService.deleteEvent(toNotBeSavedEvent),
 				 "Call to LocationService.deleteLocation should not work without proper authorization");
     }
+	
+	@DirtiesContext
+	@Test
+	public void testEvaluatePolls() {
+		Event toBeEvaluatedEvent = eventService.loadEventByEventId(1);
+		toBeEvaluatedEvent.setCreatorIsPreferred(true);
+		eventService.evaluatePolls(toBeEvaluatedEvent);
+		assertEquals(locationService.loadLocationByLocationId(2), toBeEvaluatedEvent.getLocation());
+		assertEquals(timeslotService.loadTimeslotByLocationId(1), toBeEvaluatedEvent.getTimeslot());
+	}
 }
