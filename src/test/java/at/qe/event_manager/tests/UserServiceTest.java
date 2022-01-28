@@ -166,7 +166,7 @@ public class UserServiceTest {
     }
 	
 	@Test
-	@WithMockUser(username = "user1", authorities = {"ROLE_LOCATION_MANAGER"})
+	@WithMockUser(username = "user2", authorities = {"ROLE_LOCATION_MANAGER"})
 	public void testUnauthorizedSaveUser() {
 		User toNotBeSavedUser = userService.loadUserByUsername("user1");
 		assertThrows(AccessDeniedException.class, () -> userService.saveUser(toNotBeSavedUser),
@@ -174,7 +174,7 @@ public class UserServiceTest {
 	}
 	
 	@Test
-    @WithMockUser(username = "user1", authorities = {"ROLE_LOCATION_MANAGER"})
+    @WithMockUser(username = "user2", authorities = {"ROLE_LOCATION_MANAGER"})
     public void testUnauthorizedDeleteUser() {
 		User toNotBeDeletedUser = userService.loadUserByUsername("admin");
 		assertThrows(AccessDeniedException.class, () -> userService.deleteUser(toNotBeDeletedUser),

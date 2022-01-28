@@ -55,7 +55,7 @@ public class UserService implements Serializable, UserDetailsService {
      * @param user the user to save
      * @return the saved user
      */
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or principal.username eq #user.getUsername")
     public User saveUser(User user) {
         if (user.isNew()) {
             user.setCreateDate(new Date());
