@@ -32,7 +32,8 @@ public class PollLocationsService implements Serializable {
     /**
      * Loads a single pollLocations identified by the pollId and the locationId.
      *
-     * @param pollId, locationId the pollId and locationId to search for
+     * @param pollId the pollId to search for
+     * @param locationId and locationId to search for
      * @return the PollLocations with the given pollId and locationId
      */
     public PollLocations loadPollLocation(Integer pollId, Integer locationId) {
@@ -42,7 +43,7 @@ public class PollLocationsService implements Serializable {
     /**
      * Saves the given pollLocation.
      *
-     * @param pollLocations the event to save
+     * @param pollLocations the pollLocation to save
      * @return the saved PollLocations
      */
     public PollLocations savePollLocations(PollLocations pollLocations) {

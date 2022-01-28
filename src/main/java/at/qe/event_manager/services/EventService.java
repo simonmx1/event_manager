@@ -82,7 +82,13 @@ public class EventService implements Serializable {
 	public void deleteEvent(Event event) {
 		deleteEventWrapper(event, true);
 	}
-	
+
+	/**
+	 * If the Event gets deleted, this method is there so you don't get more than one mail, if you are participant.
+	 *
+	 * @param event the event to delete
+	 * 		  sendEventDeletionMessage boolean
+	 */
 	private void deleteEventWrapper(Event event, boolean sendEventDeletionMessage) {
 		if (sendEventDeletionMessage && (!event.isEvaluated() || (event.getTimeslot() != null && event.getTimeslot().getStart().compareTo(new Date()) > 0))) {
 			// send Mail that event is being deleted
