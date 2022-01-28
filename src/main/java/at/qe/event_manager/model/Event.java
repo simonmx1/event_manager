@@ -62,7 +62,7 @@ public class Event implements Persistable<Integer>, Serializable, Comparable<Eve
      *  false -> random */
     boolean creatorIsPreferred = false;
 
-    /** Is the event enabled */
+    /** Have the polls been evaluated yet */
     boolean isEvaluated = false;
 
     public Location getLocation() {

@@ -4,8 +4,6 @@ import at.qe.event_manager.model.PollTimeslots;
 import at.qe.event_manager.payload.request.PollTimeslotsRequest;
 import at.qe.event_manager.payload.response.MessageResponse;
 import java.io.Serializable;
-import java.util.Collection;
-
 import at.qe.event_manager.services.PollTimeslotsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,11 +26,6 @@ public class PollTimeslotsController implements Serializable {
      *
      * @return
      */
-
-    @GetMapping("/getAll")
-    public Collection<PollTimeslots> getAll() {
-        return pollTimeslotsService.getAllPollTimeslots();
-    }
 
     @PostMapping("/edit")
     public ResponseEntity<MessageResponse> edit(@RequestBody PollTimeslotsRequest pt) {
