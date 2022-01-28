@@ -5,18 +5,14 @@ import java.util.Collection;
 import java.util.Date;
 import at.qe.event_manager.model.Location;
 import at.qe.event_manager.model.Tag;
-import at.qe.event_manager.model.User;
 import at.qe.event_manager.repositories.LocationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 /**
- * Service for accessing and manipulating user data.
- * <p>
- * This class is part of the skeleton project provided for students of the
- * courses "Software Architecture" and "Software Engineering" offered by the
- * University of Innsbruck.
+ * Service for accessing and manipulating location data.
  */
 @Component
 @Scope("application")
@@ -31,33 +27,32 @@ public class LocationService implements Serializable {
 	private EventService eventService;
 
     /**
-     * Returns a collection of all users.
+     * Loads all location from the database
      *
-     * @return
+     * @return Collection of all locations
      */
     public Collection<Location> getAllLocations() {
         return locationRepository.findAll();
     }
 
     /**
-     * Loads a single user identified by its username.
+     * Loads a single location identified by its id.
      *
-     * @param username the username to search for
-     * @return the user with the given username
+     * @param locationId the locationId to search for
+     * @return the location with the given id
      */
-    public Location loadLocation(Integer locationId) {
+    public Location loadLocationByLocationId(Integer locationId) {
         return locationRepository.findFirstByLocationId(locationId);
     }
 
     /**
-     * Saves the user. This method will also set {@link User#createDate} for new
-     * entities or {@link User#updateDate} for updated entities. The user
-     * requesting this operation will also be stored as {@link User#createDate}
-     * or {@link User#updateUser} respectively.
+     * Saves the given location. This method will also set the location createDate for new
+     * entities.
      *
-     * @param user the user to save
-     * @return the updated user
+     * @param location the location to save
+     * @return the saved location
      */
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_LOCATION_MANAGER')")
     public Location saveLocation(Location location) {
         if (location.isNew()) {
             location.setCreateDate(new Date());
@@ -66,32 +61,28 @@ public class LocationService implements Serializable {
     }
 
     /**
-     * Saves the user. This method will also set {@link User#createDate} for new
-     * entities or {@link User#updateDate} for updated entities. The user
-     * requesting this operation will also be stored as {@link User#createDate}
-     * or {@link User#updateUser} respectively.
+     * Creates the given location.
      *
-     * @param user the user to save
-     * @return the updated user
+     * @param location the location to create
+     * @return the created location
      */
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_LOCATION_MANAGER')")
     public Location createLocation(Location location) {
         return saveLocation(location);
     }
 
     /**
-     * Deletes the user.
+     * Deletes the location.
      *
-     * @param user the user to delete
+     * @param location the location to delete
      */
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_LOCATION_MANAGER')")
     public void deleteLocation(Location location) {
     	eventService.cleanUpForLocationDeletion(location);
         locationRepository.delete(location);
     }
 
-    public Location loadLocationByLocationId(Integer locationId) {
-        return locationRepository.findFirstByLocationId(locationId);
-    }
-    
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_LOCATION_MANAGER')")
     public void cleanUpForTagDeletion(Tag tag) {
     	// Delete Policy for Tag in Locations
     	for(Location location : getAllLocations()) {

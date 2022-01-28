@@ -9,10 +9,6 @@ import org.springframework.data.repository.Repository;
  * Common base repository for all other repositories. Provides basic methods for
  * loading, saving and removing entities.
  *
- * This class is part of the skeleton project provided for students of the
- * courses "Software Architecture" and "Software Engineering" offered by the
- * University of Innsbruck.
- *
  * @param <T> The domain type this repository manages.
  * @param <ID> The type of the id of the entity this repository manages.
  */

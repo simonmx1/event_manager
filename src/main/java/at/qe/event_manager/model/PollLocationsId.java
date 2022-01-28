@@ -2,11 +2,19 @@ package at.qe.event_manager.model;
 
 import java.io.Serializable;
 
+/**
+ * Entity representing pollLocationsId.
+ * <p>
+ * This class models connect the poll with the location
+ */
 public class PollLocationsId implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    /** The pollID */
     private Integer poll;
+
+    /** The locationID */
     private Integer location;
 
     public Integer getPoll() {

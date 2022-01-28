@@ -73,16 +73,16 @@
 <script>
 export default {
   name: "OpeningTimesSelector",
+  props: {
+    openingTimes: {type: Array, default: () => []}
+  },
   data: () => ({
     timepicker: [],
     weekdays: [],
     loadOpeningTimes: true
   }),
   mounted() {
-    this.$date.getWeek().forEach(day => {
-      this.weekdays.push({day: day, enabled: false, openingTimes: [{start: null, end: null, text: ''}]})
-      this.timepicker.push([false])
-    })
+    this.resetTimes()
   },
   methods: {
     addOpeningTimesInput(dayIndex) {
@@ -112,8 +112,38 @@ export default {
     },
     allowedStep: m => m % 30 === 0,
     sendData() {
-      this.$emit('confirm', JSON.parse(JSON.stringify(this.weekdays)))
+      let openingTimes = [];
+      this.weekdays.forEach(day => {if (day.enabled) openingTimes.push(day)})
+      this.$emit('confirm', JSON.parse(JSON.stringify(openingTimes)))
     },
-  },
+    resetTimes() {
+      this.weekdays = []
+      this.timepicker = []
+      this.$date.getWeek().forEach(day => {
+        this.weekdays.push({day: day, enabled: false, openingTimes: [{start: null, end: null, text: ''}]})
+        this.timepicker.push([false])
+      })
+      this.openingTimes.forEach(time => {
+        time.start = this.$date.formatTimeWithoutMillis(time.start)
+        time.end = this.$date.formatTimeWithoutMillis(time.end)
+        if (this.weekdays[time.weekday].enabled) {
+          this.weekdays[time.weekday].openingTimes.push({
+            start: time.start,
+            end: time.end,
+            text: time.start + ' - ' + time.end
+          })
+        } else {
+          this.weekdays[time.weekday].openingTimes[0].start = time.start
+          this.weekdays[time.weekday].openingTimes[0].end = time.end
+          this.weekdays[time.weekday].openingTimes[0].text = time.start + ' - ' + time.end
+
+          this.weekdays[time.weekday].enabled = true
+        }
+      })
+    },
+    clear() {
+      this.resetTimes()
+    },
+  }
 }
 </script>

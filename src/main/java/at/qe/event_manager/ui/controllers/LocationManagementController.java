@@ -1,10 +1,15 @@
 package at.qe.event_manager.ui.controllers;
 
 import at.qe.event_manager.model.Location;
+import at.qe.event_manager.model.OpeningTime;
+import at.qe.event_manager.payload.request.LocationCreationRequest;
 import at.qe.event_manager.payload.response.MessageResponse;
 import at.qe.event_manager.services.LocationService;
+import at.qe.event_manager.services.OpeningTimeService;
+
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.*;
+
 import org.primefaces.shaded.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +27,9 @@ public class LocationManagementController implements Serializable {
 
 	@Autowired
     private LocationService locationService;
+	
+	@Autowired
+	private OpeningTimeService openingTimeService;
 	
     /**
      * Returns a list of all users.
@@ -41,11 +49,32 @@ public class LocationManagementController implements Serializable {
     }
 
     @PostMapping("/edit")
-    public ResponseEntity<MessageResponse> edit(@RequestBody Location location) {
+    public ResponseEntity<String> edit(@RequestBody LocationCreationRequest locationRequest) {
+        Location location = locationService.loadLocationByLocationId(locationRequest.getLocationId());
+        Iterator<OpeningTime> iterator = location.getOpeningTimes().iterator();
+        Set<OpeningTime> openingTimes = new HashSet<>();
+        openingTimes.addAll(location.getOpeningTimes());
+        while(iterator.hasNext()) {
+            iterator.next();
+            iterator.remove();
+        }
+        for(OpeningTime openingTime : openingTimes) {
+        	openingTimeService.deleteOpeningTime(openingTime);
+        }
+        location.setOpeningTimes(locationRequest.getOpeningTimes());
+        for(OpeningTime op : location.getOpeningTimes()) {
+            op.setLocation(location);
+        }
+        location.setName(locationRequest.getName());
+        location.setMenu(locationRequest.getMenu());
+        location.setGeolocation(locationRequest.getGeolocation());
+        location.setDescription(locationRequest.getDescription());
+        location.setEnabled(locationRequest.isEnabled());
+        location.setTags(locationRequest.getTags());
         if(locationService.saveLocation(location) == null) {
-            return ResponseEntity.ok(new MessageResponse("Error: Location does not exist!"));
+            return new ResponseEntity<>("Error: Location does not exist!", HttpStatus.OK);
         } else {
-            return ResponseEntity.ok(new MessageResponse("Location edited successfully!"));
+            return new ResponseEntity<>("Location edited successfully!", HttpStatus.CREATED);
         }
     }
 
@@ -56,8 +85,11 @@ public class LocationManagementController implements Serializable {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<String> createLocation(@RequestBody Location location) {
-        System.out.println(location);
+    public ResponseEntity<String> createLocation(@RequestBody LocationCreationRequest locationRequest) {
+        Location location = new Location(locationRequest);
+        for(OpeningTime op : location.getOpeningTimes()) {
+            op.setLocation(location);
+        }
         if (locationService.createLocation(location) == null) {
             return new ResponseEntity<>("Error While creating the Location!", HttpStatus.OK);
         } else {

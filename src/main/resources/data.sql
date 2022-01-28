@@ -1,8 +1,18 @@
 /*Users*/
-INSERT INTO USER (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, EMAIL, ROLE, CREATE_DATE) VALUES('true', 'Admin', 'Istrator', '$2a$10$nU8E73kNkO28YwFyx2Xwee21e8KS9DhV7UCKArOa2TyLpocRho/KG', 'admin', 'admin@admin.com', 'ADMIN', '2016-01-01 00:00:00');
-INSERT INTO USER (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, EMAIL, ROLE, CREATE_DATE) VALUES('true', 'Matthias', 'Komar', '$2a$10$nU8E73kNkO28YwFyx2Xwee21e8KS9DhV7UCKArOa2TyLpocRho/KG', 'user1', 'admin2@admin.com', 'USER', '2016-01-01 00:00:00');
-INSERT INTO USER (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, EMAIL, ROLE, CREATE_DATE) VALUES('true', 'Max', 'Mustermann', '$2a$10$nU8E73kNkO28YwFyx2Xwee21e8KS9DhV7UCKArOa2TyLpocRho/KG', 'user2', 'user@nichtadmin.com', 'LOCATION_MANAGER', '2016-01-01 00:00:00');
-INSERT INTO USER (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, EMAIL, ROLE, CREATE_DATE) VALUES('true', 'Elvis', 'The King', '$2a$10$nU8E73kNkO28YwFyx2Xwee21e8KS9DhV7UCKArOa2TyLpocRho/KG', 'elvis', 'elvis@elvis.com', 'USER', '2016-01-01 00:00:00');
+INSERT INTO USER (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, EMAIL, ROLE, CREATE_DATE) VALUES('true', 'Admin', 'Istrator', '$2a$10$nU8E73kNkO28YwFyx2Xwee21e8KS9DhV7UCKArOa2TyLpocRho/KG', 'admin', 'event.manager.g7t0@gmail.com', 'ADMIN', '2016-01-01 00:00:00');
+INSERT INTO USER (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, EMAIL, ROLE, CREATE_DATE) VALUES('true', 'Maxi', 'Mustermanni', '$2a$10$nU8E73kNkO28YwFyx2Xwee21e8KS9DhV7UCKArOa2TyLpocRho/KG', 'user1', 'event.manager.g7t0@gmail.com', 'USER', '2016-01-01 00:00:00');
+INSERT INTO USER (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, EMAIL, ROLE, CREATE_DATE) VALUES('true', 'Max', 'Mustermann', '$2a$10$nU8E73kNkO28YwFyx2Xwee21e8KS9DhV7UCKArOa2TyLpocRho/KG', 'user2', 'event.manager.g7t0@gmail.com', 'LOCATION_MANAGER', '2016-01-01 00:00:00');
+INSERT INTO USER (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, EMAIL, ROLE, CREATE_DATE) VALUES('true', 'Donald', 'Dumbtrump', '$2a$10$nU8E73kNkO28YwFyx2Xwee21e8KS9DhV7UCKArOa2TyLpocRho/KG', 'donni', 'event.manager.g7t0@gmail.com', 'LOCATION_MANAGER', '2016-01-01 00:00:00');
+INSERT INTO USER (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, EMAIL, ROLE, CREATE_DATE) VALUES('true', 'John', 'Doe', '$2a$10$nU8E73kNkO28YwFyx2Xwee21e8KS9DhV7UCKArOa2TyLpocRho/KG', 'johnny', 'event.manager.g7t0@gmail.com', 'LOCATION_MANAGER', '2016-01-01 00:00:00');
+INSERT INTO USER (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, EMAIL, ROLE, CREATE_DATE) VALUES('true', 'Jane', 'Doe', '$2a$10$nU8E73kNkO28YwFyx2Xwee21e8KS9DhV7UCKArOa2TyLpocRho/KG', 'jenny', 'event.manager.g7t0@gmail.com', 'LOCATION_MANAGER', '2016-01-01 00:00:00');
+INSERT INTO USER (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, EMAIL, ROLE, CREATE_DATE) VALUES('true', 'Elvis', 'The King', '$2a$10$nU8E73kNkO28YwFyx2Xwee21e8KS9DhV7UCKArOa2TyLpocRho/KG', 'elvis', 'event.manager.g7t0@gmail.com', 'USER', '2016-01-01 00:00:00');
+INSERT INTO USER (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, EMAIL, ROLE, CREATE_DATE) VALUES('true', 'Stefan', 'Wagner', '$2a$10$nU8E73kNkO28YwFyx2Xwee21e8KS9DhV7UCKArOa2TyLpocRho/KG', 'steff', 'stefan.r.wagner@student.uibk.ac.at', 'ADMIN', '2016-01-01 00:00:00');
+INSERT INTO USER (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, EMAIL, ROLE, CREATE_DATE) VALUES('true', 'Matthias', 'Komar', '$2a$10$nU8E73kNkO28YwFyx2Xwee21e8KS9DhV7UCKArOa2TyLpocRho/KG', 'ini', 'matthias.komar@student.uibk.ac.at', 'ADMIN', '2016-01-01 00:00:00');
+INSERT INTO USER (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, EMAIL, ROLE, CREATE_DATE) VALUES('true', 'Manuel', 'Reichegger', '$2a$10$nU8E73kNkO28YwFyx2Xwee21e8KS9DhV7UCKArOa2TyLpocRho/KG', 'manu', 'manuel.reichegger@student.uibk.ac.at', 'ADMIN', '2016-01-01 00:00:00');
+INSERT INTO USER (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, EMAIL, ROLE, CREATE_DATE) VALUES('true', 'Simon', 'Muscatello', '$2a$10$nU8E73kNkO28YwFyx2Xwee21e8KS9DhV7UCKArOa2TyLpocRho/KG', 'simon', 'simon.muscatello@student.uibk.ac.at', 'ADMIN', '2016-01-01 00:00:00');
+INSERT INTO USER (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, EMAIL, ROLE, CREATE_DATE) VALUES('true', 'Dominik', 'Pahl', '$2a$10$nU8E73kNkO28YwFyx2Xwee21e8KS9DhV7UCKArOa2TyLpocRho/KG', 'domme', 'event.manager.g7t0@gmail.com', 'USER', '2016-01-01 00:00:00');
+INSERT INTO USER (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, EMAIL, ROLE, CREATE_DATE) VALUES('true', 'Michael', 'Michi', '$2a$10$nU8E73kNkO28YwFyx2Xwee21e8KS9DhV7UCKArOa2TyLpocRho/KG', 'michi', 'event.manager.g7t0@gmail.com', 'USER', '2016-01-01 00:00:00');
+INSERT INTO USER (ENABLED, FIRST_NAME, LAST_NAME, PASSWORD, USERNAME, EMAIL, ROLE, CREATE_DATE) VALUES('true', 'Max', 'Mustermann', '$2a$10$nU8E73kNkO28YwFyx2Xwee21e8KS9DhV7UCKArOa2TyLpocRho/KG', 'schuwiddoMax', 'event.manager.g7t0@gmail.com', 'USER', '2016-01-01 00:00:00');
 
 /*Tags*/
 INSERT INTO TAG (TEXT, CREATE_DATE) VALUES('Chinese', '2016-01-01 00:00:00');
@@ -15,7 +25,7 @@ INSERT INTO LOCATION (ENABLED, NAME, MENU, GEOLOCATION, DESCRIPTION, CREATE_DATE
 INSERT INTO LOCATION (ENABLED, NAME, MENU, GEOLOCATION, DESCRIPTION, CREATE_DATE) VALUES(TRUE, 'McDonalds', 'mcdonalds.at', 'goo.gl/maps/tJEtHefB6FYXJkAa9', 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea tak', '2016-01-01 00:00:00');
 INSERT INTO LOCATION (ENABLED, NAME, MENU, GEOLOCATION, DESCRIPTION, CREATE_DATE) VALUES(TRUE, 'Burger King', 'burgerking.de', 'goo.gl/maps/CPPrigxSo9Tg8hfF7', 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea tak', '2016-01-01 00:00:00');
 INSERT INTO LOCATION (ENABLED, NAME, MENU, GEOLOCATION, DESCRIPTION, CREATE_DATE) VALUES(TRUE, 'KFC', 'kfc.de', 'goo.gl/maps/fQkQcnWPH2s9MiLt7', 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea tak','2016-01-01 00:00:00');
-INSERT INTO LOCATION (ENABLED, NAME, MENU, GEOLOCATION, CREATE_DATE) VALUES(TRUE, 'Meggima', 'meggima.eu', 'goo.gl/maps/Fspndr3WTdEJJyMH6', '2016-01-01 00:00:00');
+INSERT INTO LOCATION (ENABLED, NAME, MENU, GEOLOCATION, DESCRIPTION, CREATE_DATE) VALUES(TRUE, 'Meggima', 'meggima.eu', 'goo.gl/maps/Fspndr3WTdEJJyMH6', '', '2016-01-01 00:00:00');
 
 /*Add Tags to Locations*/
 INSERT INTO LOCATION_TAGS(LOCATION_ID, TAGS_TEXT) VALUES(1, 'Chinese');
@@ -29,6 +39,7 @@ INSERT INTO LOCATION_TAGS(LOCATION_ID, TAGS_TEXT) VALUES(5, 'Pizza');
 
 /*Add OpeningTimes to Locations*/
 INSERT INTO OPENING_TIME(START, END, WEEKDAY, LOCATION_ID, CREATE_DATE) VALUES ( '13:00:00','19:00:00', 0,1,'2016-01-01 00:00:00');
+INSERT INTO OPENING_TIME(START, END, WEEKDAY, LOCATION_ID, CREATE_DATE) VALUES ( '20:00:00','23:00:00', 0,1,'2016-01-01 00:00:00');
 INSERT INTO OPENING_TIME(START, END, WEEKDAY, LOCATION_ID, CREATE_DATE) VALUES ( '13:00:00','19:00:00', 1,1,'2016-01-01 00:00:00');
 INSERT INTO OPENING_TIME(START, END, WEEKDAY, LOCATION_ID, CREATE_DATE) VALUES ( '10:00:00','13:00:00', 4,1,'2016-01-01 00:00:00');
 INSERT INTO OPENING_TIME(START, END, WEEKDAY, LOCATION_ID, CREATE_DATE) VALUES ( '17:00:00','23:00:00', 4,1,'2016-01-01 00:00:00');

@@ -100,7 +100,7 @@
                     <v-card-actions>
                       <v-spacer></v-spacer>
                       <v-btn @click="closePollDialog(index)" color="red">Cancel</v-btn>
-                      <v-btn @click="confirmPoll()" color="primary">Save</v-btn>
+                      <v-btn @click="confirmPoll(index)" color="primary">Save</v-btn>
                     </v-card-actions>
                   </v-card>
                 </v-dialog>
@@ -195,9 +195,6 @@
                 <v-card-actions class="ma-1">
                   <v-btn text color="orange" @click="evaluateEvent(item)" v-if="!item.evaluated">Evaluate Poll</v-btn>
                   <v-spacer/>
-                  <v-btn icon small v-if="!item.evaluated">
-                    <v-icon small>mdi-pencil</v-icon>
-                  </v-btn>
                   <v-btn icon small @click="deleteDialog = true, currentEvent = item">
                     <v-icon small>mdi-delete</v-icon>
                   </v-btn>
@@ -278,8 +275,9 @@ export default {
         this.$api.pollTimeslots.edit(disabled, event.poll)
       })
     },
-    confirmPoll() {
+    confirmPoll(index) {
       this.$refs.pollForm[0].sendData()
+      this.closePollDialog(index)
     },
     getPollswithPoints(array) {
       let len = array.length
@@ -312,6 +310,8 @@ export default {
         this.response = response.data
         if (this.success)
           this.$refs.eventForm.clear()
+        else
+          this.$refs.eventForm.resetConfirmedData()
       }))
     },
     deleteEventConfirm() {

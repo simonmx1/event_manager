@@ -2,7 +2,8 @@ package at.qe.event_manager.tests;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.Assertions;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.orm.jpa.JpaSystemException;
@@ -14,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import at.qe.event_manager.model.User;
 import at.qe.event_manager.model.UserRole;
+import at.qe.event_manager.services.MailService;
+import at.qe.event_manager.services.SchedulerEventService;
 import at.qe.event_manager.services.UserService;
 
 /**
@@ -28,13 +31,19 @@ public class UserServiceTest {
 	@Autowired
 	UserService userService;
 	
+	@BeforeEach
+	public void disableMailServiceAndSchedulerEventService() {
+		MailService.disable();
+		SchedulerEventService.disable();
+	}
+	
 	@Test
 	@WithMockUser(username = "admin", authorities = {"ROLE_ADMIN"})
     public void testInitUserData() {
-		assertEquals(4, userService.getAllUsers().size(), "Insufficient amount of users initialized for test data source");
+		assertTrue(userService.getAllUsers().size() >= 4, "Insufficient amount of users initialized for test data source");
 		for(User user : userService.getAllUsers()) {
 			if ("admin".equals(user.getUsername())) {
-				assertEquals(user.getRole(), UserRole.ADMIN, "User \"" + user + "\" does not have role ADMIN");
+				assertEquals(UserRole.ADMIN, user.getRole(), "User \"" + user + "\" does not have role ADMIN");
 				assertNotNull(user.getUsername(), "User \"" + user + "\" does not have a username defined");
 				assertNotNull(user.getPassword(), "User \"" + user + "\" does not have a password defined");
 				assertNotNull(user.getCreateDate(), "User \"" + user + "\" does not have a createDate defined");
@@ -42,7 +51,7 @@ public class UserServiceTest {
 				assertNotNull(user.getLastName(), "User \"" + user + "\" does not have a lastname defined");
 				assertNotNull(user.getEmail(), "User \"" + user + "\" does not have a email defined");
             } else if ("user1".equals(user.getUsername())) {
-            	assertEquals(user.getRole(), UserRole.USER, "User \"" + user + "\" does not have role USER");
+            	assertEquals( UserRole.USER, user.getRole(), "User \"" + user + "\" does not have role USER");
             	assertNotNull(user.getUsername(), "User \"" + user + "\" does not have a username defined");
 				assertNotNull(user.getPassword(), "User \"" + user + "\" does not have a password defined");
 				assertNotNull(user.getCreateDate(), "User \"" + user + "\" does not have a createDate defined");
@@ -50,7 +59,7 @@ public class UserServiceTest {
 				assertNotNull(user.getLastName(), "User \"" + user + "\" does not have a lastname defined");
 				assertNotNull(user.getEmail(), "User \"" + user + "\" does not have a email defined");
             } else if ("user2".equals(user.getUsername())) {
-            	assertEquals(user.getRole(), UserRole.LOCATION_MANAGER, "User \"" + user + "\" does not have role LOCATION_MANAGER");
+            	assertEquals(UserRole.LOCATION_MANAGER, user.getRole(), "User \"" + user + "\" does not have role LOCATION_MANAGER");
             	assertNotNull(user.getUsername(), "User \"" + user + "\" does not have a username defined");
 				assertNotNull(user.getPassword(), "User \"" + user + "\" does not have a password defined");
 				assertNotNull(user.getCreateDate(), "User \"" + user + "\" does not have a createDate defined");
@@ -58,15 +67,13 @@ public class UserServiceTest {
 				assertNotNull(user.getLastName(), "User \"" + user + "\" does not have a lastname defined");
 				assertNotNull(user.getEmail(), "User \"" + user + "\" does not have a email defined");
             } else  if ("elvis".equals(user.getUsername())) {
-            	assertEquals(user.getRole(), UserRole.USER, "User \"" + user + "\" does not have role USER");
+            	assertEquals(UserRole.USER, user.getRole(), "User \"" + user + "\" does not have role USER");
             	assertNotNull(user.getUsername(), "User \"" + user + "\" does not have a username defined");
 				assertNotNull(user.getPassword(), "User \"" + user + "\" does not have a password defined");
 				assertNotNull(user.getCreateDate(), "User \"" + user + "\" does not have a createDate defined");
 				assertNotNull(user.getFirstName(), "User \"" + user + "\" does not have a firstname defined");
 				assertNotNull(user.getLastName(), "User \"" + user + "\" does not have a lastname defined");
 				assertNotNull(user.getEmail(), "User \"" + user + "\" does not have a email defined");
-            } else {
-                Assertions.fail("Unknown user \"" + user.getUsername() + "\" loaded from test data source via UserService.getAllUsers");
             }
 		}
 	}
@@ -79,12 +86,13 @@ public class UserServiceTest {
 		String username = "user2";
         User adminUser = userService.loadUserByUsername("admin");
         assertNotNull(adminUser, "Admin user could not be loaded from test data source");
+        int userSize = userService.getAllUsers().size();
         User toBeDeletedUser = userService.loadUserByUsername(username);
         assertNotNull(toBeDeletedUser, "User \"" + username + "\" could not be loaded from test data source");
-
+        
         userService.deleteUser(toBeDeletedUser);
-
-        assertEquals(3, userService.getAllUsers().size(), "No user has been deleted after calling UserService.deleteUser");
+        
+        assertEquals(userSize-1, userService.getAllUsers().size(), "No user has been deleted after calling UserService.deleteUser");
         User deletedUser = userService.loadUserByUsername(username);
         assertNull(deletedUser, "Deleted User \"" + username + "\" could still be loaded from test data source via UserService.loadUserByUsername");
 
@@ -100,6 +108,7 @@ public class UserServiceTest {
         String username = "user1";
         User adminUser = userService.loadUserByUsername("admin");
         assertNotNull(adminUser, "Admin user could not be loaded from test data source");
+        int userSize = userService.getAllUsers().size();
         User toBeUpdatedUser = userService.loadUserByUsername(username);
         assertNotNull(toBeUpdatedUser, "User \"" + username + "\" could not be loaded from test data source");
 
@@ -107,7 +116,7 @@ public class UserServiceTest {
         userService.saveUser(toBeUpdatedUser);
 
         User freshlyLoadedUser = userService.loadUserByUsername("user1");
-        assertEquals(4, userService.getAllUsers().size(), "Size of users did change in database. User was inserted, not updated");
+        assertEquals(userSize, userService.getAllUsers().size(), "Size of users did change in database. User was inserted, not updated");
         assertNotNull(freshlyLoadedUser, "User \"" + username + "\" could not be loaded from test data source after being saved");
         assertEquals("changed-email@whatever.wherever", freshlyLoadedUser.getEmail(), "User \"" + username + "\" does not have a the correct email attribute stored being saved");
     }
@@ -118,6 +127,7 @@ public class UserServiceTest {
     public void testCreateUser() {
         User adminUser = userService.loadUserByUsername("admin");
         assertNotNull(adminUser, "Admin user could not be loaded from test data source");
+        int userSize = userService.getAllUsers().size();
 
         String username = "newuser";
         String password = "passwd";
@@ -135,14 +145,14 @@ public class UserServiceTest {
         userService.saveUser(toBeCreatedUser);
 
         User freshlyCreatedUser = userService.loadUserByUsername(username);
-        assertEquals(5, userService.getAllUsers().size(), "No user has been added after calling UserService.saveUser");
+        assertEquals(userSize+1, userService.getAllUsers().size(), "No user has been added after calling UserService.saveUser");
         assertNotNull(freshlyCreatedUser, "New user could not be loaded from test data source after being saved");
         assertEquals(username, freshlyCreatedUser.getUsername(), "New user could not be loaded from test data source after being saved");
         assertEquals(password, freshlyCreatedUser.getPassword(), "User \"" + username + "\" does not have a the correct password attribute stored being saved");
         assertEquals(fName, freshlyCreatedUser.getFirstName(), "User \"" + username + "\" does not have a the correct firstName attribute stored being saved");
         assertEquals(lName, freshlyCreatedUser.getLastName(), "User \"" + username + "\" does not have a the correct lastName attribute stored being saved");
         assertEquals(email, freshlyCreatedUser.getEmail(), "User \"" + username + "\" does not have a the correct email attribute stored being saved");
-        assertEquals(freshlyCreatedUser.getRole(), UserRole.USER, "User \"" + username + "\" does not have role USER");
+        assertEquals(UserRole.USER,freshlyCreatedUser.getRole(), "User \"" + username + "\" does not have role USER");
         assertNotNull(freshlyCreatedUser.getCreateDate(), "User \"" + username + "\" does not have a createDate defined after being saved");
     }
 	
@@ -156,7 +166,7 @@ public class UserServiceTest {
     }
 	
 	@Test
-	@WithMockUser(username = "user1", authorities = {"ROLE_LOCATION_MANAGER"})
+	@WithMockUser(username = "user2", authorities = {"ROLE_LOCATION_MANAGER"})
 	public void testUnauthorizedSaveUser() {
 		User toNotBeSavedUser = userService.loadUserByUsername("user1");
 		assertThrows(AccessDeniedException.class, () -> userService.saveUser(toNotBeSavedUser),
@@ -164,7 +174,7 @@ public class UserServiceTest {
 	}
 	
 	@Test
-    @WithMockUser(username = "user1", authorities = {"ROLE_LOCATION_MANAGER"})
+    @WithMockUser(username = "user2", authorities = {"ROLE_LOCATION_MANAGER"})
     public void testUnauthorizedDeleteUser() {
 		User toNotBeDeletedUser = userService.loadUserByUsername("admin");
 		assertThrows(AccessDeniedException.class, () -> userService.deleteUser(toNotBeDeletedUser),

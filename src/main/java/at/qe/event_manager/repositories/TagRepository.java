@@ -5,6 +5,10 @@ import java.io.Serializable;
 import at.qe.event_manager.model.Tag;
 import org.springframework.data.jpa.repository.Query;
 
+/**
+ * Repository for managing {@link Tag} entities.
+ */
+
 public interface TagRepository extends AbstractRepository<Tag, Integer>, Serializable {
 
     @Query("SELECT t FROM Tag t WHERE :text = t.text")

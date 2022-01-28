@@ -5,6 +5,11 @@ import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+/**
+ * Entity representing pollLocations.
+ * <p>
+ * This class models a part of the poll of a user with points of a location.
+ */
 @Entity
 @Table(name = "pollLocations")
 @IdClass(PollLocationsId.class)
@@ -12,15 +17,18 @@ public class PollLocations implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    /** The ID of the poll for which the ranking applies */
     @Id
     @ManyToOne
     @JsonIgnore
     private Poll poll;
 
+    /** The location to which the points apply */
     @Id
     @ManyToOne
     private Location location;
 
+    /** The points for the location */
     private Integer points;
 
     public PollLocations() {
@@ -67,6 +75,11 @@ public class PollLocations implements Serializable {
         }
         PollLocations pl = (PollLocations) o;
         return this.location.getId() == pl.getLocation().getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 }
 

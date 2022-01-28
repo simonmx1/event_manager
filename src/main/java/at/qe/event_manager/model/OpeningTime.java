@@ -10,31 +10,45 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.domain.Persistable;
 
-
+/**
+ * Entity representing openingTimes.
+ * <p>
+ * This class models a openingTime with the weekday, opening and closing.
+ */
 @Entity
 @OnDelete(action = OnDeleteAction.CASCADE)
 public class OpeningTime implements Persistable<Integer>, Serializable, Comparable<OpeningTime> {
 
     private static final long serialVersionUID = 1L;
 
+    /** The ID of the openingTime (primary-key)*/
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer openingTimeId;
 
+    /** The time it opens */
     private Time start;
+
+    /** The time it close */
     private Time end;
 
+    /** The location for which the openingTime applies*/
     @ManyToOne
     @JoinColumn(name = "locationId")
     @JsonIgnore
     private Location location;
 
-    private int weekday; //monday=0 to sunday=6
+    /** The weekday of the openingTime<br>
+     * monday - 0 ... sunday - 6
+     */
+    private int weekday;
 
+    /** The date on which the openingTime is created */
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createDate;
+
 
     public Location getLocation() {
         return location;
@@ -101,4 +115,8 @@ public class OpeningTime implements Persistable<Integer>, Serializable, Comparab
         return (null == createDate);
     }
 
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

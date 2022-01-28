@@ -1,25 +1,34 @@
 package at.qe.event_manager.model;
 
 import org.springframework.data.domain.Persistable;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
 
+/**
+ * Entity representing timeslot.
+ * <p>
+ * This class models a timeslot with the date and time of the beginning and ending.
+ */
 @Entity
 public class Timeslot implements Persistable<Integer>, Serializable, Comparable<Timeslot> {
 
     private static final long serialVersionUID = 1L;
 
+    /** The ID of the timeslot (primary-key) */
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer timeslotId;
 
+    /** The date and time  of the beginning */
     private Timestamp start;
+
+    /** The date and time of the ending */
     private Timestamp end;
 
+    /** The date on which the timeslot is created */
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createDate;
@@ -67,5 +76,10 @@ public class Timeslot implements Persistable<Integer>, Serializable, Comparable<
     @Override
     public boolean isNew() {
         return createDate == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 }

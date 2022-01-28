@@ -1,12 +1,15 @@
 package at.qe.event_manager.services;
 
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.mail.Authenticator;
 import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.PasswordAuthentication;
+import javax.mail.SendFailedException;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
@@ -15,16 +18,18 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import org.springframework.stereotype.Service;
 import at.qe.event_manager.model.Event;
+import at.qe.event_manager.model.Location;
 import at.qe.event_manager.model.User;
 
 @Service
 public class MailService {
-	
+
+	private static final Logger LOGGER = Logger.getLogger(MailService.class.getName());
 	private static final String SRC_MAIL_ADDR = "event.manager.g7t0@gmail.com";
 	private static final String PASSWORD = "g7t0passwd";
 	private static final Properties PROPERTIES = new Properties();
 	private static final Session SESSION;
-	private static final boolean ENABLED = false;
+	private static boolean enabled = true;
 	
 	private MailService() {}
 	
@@ -40,6 +45,10 @@ public class MailService {
 				return new PasswordAuthentication(SRC_MAIL_ADDR, PASSWORD);
 			}
 		});
+	}
+	
+	public static void disable() {
+		enabled = false;
 	}
 	
 	private static Message prepareMessage(final String DST_MAIL_ADDR) throws MessagingException {
@@ -60,7 +69,7 @@ public class MailService {
 			multipart.addBodyPart(msgBodyPart);
 			msg.setContent(multipart);
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.SEVERE, e.getMessage());
 		}
 		return msg;
 	}
@@ -70,7 +79,9 @@ public class MailService {
 	}
 	
 	private static class ThreadMailService extends Thread{
-		Message msg;
+		private Message msg;
+		
+		private Integer numberOfTries = 0;
 		
 		public ThreadMailService(Message msg) {
 			this.msg = msg;
@@ -79,12 +90,28 @@ public class MailService {
 		@Override
 		public void run() {
 			try {
-				// We set our own email address here, so that we don't
-				// send any emails to third-party mail addresses.
-				msg.setRecipient(Message.RecipientType.TO, new InternetAddress(SRC_MAIL_ADDR));
-				if(ENABLED) Transport.send(msg);
-			} catch (MessagingException e) {
-				e.printStackTrace();
+				if(enabled) {
+					numberOfTries++;
+					Transport.send(msg);
+				}
+			} catch (SendFailedException e) {
+				catchSendErrorAndPotentiallyTryAgain(e);
+			} catch (Exception e) {
+				LOGGER.log(Level.SEVERE, e.getMessage());
+			}
+		}
+		
+		private void catchSendErrorAndPotentiallyTryAgain(SendFailedException e) {
+			try {
+				if(numberOfTries < 5) {
+					Thread.sleep(4000);
+					run();
+				}
+				else {
+					LOGGER.log(Level.WARNING, e.getMessage());
+				}
+			} catch (InterruptedException e1) {
+				LOGGER.log(Level.SEVERE, e1.getMessage());
 			}
 		}
 	}
@@ -120,12 +147,58 @@ public class MailService {
 		sendMessage(buildMessage(user, subject, generateContentString(user, content)));
 	}
 	
+	public static void sendEventDeletionMessage(User user, Event event) {
+		String subject = String.format("Event Manager: Event: \"%s\" has been cancelled", event.getName());
+		String content = String.format("The event \"%s\" has just been deleted on \"Event Manager\" and will therefore not take place.\n"
+				+ "If this was a mistake, please contact us!", event.getName());
+		sendMessage(buildMessage(user, subject, generateContentString(user, content)));
+	}
+	
 	public static void sendEventEvaluationMessage(User user, Event event) {
 		String subject = String.format("Event Manager: Event: \"%s\", WHEN: \"%s\" - \"%s\", WHERE: \"%s\"",
 				event.getName(), event.getTimeslot().getStart(), event.getTimeslot().getEnd(), event.getLocation().getName());
 		String content = String.format("The voting time for the event \"%s\" on \"Event Manager\" has expired "
 				+ "and the polls of all participants have been evaluated.\nThe event will take place from \"%s\" until \"%s\" at \"%s\"."
 				, event.getName(), event.getTimeslot().getStart(), event.getTimeslot().getEnd(), event.getLocation().getName());
+		sendMessage(buildMessage(user, subject, generateContentString(user, content)));
+	}
+	
+	public static void sendEventCreatorDeletionMessage(User user, Event event) {
+		String subject = String.format("Event Manager: Event: \"%s\" has been cancelled", event.getName());
+		String content = String.format("The creator \"%s %s\" with the username \"%s\" of the event \"%s\" has been deleted on \"Event Manager\".\n"
+				+ "Therefore the event \"%s\" has also been deleted.", event.getCreator().getFirstName(), event.getCreator().getLastName(),
+				event.getCreator().getUsername(), event.getName(), event.getName());
+		sendMessage(buildMessage(user, subject, generateContentString(user, content)));
+	}
+	
+	public static void sendEventNotEnoughParticipantsMessage(User user, Event event, User deletedUser) {
+		String subject = String.format("Event Manager: Event: \"%s\" has been cancelled", event.getName());
+		String content = String.format("The participant \"%s %s\" with the username \"%s\" of the event \"%s\" has been deleted on \"Event Manager\".\n"
+				+ "You are now the only participant in this event. For this reason it will be deleted.", deletedUser.getFirstName(), deletedUser.getLastName(),
+				deletedUser.getUsername(), event.getName());
+		sendMessage(buildMessage(user, subject, generateContentString(user, content)));
+	}
+	
+	public static void sendEventNotEnoughLocationsMessage(User user, Event event) {
+		String subject = String.format("Event Manager: Event: \"%s\" has been cancelled", event.getName());
+		String content = String.format("All locations that were available for selection in the voting of the event \"%s\" on \"Event Manager\" "
+				+ "have been deleted. For this reason, this event cannot take place and therefore it will be deleted.", event.getName());
+		sendMessage(buildMessage(user, subject, generateContentString(user, content)));
+	}
+	
+	public static void sendEventLocationDeletionMessage(User user, Event event, Location location) {
+		String subject = String.format("Event Manager: Event: \"%s\" has been cancelled", event.getName());
+		String content = String.format("Unfortunately, the location with the name \"%s\" selected in the voting of the event \"name\" "
+				+ "has been deleted on \"Event Manager\". For this reason, this event cannot take place and therefore it will be deleted.",
+				location.getName(), event.getName());
+		sendMessage(buildMessage(user, subject, generateContentString(user, content)));
+	}
+	
+	public static void sendEventNoCompatibleTimeslotAvailableMessage(User user, Event event) {
+		String subject = String.format("Event Manager: Event: \"%s\" has been cancelled", event.getName());
+		String content = String.format("Unfortunately, no timeslots were found in the voting of the event \"%s\" on \"Event Manager\", in which all "
+				+ "participants of the event can also participate. For this reason, this event cannot take place and therefore it will be deleted.",
+				event.getName());
 		sendMessage(buildMessage(user, subject, generateContentString(user, content)));
 	}
 }

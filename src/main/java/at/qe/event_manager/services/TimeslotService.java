@@ -5,11 +5,12 @@ import at.qe.event_manager.repositories.TimeslotRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Date;
 
+/**
+ * Service for accessing and manipulating timeslot data.
+ */
 @Component
 @Scope("application")
 public class TimeslotService implements Serializable {
@@ -18,28 +19,28 @@ public class TimeslotService implements Serializable {
 
     @Autowired
     private TimeslotRepository timeslotRepository;
-
-    public Collection<Timeslot> getAllTimeslots() {
-        return timeslotRepository.findAll();
+    
+    /**
+     * Loads a single timeslot identified by its id.
+     *
+     * @param timeslotId the timeslotId to search for
+     * @return the timeslot with the given id
+     */
+    public Timeslot loadTimeslotByLocationId(Integer timeslotId) {
+        return timeslotRepository.findFirstById(timeslotId);
     }
-
-    public Timeslot loadTimeslotById(Integer id) {
-        return timeslotRepository.findFirstById(id);
-    }
-
+    
+    /**
+     * Saves the given Timeslot. This method will also set the event createDate for new
+     * entities.
+     *
+     * @param timeslot the timeslot to save
+     * @return the saved timeslot
+     */
     public Timeslot saveTimeslot(Timeslot timeslot) {
         if (timeslot.isNew()) {
             timeslot.setCreateDate(new Date());
         }
         return timeslotRepository.save(timeslot);
     }
-
-    public Timeslot createTimeslot(Timeslot timeslot) {
-        return saveTimeslot(timeslot);
-    }
-
-    public void deleteTimeslot(Timeslot timeslot) {
-        timeslotRepository.delete(timeslot);
-    }
-
 }

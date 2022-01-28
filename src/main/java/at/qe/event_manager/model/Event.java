@@ -8,40 +8,61 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
+/**
+ * Entity representing events.
+ * <p>
+ * This class models an event with participants and polls
+ */
 @Entity
 public class Event implements Persistable<Integer>, Serializable, Comparable<Event> {
 
     private static final long serialVersionUID = 1L;
 
+    /** ID of the Event (primary-key)*/
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer eventId;
 
+    /** Name of the Event */
     private String name;
+
+    /** The final voted timeslot */
     @ManyToOne
     private Timeslot timeslot;
+
+    /** The final voted location */
     @ManyToOne
     private Location location;
 
+    /** The user who creates the event */
     @ManyToOne
     @JoinColumn(name = "creatorUsername")
     private User creator;
 
+    /** The participants of the event witch can poll*/
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<User> participants;
 
+    /** The polls of every participant */
     @OneToMany(mappedBy = "event", fetch = FetchType.EAGER)
     @JsonIgnore
     private Set<Poll> polls;
 
+    /** The date from which voting will no longer take place and the result will be evaluated */
     private Date pollEndDate;
 
+    /** The date on which the event is created */
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createDate;
 
+    /** Decides in case of a tie <br>
+     *  true  -> creator <br>
+     *  false -> random */
     boolean creatorIsPreferred = false;
+
+    /** Is the event enabled */
     boolean isEvaluated = false;
 
     public Location getLocation() {
@@ -148,4 +169,8 @@ public class Event implements Persistable<Integer>, Serializable, Comparable<Eve
         return (createDate == null);
     }
 
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

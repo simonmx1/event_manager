@@ -6,6 +6,11 @@ import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+/**
+ * Entity representing pollTimeslots.
+ * <p>
+ * This class models a part of the poll of a user with points of a timeslot.
+ */
 @Entity
 @Table(name = "pollTimeslots")
 @IdClass(PollTimeslotsId.class)
@@ -13,15 +18,18 @@ public class PollTimeslots implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    /** The ID of the poll for which the ranking applies */
     @Id
     @ManyToOne
     @JsonIgnore
     private Poll poll;
 
+    /** The timeslot to which the points apply */
     @Id
     @ManyToOne
     private Timeslot timeslot;
 
+    /** The points for the location */
     private Integer points;
 
     public PollTimeslots() {
@@ -68,5 +76,10 @@ public class PollTimeslots implements Serializable {
         }
         PollTimeslots pl = (PollTimeslots) o;
         return this.timeslot.getId() == pl.getTimeslot().getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 }

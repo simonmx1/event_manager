@@ -9,6 +9,9 @@ import org.springframework.stereotype.Component;
 import java.util.Collection;
 import java.util.Date;
 
+/**
+ * Service for accessing and manipulating tag data.
+ */
 @Component
 @Scope("application")
 public class TagService {
@@ -20,17 +23,30 @@ public class TagService {
     private LocationService locationService;
 
     /**
-     * Returns a collection of all users.
+     * Loads all Tags from the database
      *
-     * @return Collection of tags
+     * @return a Collection of all tags
      */
     public Collection<Tag> getAllTags() {
         return tagRepository.findAll();
     }
 
     /**
-     * @param tag
-     * @return
+     * Loads a single tag identified by its text.
+     *
+     * @param text the tag text to search for
+     * @return the tag with the given text
+     */
+    public Tag loadTag(String text) {
+        return tagRepository.findFirstTagByText(text);
+    }
+
+    /**
+     * Saves the given tag. This method will also set the tag createDate for new
+     * entities.
+     *
+     * @param tag the tag to save
+     * @return the saved tag
      */
     public Tag saveTag(Tag tag) {
         if (tag.isNew()) {
@@ -40,26 +56,22 @@ public class TagService {
     }
 
     /**
-     * @param tag
-     * @return
+     * Creates the given tag.
+     *
+     * @param tag the tag to create
+     * @return the created tag
      */
     public Tag createTag(Tag tag) {
         return saveTag(tag);
     }
 
     /**
-     * @param tag
+     * Deletes the tag.
+     *
+     * @param tag the tag to delete
      */
     public void deleteTag(Tag tag) {
     	locationService.cleanUpForTagDeletion(tag);
         tagRepository.delete(tag);
-    }
-
-    /**
-     * @param tag
-     * @return
-     */
-    public Tag loadTag(String text) {
-        return tagRepository.findFirstTagByText(text);
     }
 }

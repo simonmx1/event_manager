@@ -5,6 +5,10 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.io.Serializable;
 
+/**
+ * Repository for managing {@link PollTimeslots} entities.
+ */
+
 public interface PollTimeslotsRepository extends AbstractRepository<PollTimeslots, Integer>, Serializable {
 
     @Query("SELECT pt FROM PollTimeslots pt WHERE :tid = pt.timeslot.timeslotId AND :pid = pt.poll.pollId")

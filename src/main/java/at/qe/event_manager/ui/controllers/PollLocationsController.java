@@ -36,12 +36,12 @@ public class PollLocationsController implements Serializable {
 
     @GetMapping("/getAll")
     public Collection<PollLocations> getAll(Poll poll) {
-        return pollService.loadPoll(poll.getId()).getPollLocations();
+        return pollService.loadPollByPollId(poll.getId()).getPollLocations();
     }
 
     @PostMapping("/edit")
     public ResponseEntity<MessageResponse> edit(@RequestBody PollLocationsRequest pl) {
-        PollLocations pollLocations = pollLocationsService.get(pl.getPollId(), pl.getLocationId());
+        PollLocations pollLocations = pollLocationsService.loadPollLocation(pl.getPollId(), pl.getLocationId());
         pollLocations.setPoints(pl.getPoints());
         if(pollLocationsService.savePollLocations(pollLocations) == null) {
             return ResponseEntity.ok(new MessageResponse("Error: Poll does not exist!"));

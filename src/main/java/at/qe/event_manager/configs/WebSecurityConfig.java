@@ -23,10 +23,6 @@ import at.qe.event_manager.services.UserService;
 
 /**
  * Spring configuration for web security.
- * <p>
- * This class is part of the skeleton project provided for students of the
- * courses "Software Architecture" and "Software Engineering" offered by the
- * University of Innsbruck.
  */
 @Configuration
 @EnableWebSecurity
@@ -53,12 +49,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.headers().frameOptions().disable(); // needed for H2 console
 
-        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class); // check for jwt on requests
-        //http.addFilterAfter(new HistoryModeFilter(), FilterSecurityInterceptor.class);
-
-        //http.exceptionHandling().accessDeniedPage("/error").and().;
-//        http.sessionManagement().invalidSessionUrl("/error/invalid_session.xhtml");
-
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class); // check for jwt on request
     }
 
     @Override
@@ -83,5 +74,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
         return source;
     }
-
 }

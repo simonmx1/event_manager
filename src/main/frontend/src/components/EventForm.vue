@@ -432,8 +432,9 @@ export default {
           this.currentEvent.timeslots.push(this.timeslotConvert(timeslot))
         }
       })
-      if (valid)
+      if (valid) {
         this.$emit('confirm', this.currentEvent)
+      }
     },
     timeslotConvert(timeslot) {
       return {
@@ -449,9 +450,14 @@ export default {
       this.eventNameError = null
       this.$refs.form.reset()
       this.currentEvent = JSON.parse(JSON.stringify(this.event))
-      this.timeslots = {date: null, start: null, end: null}
-      this.pollEndDate = this.event.pollEndDate
+      this.timeslots = [{date: null, start: null, end: null}]
+      this.pollEndDate = {date: null, time: null}
+      this.$refs.participantsSelector.clear()
+      this.$refs.locationSelector.clear()
       this.$forceUpdate()
+    },
+    resetConfirmedData() {
+      this.currentEvent.timeslots = []
     }
   },
   mounted() {

@@ -8,11 +8,7 @@ import at.qe.event_manager.model.User;
 import org.springframework.data.jpa.repository.Query;
 
 /**
- * Repository for managing {@link User} entities.
- * <p>
- * This class is part of the skeleton project provided for students of the
- * courses "Software Architecture" and "Software Engineering" offered by the
- * University of Innsbruck.
+ * Repository for managing {@link Event} entities.
  */
 
 public interface EventRepository extends AbstractRepository<Event, Integer>, Serializable {
