@@ -8,7 +8,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -210,11 +212,90 @@ public class EventServiceTest {
 	
 	@DirtiesContext
 	@Test
-	public void testEvaluatePolls() {
+	public void testEvaluatePollsWithCreatorPreferred() {
 		Event toBeEvaluatedEvent = eventService.loadEventByEventId(1);
+		assertEquals(userService.loadUserByUsername("admin"), toBeEvaluatedEvent.getCreator());
 		toBeEvaluatedEvent.setCreatorIsPreferred(true);
+		
+		Poll user2_poll = pollService.loadPollByEventAndUser(toBeEvaluatedEvent, userService.loadUserByUsername("user2"));
+		List<PollLocations> user2_pollLocations = new ArrayList<>(user2_poll.getPollLocations());
+		for(PollLocations user2_pollLocation : user2_pollLocations) {
+			if(user2_pollLocation.getLocation().compareTo(locationService.loadLocationByLocationId(1)) == 0) {
+				assertEquals(3, user2_pollLocation.getPoints(), "Location \"" + user2_pollLocation.getLocation().getName() + "\" is not correctly initialised with the right points.");
+			}
+			if(user2_pollLocation.getLocation().compareTo(locationService.loadLocationByLocationId(2)) == 0) {
+				assertEquals(2, user2_pollLocation.getPoints(), "Location \"" + user2_pollLocation.getLocation().getName() + "\" is not correctly initialised with the right points.");
+			}
+			if(user2_pollLocation.getLocation().compareTo(locationService.loadLocationByLocationId(3)) == 0) {
+				assertEquals(1, user2_pollLocation.getPoints(), "Location \"" + user2_pollLocation.getLocation().getName() + "\" is not correctly initialised with the right points.");
+			}
+		}
+		List<PollTimeslots> user2_pollTimeslots = new ArrayList<>(user2_poll.getPollTimeslots());
+		for(PollTimeslots user2_pollTimeslot : user2_pollTimeslots) {
+			if(user2_pollTimeslot.getTimeslot().compareTo(timeslotService.loadTimeslotByLocationId(1)) == 0) {
+				assertEquals(1, user2_pollTimeslot.getPoints(), "Timeslot \"" + user2_pollTimeslot.getTimeslot().getId() + "\" is not correctly initialised with the right points.");
+			}
+			if(user2_pollTimeslot.getTimeslot().compareTo(timeslotService.loadTimeslotByLocationId(2)) == 0) {
+				assertEquals(2, user2_pollTimeslot.getPoints(), "Timeslot \"" + user2_pollTimeslot.getTimeslot().getId() + "\" is not correctly initialised with the right points.");
+			}
+			if(user2_pollTimeslot.getTimeslot().compareTo(timeslotService.loadTimeslotByLocationId(3)) == 0) {
+				assertEquals(0, user2_pollTimeslot.getPoints(), "Timeslot \"" + user2_pollTimeslot.getTimeslot().getId() + "\" is not correctly initialised with the right points.");
+			}
+		}
+		
+		Poll admin_poll = pollService.loadPollByEventAndUser(toBeEvaluatedEvent, userService.loadUserByUsername("admin"));
+		List<PollLocations> admin_pollLocations = new ArrayList<>(admin_poll.getPollLocations());
+		for(PollLocations admin_pollLocation : admin_pollLocations) {
+			if(admin_pollLocation.getLocation().compareTo(locationService.loadLocationByLocationId(1)) == 0) {
+				assertEquals(1, admin_pollLocation.getPoints(), "Location \"" + admin_pollLocation.getLocation().getName() + "\" is not correctly initialised with the right points.");
+			}
+			if(admin_pollLocation.getLocation().compareTo(locationService.loadLocationByLocationId(2)) == 0) {
+				assertEquals(3, admin_pollLocation.getPoints(), "Location \"" + admin_pollLocation.getLocation().getName() + "\" is not correctly initialised with the right points.");
+			}
+			if(admin_pollLocation.getLocation().compareTo(locationService.loadLocationByLocationId(3)) == 0) {
+				assertEquals(2, admin_pollLocation.getPoints(), "Location \"" + admin_pollLocation.getLocation().getName() + "\" is not correctly initialised with the right points.");
+			}
+		}
+		List<PollTimeslots> admin_pollTimeslots = new ArrayList<>(admin_poll.getPollTimeslots());
+		for(PollTimeslots admin_pollTimeslot : admin_pollTimeslots) {
+			if(admin_pollTimeslot.getTimeslot().compareTo(timeslotService.loadTimeslotByLocationId(1)) == 0) {
+				assertEquals(2, admin_pollTimeslot.getPoints(), "Timeslot \"" + admin_pollTimeslot.getTimeslot().getId() + "\" is not correctly initialised with the right points.");
+			}
+			if(admin_pollTimeslot.getTimeslot().compareTo(timeslotService.loadTimeslotByLocationId(2)) == 0) {
+				assertEquals(1, admin_pollTimeslot.getPoints(), "Timeslot \"" + admin_pollTimeslot.getTimeslot().getId() + "\" is not correctly initialised with the right points.");
+			}
+			if(admin_pollTimeslot.getTimeslot().compareTo(timeslotService.loadTimeslotByLocationId(3)) == 0) {
+				assertEquals(3, admin_pollTimeslot.getPoints(), "Timeslot \"" + admin_pollTimeslot.getTimeslot().getId() + "\" is not correctly initialised with the right points.");
+			}
+		}
+		
+		/*
+		 * Location Winner should be McDonalds (Id = 2) with 5 points
+		 * Timeslot Winner should be Id = 1 => there's a conflict
+		 * Id: 1 -> points: 3;
+		 * Id: 2 -> points: 3;
+		 * Creator preferred Id 1
+		 */
 		eventService.evaluatePolls(toBeEvaluatedEvent);
-		assertEquals(locationService.loadLocationByLocationId(2), toBeEvaluatedEvent.getLocation());
-		assertEquals(timeslotService.loadTimeslotByLocationId(1), toBeEvaluatedEvent.getTimeslot());
+		assertEquals(locationService.loadLocationByLocationId(2), toBeEvaluatedEvent.getLocation(), "Location Winner is wrong");
+		assertEquals(timeslotService.loadTimeslotByLocationId(1), toBeEvaluatedEvent.getTimeslot(), "Timeslot Winner is wrong");
+	}
+	
+	@DirtiesContext
+	@Transactional
+	@Test
+	public void testEvaluatePollsWithNoAvailableTimeslot() {
+		int eventSize = eventService.getAllEvents().size();
+		Event toBeEvaluatedEvent = eventService.loadEventByEventId(1);
+		assertNotNull(toBeEvaluatedEvent, "event loaded from database should not be null");
+		
+		Poll user2_poll = pollService.loadPollByEventAndUser(toBeEvaluatedEvent, userService.loadUserByUsername("user2"));
+		for(PollTimeslots user2_pollTimeslot : user2_poll.getPollTimeslots()) {
+			user2_pollTimeslot.setPoints(0);
+		}
+		
+		//No available timeslot means -> the event cannot be held and therefore will be deleted
+		eventService.evaluatePolls(toBeEvaluatedEvent);
+		assertEquals(eventSize-1, eventService.getAllEvents().size(), "eventSize should have decreased by one because of event deletion");
 	}
 }
