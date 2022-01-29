@@ -72,7 +72,6 @@ public class UserService implements Serializable, UserDetailsService {
      * @param user the user to create
      * @return the updated create
      */
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') or principal.username eq #user.getUsername")
     public User createUser(User user) {
         if (!this.getAllUsers().contains(user)) {
             return saveUser(user);

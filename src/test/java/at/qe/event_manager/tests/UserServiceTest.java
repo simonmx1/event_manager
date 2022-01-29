@@ -169,7 +169,7 @@ public class UserServiceTest {
 	@WithMockUser(username = "user2", authorities = {"ROLE_LOCATION_MANAGER"})
 	public void testUnauthorizedSaveUser() {
 		User toNotBeSavedUser = userService.loadUserByUsername("user1");
-		assertThrows(AccessDeniedException.class, () -> userService.createUser(toNotBeSavedUser),
+		assertThrows(AccessDeniedException.class, () -> userService.saveUser(toNotBeSavedUser),
 			 "Call to userService.saveUser should not work without proper authorization");
 	}
 	
