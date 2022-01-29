@@ -1,9 +1,6 @@
 package at.qe.event_manager.tests;
 
-import at.qe.event_manager.model.Event;
-import at.qe.event_manager.model.Poll;
-import at.qe.event_manager.model.PollLocations;
-import at.qe.event_manager.model.PollTimeslots;
+import at.qe.event_manager.model.*;
 import at.qe.event_manager.services.*;
 import at.qe.event_manager.ui.controllers.EventManagementController;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +15,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -170,6 +168,44 @@ public class EventManagementControllerTest {
         eventManagementController.evaluatePolls(toBeEvaluatedEvent.getId());
         assertEquals(locationService.loadLocationByLocationId(2), toBeEvaluatedEvent.getLocation(), "Location Winner is wrong");
         assertEquals(timeslotService.loadTimeslotByLocationId(1), toBeEvaluatedEvent.getTimeslot(), "Timeslot Winner is wrong");
+    }
+
+    @DirtiesContext
+    @Transactional
+    @Test
+    @WithMockUser(username = "admin", authorities = {"ROLE_ADMIN"})
+    public void testEvaluatePollsWithNoAvailableTimeslot() {
+        int eventSize = eventManagementController.getEvents().size();
+        Event toBeEvaluatedEvent = eventManagementController.get(1);
+        assertNotNull(toBeEvaluatedEvent, "event loaded from database should not be null");
+
+        Poll user2_poll = pollService.loadPollByEventAndUser(toBeEvaluatedEvent, userService.loadUserByUsername("user2"));
+        for (PollTimeslots user2_pollTimeslot : user2_poll.getPollTimeslots()) {
+            user2_pollTimeslot.setPoints(0);
+        }
+
+        //No available timeslot means -> the event cannot be held and therefore will be deleted
+        eventManagementController.evaluatePolls(toBeEvaluatedEvent.getId());
+        assertEquals(eventSize - 1, eventManagementController.getEvents().size(), "eventSize should have decreased by one because of event deletion");
+    }
+
+    @DirtiesContext
+    @Transactional
+    @Test
+    public void testGetAllEventFromUser() {
+        String username = "admin";
+        User admin = userService.loadUserByUsername(username);
+        assertNotNull(admin, "Admin user could not be loaded from test data source");
+        Collection<Event> events = eventManagementController.getEventsFromUser(admin.getUsername());
+        assertEquals(4, events.size(), "eventService.getAllEventsFromUser has been loaded less or more events then the Admin has");
+        for (Event event : events) {
+            if (!event.getName().equals("Dinner") &&
+                    !event.getName().equals("Caffe Time") &&
+                    !event.getName().equals("Breakfast") &&
+                    !event.getName().equals("50 Years Party")){
+                fail("Loaded the wrong events for Admin");
+            }
+        }
     }
 
 }
