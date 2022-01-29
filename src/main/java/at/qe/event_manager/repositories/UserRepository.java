@@ -9,6 +9,14 @@ import at.qe.event_manager.model.User;
 import at.qe.event_manager.model.UserRole;
 
 /**
+ * This interface is part of the event manager project which was programmed during the
+ * "PS Software Architecture" course in the winter semester 2021/2022 at the University of Innsbruck.
+ * 
+ * @author Matthias Komar
+ * @author Manuel Reichegger
+ * @author Simon Muscatello
+ * @author Stefan Wagner
+ * 
  * Repository for managing {@link User} entities.
  */
 public interface UserRepository extends AbstractRepository<User, String>, Serializable {

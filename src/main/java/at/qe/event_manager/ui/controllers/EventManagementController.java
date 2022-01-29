@@ -14,6 +14,17 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.*;
 
+/**
+ * This class is part of the event manager project which was programmed during the
+ * "PS Software Architecture" course in the winter semester 2021/2022 at the University of Innsbruck.
+ * 
+ * @author Matthias Komar
+ * @author Manuel Reichegger
+ * @author Simon Muscatello
+ * @author Stefan Wagner
+ * 
+ * Controller which controls the event management between backend and frontend.
+ */
 @RestController
 @RequestMapping("/api/event")
 public class EventManagementController {

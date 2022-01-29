@@ -4,7 +4,6 @@ import at.qe.event_manager.model.*;
 import at.qe.event_manager.services.*;
 import at.qe.event_manager.ui.controllers.EventManagementController;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,13 +12,22 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * This class is part of the event manager project which was programmed during the
+ * "PS Software Architecture" course in the winter semester 2021/2022 at the University of Innsbruck.
+ * 
+ * @author Matthias Komar
+ * @author Manuel Reichegger
+ * @author Simon Muscatello
+ * @author Stefan Wagner
+ * 
+ * Some very basic tests for {@link EventManagementController}.
+ */
 @SpringBootTest
 @WebAppConfiguration
 public class EventManagementControllerTest {
@@ -38,12 +46,6 @@ public class EventManagementControllerTest {
 
     @Autowired
     private TimeslotService timeslotService;
-
-    @Autowired
-    private PollLocationsService pollLocationsService;
-
-    @Autowired
-    private PollTimeslotsService pollTimeslotsService;
 
     @BeforeEach
     public void disableMailServiceAndSchedulerEventService() {

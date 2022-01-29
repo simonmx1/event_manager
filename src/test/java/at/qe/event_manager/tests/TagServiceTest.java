@@ -2,11 +2,8 @@ package at.qe.event_manager.tests;
 
 import at.qe.event_manager.model.Tag;
 import at.qe.event_manager.services.TagService;
-import org.apache.jasper.tagplugins.jstl.core.If;
 import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.orm.jpa.JpaSystemException;
@@ -15,6 +12,17 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * This class is part of the event manager project which was programmed during the
+ * "PS Software Architecture" course in the winter semester 2021/2022 at the University of Innsbruck.
+ * 
+ * @author Matthias Komar
+ * @author Manuel Reichegger
+ * @author Simon Muscatello
+ * @author Stefan Wagner
+ * 
+ * Some very basic tests for {@link TagService}.
+ */
 @SpringBootTest
 @WebAppConfiguration
 public class TagServiceTest {
