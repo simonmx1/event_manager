@@ -100,7 +100,7 @@ public class EventManagementControllerTest {
 
     @DirtiesContext
     @Test
-    @Disabled
+    @Transactional
     public void testEvaluatePollsWithCreatorPreferred() {
         Event toBeEvaluatedEvent = eventManagementController.get(1);
         assertEquals(userService.loadUserByUsername("admin"), toBeEvaluatedEvent.getCreator());
