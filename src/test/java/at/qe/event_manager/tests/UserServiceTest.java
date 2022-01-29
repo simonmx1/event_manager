@@ -142,7 +142,7 @@ public class UserServiceTest {
         toBeCreatedUser.setLastName(lName);
         toBeCreatedUser.setEmail(email);
         toBeCreatedUser.setRole(UserRole.USER);
-        userService.saveUser(toBeCreatedUser);
+        userService.createUser(toBeCreatedUser);
 
         User freshlyCreatedUser = userService.loadUserByUsername(username);
         assertEquals(userSize+1, userService.getAllUsers().size(), "No user has been added after calling UserService.saveUser");
@@ -162,14 +162,14 @@ public class UserServiceTest {
 		User adminUser = userService.loadUserByUsername("admin");
         assertNotNull(adminUser, "Admin user could not be loaded from test data source");
         User toBeCreatedUser = new User();
-        assertThrows(JpaSystemException.class, () -> userService.saveUser(toBeCreatedUser));
+        assertThrows(JpaSystemException.class, () -> userService.createUser(toBeCreatedUser));
     }
 	
 	@Test
 	@WithMockUser(username = "user2", authorities = {"ROLE_LOCATION_MANAGER"})
 	public void testUnauthorizedSaveUser() {
 		User toNotBeSavedUser = userService.loadUserByUsername("user1");
-		assertThrows(AccessDeniedException.class, () -> userService.saveUser(toNotBeSavedUser),
+		assertThrows(AccessDeniedException.class, () -> userService.createUser(toNotBeSavedUser),
 			 "Call to userService.saveUser should not work without proper authorization");
 	}
 	
