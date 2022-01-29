@@ -91,11 +91,11 @@ public class TagServiceTest {
         Tag tag = new Tag();
         tag.setText(text);
 
-        tagService.saveTag(tag);
+        tagService.createTag(tag);
 
         Tag freshlyCreatedTag = tagService.loadTag(text);
         assertNotNull(freshlyCreatedTag, "New Tag could be loaded from test data");
-        assertEquals(tagSize+1, tagService.getAllTags().size(), "No Tag has been added after calling TagService.saveTag");
+        assertEquals(tagSize+1, tagService.getAllTags().size(), "No Tag has been added after calling TagService.createTag");
 
     }
 
