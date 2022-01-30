@@ -37,12 +37,6 @@ public class PollManagementController implements Serializable {
     @Autowired
     private UserService userService;
 
-    /**
-     * Returns a list of all polls.
-     *
-     * @return
-     */
-
     @GetMapping("/getAll")
     public Collection<Poll> getAll() {
         return pollService.getAllPolls();

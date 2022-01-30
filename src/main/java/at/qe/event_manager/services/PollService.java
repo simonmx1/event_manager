@@ -57,7 +57,8 @@ public class PollService implements Serializable {
     /**
      * Loads a single poll identified by its event and user.
      *
-     * @param event, user the event and user to search for
+     * @param event the event to search for
+     * @param user the user to search for
      * @return the poll with the given event and user
      */
     public Poll loadPollByEventAndUser(Event event, User user) {

@@ -38,12 +38,7 @@ public class LocationManagementController implements Serializable {
 	
 	@Autowired
 	private OpeningTimeService openingTimeService;
-	
-    /**
-     * Returns a list of all users.
-     *
-     * @return
-     */
+
     @GetMapping("/getAll")
     public Collection<Location> getLocations() {
         return locationService.getAllLocations();

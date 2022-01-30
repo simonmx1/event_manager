@@ -40,11 +40,6 @@ public class UserManagementController implements Serializable {
     
     private static final String FORBIDDEN = "You shall not pass!";
 
-    /**
-     * Returns a list of all users.
-     *
-     * @return
-     */
     @GetMapping("/getAll")
     public Collection<User> getUsers() {
     	Collection<User> u = userService.getAllUsers();
