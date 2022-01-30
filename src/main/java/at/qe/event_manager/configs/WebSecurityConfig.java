@@ -22,7 +22,15 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import at.qe.event_manager.services.UserService;
 
 /**
- * Spring configuration for web security.
+ * This class is part of the event manager project which was programmed during the
+ * "PS Software Architecture" course in the winter semester 2021/2022 at the University of Innsbruck.
+ * 
+ * @author Matthias Komar
+ * @author Manuel Reichegger
+ * @author Simon Muscatello
+ * @author Stefan Wagner
+ * 
+ * In this class the spring configuration for web security is set.
  */
 @Configuration
 @EnableWebSecurity

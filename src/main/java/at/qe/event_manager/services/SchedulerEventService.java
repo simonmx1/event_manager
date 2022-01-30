@@ -11,6 +11,14 @@ import org.springframework.stereotype.Component;
 import at.qe.event_manager.model.Event;
 
 /**
+ * This class is part of the event manager project which was programmed during the
+ * "PS Software Architecture" course in the winter semester 2021/2022 at the University of Innsbruck.
+ * 
+ * @author Matthias Komar
+ * @author Manuel Reichegger
+ * @author Simon Muscatello
+ * @author Stefan Wagner
+ * 
  * The Scheduler looks up every 5 minutes for events which PollEndTime is in the Past and sends them to evaluation.
  */
 

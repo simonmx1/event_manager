@@ -21,6 +21,17 @@ import at.qe.event_manager.model.Event;
 import at.qe.event_manager.model.Location;
 import at.qe.event_manager.model.User;
 
+/**
+ * This class is part of the event manager project which was programmed during the
+ * "PS Software Architecture" course in the winter semester 2021/2022 at the University of Innsbruck.
+ * 
+ * @author Matthias Komar
+ * @author Manuel Reichegger
+ * @author Simon Muscatello
+ * @author Stefan Wagner
+ * 
+ * Service for sending mails to users
+ */
 @Service
 public class MailService {
 
@@ -47,20 +58,55 @@ public class MailService {
 		});
 	}
 	
+	
+	/**
+	 * A possibility to deactivate the MailService while testing or developing
+	 */
 	public static void disable() {
 		enabled = false;
 	}
 	
-	private static Message prepareMessage(final String DST_MAIL_ADDR) throws MessagingException {
+	/**
+	 * Create a mail message and set the session context and the source mail address
+	 *
+	 * @return the prepared message
+	 */
+	private static Message prepareMessage() throws MessagingException {
 		Message msg = new MimeMessage(SESSION);
-		msg.setFrom(new InternetAddress(DST_MAIL_ADDR));
+		msg.setFrom(new InternetAddress(SRC_MAIL_ADDR));
 		return msg;
 	}
 	
+	/**
+	 * A helper method to avoid having to define the same content of a mail over and over again.
+	 *
+	 * @param user with firstname and lastname to which the mail is addressed 
+	 * @param content of the mail message
+	 * 
+	 * @return the whole content string of the message with greeting and farewell
+	 */
+	private static String generateContentString(User user, String content) {
+		StringBuilder contentBuilder = new StringBuilder();
+		contentBuilder.append(String.format("Hello %s %s!%n%n", user.getFirstName(), user.getLastName()));
+		contentBuilder.append(content);
+		contentBuilder.append("\n\nYour Event Manager Team");
+		return contentBuilder.toString();
+	}
+	
+	/**
+	 * Build everything together
+	 * In this method, the mail is assembled as specified by {@link javax.mail}
+	 *
+	 * @param user with destination mail address
+	 * @param subject of the mail message
+	 * @param content of the mail message
+	 *
+	 * @return message ready to be sent
+	 */
 	private static Message buildMessage(User user, String subject, String content) {
 		Message msg = null;
 		try {
-			msg = prepareMessage(user.getEmail());
+			msg = prepareMessage();
 			msg.setRecipient(Message.RecipientType.TO, new InternetAddress(user.getEmail()));
 			msg.setSubject(subject);
 			Multipart multipart = new MimeMultipart();
@@ -74,10 +120,21 @@ public class MailService {
 		return msg;
 	}
 	
+	
+	/**
+	 * Send the message by starting a new thread of {@link ThreadMailService}
+	 * so that the backend continues to run
+	 *
+	 * @param msg the message which is sent
+	 */
 	private static void sendMessage(Message msg) {
 		new ThreadMailService(msg).start();
 	}
 	
+	/**
+	 * Inner class of {@link MailService} which starts a simple thread
+	 * in order to make mail sending multithreaded
+	 */
 	private static class ThreadMailService extends Thread{
 		private Message msg;
 		
@@ -87,6 +144,9 @@ public class MailService {
 			this.msg = msg;
 		}
 		
+		/**
+		 * Start the thread which sends the mail message
+		 */
 		@Override
 		public void run() {
 			try {
@@ -101,10 +161,17 @@ public class MailService {
 			}
 		}
 		
+		/**
+		 * If the sending of mails is rejected due to too many server accesses
+		 * then this method catches the errors and tries again in 5 seconds.
+		 * After 5 unsuccessful attempts to send the mail message, sending is aborted.
+		 * 
+		 * @param e the exception which lead to the call of this method
+		 */
 		private void catchSendErrorAndPotentiallyTryAgain(SendFailedException e) {
 			try {
 				if(numberOfTries < 5) {
-					Thread.sleep(4000);
+					Thread.sleep(5000);
 					run();
 				}
 				else {
@@ -114,14 +181,6 @@ public class MailService {
 				LOGGER.log(Level.SEVERE, e1.getMessage());
 			}
 		}
-	}
-	
-	private static String generateContentString(User user, String content) {
-		StringBuilder contentBuilder = new StringBuilder();
-		contentBuilder.append(String.format("Hello %s %s!%n%n", user.getFirstName(), user.getLastName()));
-		contentBuilder.append(content);
-		contentBuilder.append("\n\nYour Event Manager Team");
-		return contentBuilder.toString();
 	}
 	
 	public static void sendUserRegisterMessage(User user){
@@ -188,7 +247,7 @@ public class MailService {
 	
 	public static void sendEventLocationDeletionMessage(User user, Event event, Location location) {
 		String subject = String.format("Event Manager: Event: \"%s\" has been cancelled", event.getName());
-		String content = String.format("Unfortunately, the location with the name \"%s\" selected in the voting of the event \"name\" "
+		String content = String.format("Unfortunately, the location with the name \"%s\" selected in the voting of the event \"%s\" "
 				+ "has been deleted on \"Event Manager\". For this reason, this event cannot take place and therefore it will be deleted.",
 				location.getName(), event.getName());
 		sendMessage(buildMessage(user, subject, generateContentString(user, content)));
