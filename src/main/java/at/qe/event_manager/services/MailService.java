@@ -247,7 +247,7 @@ public class MailService {
 	
 	public static void sendEventLocationDeletionMessage(User user, Event event, Location location) {
 		String subject = String.format("Event Manager: Event: \"%s\" has been cancelled", event.getName());
-		String content = String.format("Unfortunately, the location with the name \"%s\" selected in the voting of the event \"name\" "
+		String content = String.format("Unfortunately, the location with the name \"%s\" selected in the voting of the event \"%s\" "
 				+ "has been deleted on \"Event Manager\". For this reason, this event cannot take place and therefore it will be deleted.",
 				location.getName(), event.getName());
 		sendMessage(buildMessage(user, subject, generateContentString(user, content)));
