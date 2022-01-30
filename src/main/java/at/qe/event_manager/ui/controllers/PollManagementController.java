@@ -12,7 +12,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Controller for the poll list view.
+ * This class is part of the event manager project which was programmed during the
+ * "PS Software Architecture" course in the winter semester 2021/2022 at the University of Innsbruck.
+ * 
+ * @author Matthias Komar
+ * @author Manuel Reichegger
+ * @author Simon Muscatello
+ * @author Stefan Wagner
+ * 
+ * Controller which controls the poll management between backend and frontend.
  */
 @RestController
 @RequestMapping("/api/poll")
@@ -28,12 +36,6 @@ public class PollManagementController implements Serializable {
 
     @Autowired
     private UserService userService;
-
-    /**
-     * Returns a list of all polls.
-     *
-     * @return
-     */
 
     @GetMapping("/getAll")
     public Collection<Poll> getAll() {

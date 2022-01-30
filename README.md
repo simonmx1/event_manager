@@ -1,7 +1,16 @@
-# EventManager Team 0
+# EventManager, Group 7, Team 0
 
-- Projektplan erreichbar unter: https://uibkacat-my.sharepoint.com/:x:/g/personal/manuel_reichegger_student_uibk_ac_at/EYNiabveawpCgkA6xLfMAp0BenvE_iddEKDFeNfjm-hqQw?e=Ayy8K7
+### This project was programmed during the "PS Software Architecture" course in the winter semester 2021/2022 at the University of Innsbruck.
+### [Projektplan available here](https://uibkacat-my.sharepoint.com/:x:/g/personal/manuel_reichegger_student_uibk_ac_at/EYNiabveawpCgkA6xLfMAp0BenvE_iddEKDFeNfjm-hqQw?e=Ayy8K7)
 
+| Authors           |
+|-------------------|
+| Matthias Komar    |
+| Manuel Reichegger |
+| Simon Muscatello  |
+| Stefan Wagner     |
+
+#### Spring boot application. Execute maven with <code>mvn spring-boot:run</code> to start this web application and test it with some test users:
 
 | username | password | ROLE             |
 |----------|----------|------------------|

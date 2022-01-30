@@ -10,6 +10,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 /**
+ * This class is part of the event manager project which was programmed during the
+ * "PS Software Architecture" course in the winter semester 2021/2022 at the University of Innsbruck.
+ * 
+ * @author Matthias Komar
+ * @author Manuel Reichegger
+ * @author Simon Muscatello
+ * @author Stefan Wagner
+ * 
  * Service for accessing and manipulating Event data.
  */
 @Component
@@ -87,7 +95,7 @@ public class EventService implements Serializable {
 	 * If the Event gets deleted, this method is there so you don't get more than one mail, if you are participant.
 	 *
 	 * @param event the event to delete
-	 * 		  sendEventDeletionMessage boolean
+	 * @param sendEventDeletionMessage boolean
 	 */
 	private void deleteEventWrapper(Event event, boolean sendEventDeletionMessage) {
 		if (sendEventDeletionMessage && (!event.isEvaluated() || (event.getTimeslot() != null && event.getTimeslot().getStart().compareTo(new Date()) > 0))) {
@@ -293,9 +301,8 @@ public class EventService implements Serializable {
 	 * or PollLocations with the sum up points.
 	 *
 	 * @param event the event to evaluate the Polls.
-	 *        locationsWithComputedPoints List of the PollLocations
-	 *        timeslotsWithComputedPoints List of the PollTimeslots
-	 *
+	 * @param locationsWithComputedPoints List of the PollLocations
+	 * @param timeslotsWithComputedPoints List of the PollTimeslots
 	 */
 	private void computePointsOfPolls(Event event, List<PollLocations> locationsWithComputedPoints,
 			List<PollTimeslots> timeslotsWithComputedPoints) {

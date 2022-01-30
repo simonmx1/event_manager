@@ -434,6 +434,8 @@ export default {
       })
       if (valid) {
         this.$emit('confirm', this.currentEvent)
+      } else {
+        this.currentEvent.timeslots = []
       }
     },
     timeslotConvert(timeslot) {

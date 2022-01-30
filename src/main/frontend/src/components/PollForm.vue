@@ -191,7 +191,6 @@ export default {
           })
     },
     sendData() {
-      console.log(this.disabledTimeslots);
       this.$emit("confirm", {
         locations: this.locations,
         timeslots: this.timeslots,

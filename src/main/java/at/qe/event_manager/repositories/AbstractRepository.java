@@ -6,6 +6,14 @@ import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.Repository;
 
 /**
+ * This interface is part of the event manager project which was programmed during the
+ * "PS Software Architecture" course in the winter semester 2021/2022 at the University of Innsbruck.
+ * 
+ * @author Matthias Komar
+ * @author Manuel Reichegger
+ * @author Simon Muscatello
+ * @author Stefan Wagner
+ * 
  * Common base repository for all other repositories. Provides basic methods for
  * loading, saving and removing entities.
  *

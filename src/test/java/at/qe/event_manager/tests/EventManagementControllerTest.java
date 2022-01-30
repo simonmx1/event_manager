@@ -1,35 +1,24 @@
 package at.qe.event_manager.tests;
 
-import java.sql.Date;
-import java.sql.Timestamp;
-import java.util.*;
-
+import at.qe.event_manager.model.*;
+import at.qe.event_manager.payload.request.EventCreationRequest;
+import at.qe.event_manager.services.*;
+import at.qe.event_manager.ui.controllers.EventManagementController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.primefaces.shaded.json.JSONArray;
+import org.primefaces.shaded.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-import at.qe.event_manager.model.Event;
-import at.qe.event_manager.model.Location;
-import at.qe.event_manager.model.Poll;
-import at.qe.event_manager.model.PollLocations;
-import at.qe.event_manager.model.PollTimeslots;
-import at.qe.event_manager.model.Timeslot;
-import at.qe.event_manager.model.User;
-import at.qe.event_manager.services.EventService;
-import at.qe.event_manager.services.LocationService;
-import at.qe.event_manager.services.MailService;
-import at.qe.event_manager.services.PollLocationsService;
-import at.qe.event_manager.services.PollService;
-import at.qe.event_manager.services.PollTimeslotsService;
-import at.qe.event_manager.services.SchedulerEventService;
-import at.qe.event_manager.services.TimeslotService;
-import at.qe.event_manager.services.UserService;
-
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -41,32 +30,26 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Simon Muscatello
  * @author Stefan Wagner
  * 
- * Some very basic tests for {@link EventService}.
+ * Some very basic tests for {@link EventManagementController}.
  */
 @SpringBootTest
 @WebAppConfiguration
-public class EventServiceTest {
+public class EventManagementControllerTest {
 
     @Autowired
-    EventService eventService;
+    EventManagementController eventManagementController;
 
     @Autowired
-    PollService pollService;
+    private UserService userService;
 
     @Autowired
-    UserService userService;
+    private LocationService locationService;
 
     @Autowired
-    TimeslotService timeslotService;
+    private PollService pollService;
 
     @Autowired
-    LocationService locationService;
-
-    @Autowired
-    PollTimeslotsService pollTimeslotsService;
-
-    @Autowired
-    PollLocationsService pollLocationsService;
+    private TimeslotService timeslotService;
 
     @BeforeEach
     public void disableMailServiceAndSchedulerEventService() {
@@ -74,10 +57,13 @@ public class EventServiceTest {
         SchedulerEventService.disable();
     }
 
+    @DirtiesContext
     @Test
+    @Transactional
+    @WithMockUser(username = "admin", authorities = {"ROLE_ADMIN"})
     public void testInitEventData() {
-        assertTrue(eventService.getAllEvents().size() >= 5, "Insufficient amount of events initialized for test data source");
-        for (Event event : eventService.getAllEvents()) {
+        assertTrue(eventManagementController.getEvents().size() >= 5, "Insufficient amount of events initialized for test data source");
+        for (Event event : eventManagementController.getEvents()) {
             assertNotNull(event.getName(), "Event does not have name defined");
             assertNotNull(event.getCreator(), "Event \"" + event.getName() + "\" does not have a Creator defined");
             assertNotNull(event.getParticipants(), "Event \"" + event.getName() + "\" does not have Participants defined");
@@ -88,6 +74,31 @@ public class EventServiceTest {
             assertNotNull(event.getCreateDate(), "Event \"" + event.getName() + "\" does not have a CreateDate defined");
         }
     }
+    
+    @DirtiesContext
+    @Test
+    @Transactional
+    @WithMockUser(username = "admin", authorities = {"ROLE_ADMIN"})
+    public void testCreateEvent() {
+    	int eventSize = eventManagementController.getEvents().size();
+    	String name = "Test";
+    	String creatorUsername = "admin";
+    	JSONArray participants = new JSONArray();
+    	participants.put("user1");
+    	participants.put("user2");
+    	JSONArray locations = new JSONArray();
+    	locations.put(2);
+    	locations.put(3);
+    	JSONArray timeslots = new JSONArray();
+    	timeslots.put(new JSONObject().put("start", "2022-02-01T11:00:00.000Z").put("end", "2022-02-01T14:30:00.000Z"));
+    	timeslots.put(new JSONObject().put("start", "2022-02-02T17:30:00.000Z").put("end", "2022-02-02T20:30:00.000Z"));
+    	Boolean creatorIsPreferred = true;
+    	String pollEndDate = "2022-01-30T23:00:00.000Z";
+    	EventCreationRequest request = new EventCreationRequest(name, creatorUsername, participants, locations, timeslots, creatorIsPreferred, pollEndDate);
+    	assertEquals(HttpStatus.CREATED, eventManagementController.create(request).getStatusCode(),
+				"Call to eventManagementController.create should work with proper timeslots");
+    	assertEquals(eventSize+1, eventManagementController.getEvents().size(), "Call to eventManagementController.create did not create a new event");
+    }
 
     @DirtiesContext
     @Test
@@ -95,124 +106,34 @@ public class EventServiceTest {
     @WithMockUser(username = "admin", authorities = {"ROLE_ADMIN"})
     public void testDeleteEvent() {
         Integer eventId = 1;
-        Event event = eventService.loadEventByEventId(eventId);
+        Event event = eventManagementController.get(eventId);
         assertNotNull(event, "Event could not be loaded from test data source");
-        int eventSize = eventService.getAllEvents().size();
+        int eventSize = eventManagementController.getEvents().size();
 
-        eventService.deleteEvent(event);
+        eventManagementController.delete(event.getId());
 
-        assertEquals(eventSize - 1, eventService.getAllEvents().size(), "No event has been deleted after calling eventService.deleteEvent");
-        assertNull(eventService.loadEventByEventId(eventId), "Deleted Event \"" + event + "\" could still be loaded from test data source via eventService.loadEvent");
+        assertEquals(eventSize - 1, eventManagementController.getEvents().size(), "No event has been deleted after calling eventManagementController.deleteEvent");
+        assertNull(eventManagementController.get(eventId), "Deleted Event \"" + event + "\" could still be loaded from test data source via eventManagementController.get");
 
-        for (Event remainingEvent : eventService.getAllEvents()) {
-            assertNotEquals(event.getId(), remainingEvent.getId(), "Deleted Event \"" + event + "\" could still be loaded from test data source via eventService.getAllEvents()");
+        for (Event remainingEvent : eventManagementController.getEvents()) {
+            assertNotEquals(event.getId(), remainingEvent.getId(), "Deleted Event \"" + event + "\" could still be loaded from test data source via eventManagementController.getEvents");
         }
-    }
-
-    @DirtiesContext
-    @Test
-    @WithMockUser(username = "elvis", authorities = {"ROLE_USER"})
-    public void testCreateEvent() {
-        int eventSize = eventService.getAllEvents().size();
-
-        String name = "TEST_EVENT";
-        User creator = userService.loadUserByUsername("elvis");
-        Event event = new Event();
-        event.setName(name);
-        event.setCreator(creator);
-        event.setCreatorIsPreferred(true);
-        event.setPollEndDate(Date.valueOf("2023-1-1"));
-        event = eventService.saveEvent(event);
-
-        Set<User> participants = new HashSet<>();
-        User p1 = userService.loadUserByUsername("admin");
-        participants.add(creator);
-        participants.add(p1);
-        event.setParticipants(participants);
-
-        Set<Poll> polls = new HashSet<>();
-        Poll poll1 = new Poll();
-        poll1.setUser(creator);
-        poll1.setEvent(event);
-        poll1 = pollService.savePoll(poll1);
-        polls.add(poll1);
-        Poll poll2 = new Poll();
-        poll2.setUser(p1);
-        poll2.setEvent(event);
-        poll2 = pollService.savePoll(poll2);
-        polls.add(poll2);
-
-        Timeslot t = new Timeslot();
-        t.setStart(Timestamp.valueOf("2023-8-1 12:00:00"));
-        t.setEnd(Timestamp.valueOf("2023-8-1 14:00:00"));
-        t = timeslotService.saveTimeslot(t);
-
-        Set<PollTimeslots> poll1Timeslots = new HashSet<>();
-        PollTimeslots pt1 = new PollTimeslots();
-        pt1.setPoll(poll1);
-        pt1.setTimeslot(t);
-        pt1.setPoints(1);
-        pt1 = pollTimeslotsService.savePollTimeslots(pt1);
-        poll1Timeslots.add(pt1);
-        poll1.setPollTimeslots(poll1Timeslots);
-
-        Set<PollTimeslots> poll2Timeslots = new HashSet<>();
-        PollTimeslots pt2 = new PollTimeslots();
-        pt2.setPoll(poll2);
-        pt2.setTimeslot(t);
-        pt2.setPoints(2);
-        pt2 = pollTimeslotsService.savePollTimeslots(pt2);
-        poll2Timeslots.add(pt2);
-        poll2.setPollTimeslots(poll2Timeslots);
-
-        Location l = locationService.loadLocationByLocationId(2);
-
-        Set<PollLocations> poll1Locations = new HashSet<>();
-        PollLocations pl1 = new PollLocations();
-        pl1.setPoll(poll1);
-        pl1.setLocation(l);
-        pl1.setPoints(1);
-        pl1 = pollLocationsService.savePollLocations(pl1);
-        poll1Locations.add(pl1);
-        poll1.setPollLocations(poll1Locations);
-
-        Set<PollLocations> poll2Locations = new HashSet<>();
-        PollLocations pl2 = new PollLocations();
-        pl2.setPoll(poll2);
-        pl2.setLocation(l);
-        pl2.setPoints(2);
-        pl2 = pollLocationsService.savePollLocations(pl2);
-        poll2Locations.add(pl2);
-        poll2.setPollLocations(poll2Locations);
-
-        event.setPolls(polls);
-        event = eventService.saveEvent(event);
-
-        Event freshlyCreatedEvent = eventService.loadEventByEventId(event.getId());
-        assertEquals(eventSize + 1, eventService.getAllEvents().size(), "No event has been added after calling EventService.saveEvent");
-        assertNotNull(freshlyCreatedEvent, "New event could not be loaded from test data source after being saved");
-        assertEquals(name, freshlyCreatedEvent.getName(), "New event could not be loaded from test data source after being saved");
-        assertEquals(creator, freshlyCreatedEvent.getCreator(), "Event \"" + name + "\" does not have a the correct creator attribute stored being saved");
-        assertNotNull(event.getParticipants(), "Event \"" + name + "\" does not have Participants stored when being saved");
-        assertEquals(2, event.getParticipants().size(), "Event \"" + name + "\" does not have enough Participants stored when being saved");
-        assertNotNull(event.getPolls(), "Event \"" + name + "\" does not have Polls stored when being saved");
-        assertEquals(2, event.getPolls().size(), "Event \"" + name + "\" does not have enough Polls stored when being saved");
-        assertNotNull(freshlyCreatedEvent.getCreateDate(), "Event \"" + name + "\" does not have a createDate defined after being saved");
     }
 
     @Test
     @WithMockUser(username = "elvis", authorities = {"ROLE_USER"})
     public void testUnauthorizedDeleteEvent() {
-        Event toNotBeDeletedEvent = eventService.loadEventByEventId(2);
+        Event toNotBeDeletedEvent  = eventManagementController.get(2);
         assertEquals("admin", toNotBeDeletedEvent.getCreator().getUsername());
-        assertThrows(AccessDeniedException.class, () -> eventService.deleteEvent(toNotBeDeletedEvent),
-                "Call to eventService.deleteEvent should not work without proper authorization");
+        assertThrows(AccessDeniedException.class, () -> eventManagementController.delete(toNotBeDeletedEvent.getId()),
+                "Call to eventManagementController.delete should not work without proper authorization");
     }
 
     @DirtiesContext
     @Test
+    @Transactional
     public void testEvaluatePollsWithCreatorPreferred() {
-        Event toBeEvaluatedEvent = eventService.loadEventByEventId(1);
+        Event toBeEvaluatedEvent = eventManagementController.get(1);
         assertEquals(userService.loadUserByUsername("admin"), toBeEvaluatedEvent.getCreator());
         toBeEvaluatedEvent.setCreatorIsPreferred(true);
 
@@ -275,7 +196,7 @@ public class EventServiceTest {
          * Id: 2 -> points: 3;
          * Creator preferred Id 1
          */
-        eventService.evaluatePolls(toBeEvaluatedEvent);
+        eventManagementController.evaluatePolls(toBeEvaluatedEvent.getId());
         assertEquals(locationService.loadLocationByLocationId(2), toBeEvaluatedEvent.getLocation(), "Location Winner is wrong");
         assertEquals(timeslotService.loadTimeslotByLocationId(1), toBeEvaluatedEvent.getTimeslot(), "Timeslot Winner is wrong");
     }
@@ -283,9 +204,10 @@ public class EventServiceTest {
     @DirtiesContext
     @Transactional
     @Test
+    @WithMockUser(username = "admin", authorities = {"ROLE_ADMIN"})
     public void testEvaluatePollsWithNoAvailableTimeslot() {
-        int eventSize = eventService.getAllEvents().size();
-        Event toBeEvaluatedEvent = eventService.loadEventByEventId(1);
+        int eventSize = eventManagementController.getEvents().size();
+        Event toBeEvaluatedEvent = eventManagementController.get(1);
         assertNotNull(toBeEvaluatedEvent, "event loaded from database should not be null");
 
         Poll user2_poll = pollService.loadPollByEventAndUser(toBeEvaluatedEvent, userService.loadUserByUsername("user2"));
@@ -294,8 +216,8 @@ public class EventServiceTest {
         }
 
         //No available timeslot means -> the event cannot be held and therefore will be deleted
-        eventService.evaluatePolls(toBeEvaluatedEvent);
-        assertEquals(eventSize - 1, eventService.getAllEvents().size(), "eventSize should have decreased by one because of event deletion");
+        eventManagementController.evaluatePolls(toBeEvaluatedEvent.getId());
+        assertEquals(eventSize - 1, eventManagementController.getEvents().size(), "eventSize should have decreased by one because of event deletion");
     }
 
     @DirtiesContext
@@ -305,7 +227,7 @@ public class EventServiceTest {
         String username = "admin";
         User admin = userService.loadUserByUsername(username);
         assertNotNull(admin, "Admin user could not be loaded from test data source");
-        Collection<Event> events = eventService.getAllEventFromUser(admin);
+        Collection<Event> events = eventManagementController.getEventsFromUser(admin.getUsername());
         assertEquals(4, events.size(), "eventService.getAllEventsFromUser has been loaded less or more events then the Admin has");
         for (Event event : events) {
             if (!event.getName().equals("Dinner") &&

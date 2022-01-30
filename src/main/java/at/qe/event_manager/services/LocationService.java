@@ -12,6 +12,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 /**
+ * This class is part of the event manager project which was programmed during the
+ * "PS Software Architecture" course in the winter semester 2021/2022 at the University of Innsbruck.
+ * 
+ * @author Matthias Komar
+ * @author Manuel Reichegger
+ * @author Simon Muscatello
+ * @author Stefan Wagner
+ * 
  * Service for accessing and manipulating location data.
  */
 @Component
@@ -82,6 +90,11 @@ public class LocationService implements Serializable {
         locationRepository.delete(location);
     }
 
+    /**
+     * Deletes the given Tag from all Locations.
+     *
+     * @param tag the tag to delete
+     */
     @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_LOCATION_MANAGER')")
     public void cleanUpForTagDeletion(Tag tag) {
     	// Delete Policy for Tag in Locations

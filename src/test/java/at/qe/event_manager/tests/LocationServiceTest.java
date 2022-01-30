@@ -7,7 +7,6 @@ import at.qe.event_manager.services.LocationService;
 import at.qe.event_manager.services.MailService;
 import at.qe.event_manager.services.SchedulerEventService;
 import at.qe.event_manager.services.TagService;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,9 +25,15 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
+ * This class is part of the event manager project which was programmed during the
+ * "PS Software Architecture" course in the winter semester 2021/2022 at the University of Innsbruck.
+ * 
+ * @author Matthias Komar
+ * @author Manuel Reichegger
+ * @author Simon Muscatello
+ * @author Stefan Wagner
+ * 
  * Some very basic tests for {@link LocationService}.
- *
- * This class is part of the event_manager project.
  */
 @SpringBootTest
 @WebAppConfiguration
@@ -129,7 +134,7 @@ public class LocationServiceTest {
         ot.setCreateDate(new Date());
         openingTimes.add(ot);
         toBeCreatedLocation.setOpeningTimes(openingTimes);
-        toBeCreatedLocation = locationService.saveLocation(toBeCreatedLocation);
+        toBeCreatedLocation = locationService.createLocation(toBeCreatedLocation);
         
         Location freshlyCreatedLocation = locationService.loadLocationByLocationId(toBeCreatedLocation.getId());
         assertEquals(locationSize+1, locationService.getAllLocations().size(), "No location has been added after calling LocationService.saveLocation");
@@ -146,7 +151,7 @@ public class LocationServiceTest {
 	@WithMockUser(username = "elvis", authorities = {"ROLE_USER"})
 	public void testUnauthorizedSaveLocation() {
 		Location toNotBeSavedLocation = locationService.loadLocationByLocationId(1);
-		assertThrows(AccessDeniedException.class, () -> locationService.saveLocation(toNotBeSavedLocation),
+		assertThrows(AccessDeniedException.class, () -> locationService.createLocation(toNotBeSavedLocation),
 			 "Call to LocationService.saveLocation should not work without proper authorization");
 	}
     

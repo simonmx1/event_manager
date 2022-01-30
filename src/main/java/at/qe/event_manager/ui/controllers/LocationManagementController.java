@@ -17,7 +17,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Controller for the user list view.
+ * This class is part of the event manager project which was programmed during the
+ * "PS Software Architecture" course in the winter semester 2021/2022 at the University of Innsbruck.
+ * 
+ * @author Matthias Komar
+ * @author Manuel Reichegger
+ * @author Simon Muscatello
+ * @author Stefan Wagner
+ * 
+ * Controller which controls the location management between backend and frontend.
  */
 @RestController
 @RequestMapping("/api/location")
@@ -30,12 +38,6 @@ public class LocationManagementController implements Serializable {
 	
 	@Autowired
 	private OpeningTimeService openingTimeService;
-	
-    /**
-     * Returns a list of all users.
-     *
-     * @return
-     */
 
     @GetMapping("/getAll")
     public Collection<Location> getLocations() {
@@ -52,8 +54,7 @@ public class LocationManagementController implements Serializable {
     public ResponseEntity<String> edit(@RequestBody LocationCreationRequest locationRequest) {
         Location location = locationService.loadLocationByLocationId(locationRequest.getLocationId());
         Iterator<OpeningTime> iterator = location.getOpeningTimes().iterator();
-        Set<OpeningTime> openingTimes = new HashSet<>();
-        openingTimes.addAll(location.getOpeningTimes());
+        Set<OpeningTime> openingTimes = new HashSet<>(location.getOpeningTimes());
         while(iterator.hasNext()) {
             iterator.next();
             iterator.remove();
