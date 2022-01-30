@@ -11,10 +11,14 @@ public class PollTimeslotsId implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    /** The pollID */
+    /**
+     * The pollID
+     */
     private Integer poll;
 
-    /** The timeslotID */
+    /**
+     * The timeslotID
+     */
     private Integer timeslot;
 
     public Integer getPoll() {
@@ -60,11 +64,7 @@ public class PollTimeslotsId implements Serializable {
             return false;
 
         if (timeslot == null) {
-            if (other.timeslot != null)
-                return false;
-        } else if (!timeslot.equals(other.timeslot))
-            return false;
-
-        return true;
+            return other.timeslot == null;
+        } else return timeslot.equals(other.timeslot);
     }
 }
