@@ -34,6 +34,9 @@ public class SchedulerEventService {
 		enabled = false;
 	}
 	
+	/**
+     * Scheduler which decides if an event has to be evaluated
+     */
 	@Scheduled(fixedRate = 5000*60)
 	@Async
 	public void scheduleEventEvaluation() {
