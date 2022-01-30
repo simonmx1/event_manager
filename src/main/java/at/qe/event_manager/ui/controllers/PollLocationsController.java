@@ -36,12 +36,6 @@ public class PollLocationsController implements Serializable {
     @Autowired
     private PollLocationsService pollLocationsService;
 
-    /**
-     * Returns a list of all users.
-     *
-     * @return
-     */
-
     @GetMapping("/getAll")
     public Collection<PollLocations> getAll(Poll poll) {
         return pollService.loadPollByPollId(poll.getId()).getPollLocations();

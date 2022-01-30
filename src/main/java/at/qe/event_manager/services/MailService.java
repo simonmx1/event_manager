@@ -86,11 +86,9 @@ public class MailService {
 	 * @return the whole content string of the message with greeting and farewell
 	 */
 	private static String generateContentString(User user, String content) {
-		StringBuilder contentBuilder = new StringBuilder();
-		contentBuilder.append(String.format("Hello %s %s!%n%n", user.getFirstName(), user.getLastName()));
-		contentBuilder.append(content);
-		contentBuilder.append("\n\nYour Event Manager Team");
-		return contentBuilder.toString();
+		return String.format("Hello %s %s!%n%n", user.getFirstName(), user.getLastName()) +
+				content +
+				"\n\nYour Event Manager Team";
 	}
 	
 	/**

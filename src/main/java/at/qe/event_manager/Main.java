@@ -21,9 +21,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 @SpringBootApplication
 @EnableScheduling
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-@ComponentScan(basePackages = "at.qe.event_manager")
 public class Main {
-
     public static void main(String[] args) {
             SpringApplication.run(Main.class, args);
     }

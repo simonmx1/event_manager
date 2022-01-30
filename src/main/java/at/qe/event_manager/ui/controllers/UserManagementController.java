@@ -40,11 +40,6 @@ public class UserManagementController implements Serializable {
     
     private static final String FORBIDDEN = "You shall not pass!";
 
-    /**
-     * Returns a list of all users.
-     *
-     * @return
-     */
     @GetMapping("/getAll")
     public Collection<User> getUsers() {
     	Collection<User> u = userService.getAllUsers();
@@ -52,6 +47,11 @@ public class UserManagementController implements Serializable {
         return u;
     }
 
+    /**
+     * Check if a user is authorized to perform an action (by username or admin role)
+     * @param username of the user
+     * @return true, if authorized, else false
+     */
     private boolean isAuthorized(String username) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return auth.getName().equals(username) || auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"));

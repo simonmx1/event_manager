@@ -1,6 +1,7 @@
 package at.qe.event_manager.model;
 
 import java.io.Serializable;
+import java.util.Objects;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -82,7 +83,7 @@ public class PollLocations implements Serializable {
             return false;
         }
         PollLocations pl = (PollLocations) o;
-        return this.location.getId() == pl.getLocation().getId();
+        return Objects.equals(this.location.getId(), pl.getLocation().getId());
     }
 
     @Override

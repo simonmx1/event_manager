@@ -38,12 +38,7 @@ public class LocationManagementController implements Serializable {
 	
 	@Autowired
 	private OpeningTimeService openingTimeService;
-	
-    /**
-     * Returns a list of all users.
-     *
-     * @return
-     */
+
     @GetMapping("/getAll")
     public Collection<Location> getLocations() {
         return locationService.getAllLocations();
@@ -59,8 +54,7 @@ public class LocationManagementController implements Serializable {
     public ResponseEntity<String> edit(@RequestBody LocationCreationRequest locationRequest) {
         Location location = locationService.loadLocationByLocationId(locationRequest.getLocationId());
         Iterator<OpeningTime> iterator = location.getOpeningTimes().iterator();
-        Set<OpeningTime> openingTimes = new HashSet<>();
-        openingTimes.addAll(location.getOpeningTimes());
+        Set<OpeningTime> openingTimes = new HashSet<>(location.getOpeningTimes());
         while(iterator.hasNext()) {
             iterator.next();
             iterator.remove();

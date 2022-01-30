@@ -31,12 +31,6 @@ public class PollTimeslotsController implements Serializable {
     @Autowired
     private PollTimeslotsService pollTimeslotsService;
 
-    /**
-     * Returns a list of all users.
-     *
-     * @return
-     */
-
     @GetMapping("/getAll")
     public Collection<PollTimeslots> getAll() {
         return pollTimeslotsService.getAllPollTimeslots();
