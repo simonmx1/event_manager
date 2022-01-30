@@ -3,6 +3,14 @@ package at.qe.event_manager.model;
 import java.io.Serializable;
 
 /**
+ * This class is part of the event manager project which was programmed during the
+ * "PS Software Architecture" course in the winter semester 2021/2022 at the University of Innsbruck.
+ * 
+ * @author Matthias Komar
+ * @author Manuel Reichegger
+ * @author Simon Muscatello
+ * @author Stefan Wagner
+ * 
  * Entity representing pollLocationsId.
  * <p>
  * This class models connect the poll with the location
@@ -48,7 +56,7 @@ public class PollLocationsId implements Serializable {
             return true;
         if (obj == null)
             return false;
-        if (!(obj instanceof PollTimeslotsId))
+        if (!(obj instanceof PollLocationsId))
             return false;
 
         PollLocationsId other = (PollLocationsId) obj;
@@ -60,11 +68,7 @@ public class PollLocationsId implements Serializable {
             return false;
 
         if (location == null) {
-            if (other.location != null)
-                return false;
-        } else if (!location.equals(other.location))
-            return false;
-
-        return true;
+            return other.location == null;
+        } else return location.equals(other.location);
     }
 }

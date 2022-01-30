@@ -1,11 +1,20 @@
 package at.qe.event_manager.model;
 
 import java.io.Serializable;
+import java.util.Objects;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
+ * This class is part of the event manager project which was programmed during the
+ * "PS Software Architecture" course in the winter semester 2021/2022 at the University of Innsbruck.
+ * 
+ * @author Matthias Komar
+ * @author Manuel Reichegger
+ * @author Simon Muscatello
+ * @author Stefan Wagner
+ * 
  * Entity representing pollLocations.
  * <p>
  * This class models a part of the poll of a user with points of a location.
@@ -74,7 +83,7 @@ public class PollLocations implements Serializable {
             return false;
         }
         PollLocations pl = (PollLocations) o;
-        return this.location.getId() == pl.getLocation().getId();
+        return Objects.equals(this.location.getId(), pl.getLocation().getId());
     }
 
     @Override

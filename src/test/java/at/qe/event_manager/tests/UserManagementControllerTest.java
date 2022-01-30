@@ -3,7 +3,6 @@ package at.qe.event_manager.tests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-
 import at.qe.event_manager.model.User;
 import at.qe.event_manager.services.MailService;
 import at.qe.event_manager.services.SchedulerEventService;
@@ -21,9 +19,15 @@ import at.qe.event_manager.services.UserService;
 import at.qe.event_manager.ui.controllers.UserManagementController;
 
 /**
- * Some very basic tests for {@link UserServiceController}.
- *
- * This class is part of the event_manager project.
+ * This class is part of the event manager project which was programmed during the
+ * "PS Software Architecture" course in the winter semester 2021/2022 at the University of Innsbruck.
+ * 
+ * @author Matthias Komar
+ * @author Manuel Reichegger
+ * @author Simon Muscatello
+ * @author Stefan Wagner
+ * 
+ * Some very basic tests for {@link UserManagementController}.
  */
 @SpringBootTest
 @WebAppConfiguration

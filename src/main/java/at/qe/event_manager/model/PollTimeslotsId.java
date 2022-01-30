@@ -3,6 +3,14 @@ package at.qe.event_manager.model;
 import java.io.Serializable;
 
 /**
+ * This class is part of the event manager project which was programmed during the
+ * "PS Software Architecture" course in the winter semester 2021/2022 at the University of Innsbruck.
+ * 
+ * @author Matthias Komar
+ * @author Manuel Reichegger
+ * @author Simon Muscatello
+ * @author Stefan Wagner
+ * 
  * Entity representing pollTimeslotId.
  * <p>
  * This class models connect the poll with the timeslot
@@ -11,10 +19,14 @@ public class PollTimeslotsId implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    /** The pollID */
+    /**
+     * The pollID
+     */
     private Integer poll;
 
-    /** The timeslotID */
+    /**
+     * The timeslotID
+     */
     private Integer timeslot;
 
     public Integer getPoll() {
@@ -60,11 +72,7 @@ public class PollTimeslotsId implements Serializable {
             return false;
 
         if (timeslot == null) {
-            if (other.timeslot != null)
-                return false;
-        } else if (!timeslot.equals(other.timeslot))
-            return false;
-
-        return true;
+            return other.timeslot == null;
+        } else return timeslot.equals(other.timeslot);
     }
 }

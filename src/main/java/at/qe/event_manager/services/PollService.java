@@ -10,6 +10,14 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
+ * This class is part of the event manager project which was programmed during the
+ * "PS Software Architecture" course in the winter semester 2021/2022 at the University of Innsbruck.
+ * 
+ * @author Matthias Komar
+ * @author Manuel Reichegger
+ * @author Simon Muscatello
+ * @author Stefan Wagner
+ * 
  * Service for accessing and manipulating poll data.
  */
 @Component
@@ -49,7 +57,8 @@ public class PollService implements Serializable {
     /**
      * Loads a single poll identified by its event and user.
      *
-     * @param event, user the event and user to search for
+     * @param event the event to search for
+     * @param user the user to search for
      * @return the poll with the given event and user
      */
     public Poll loadPollByEventAndUser(Event event, User user) {

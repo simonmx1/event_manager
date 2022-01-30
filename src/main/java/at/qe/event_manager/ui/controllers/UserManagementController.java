@@ -16,7 +16,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Controller for the user list view.
+ * This class is part of the event manager project which was programmed during the
+ * "PS Software Architecture" course in the winter semester 2021/2022 at the University of Innsbruck.
+ * 
+ * @author Matthias Komar
+ * @author Manuel Reichegger
+ * @author Simon Muscatello
+ * @author Stefan Wagner
+ * 
+ * Controller which controls the user management between backend and frontend.
  */
 @RestController
 @RequestMapping("/api/users")
@@ -32,11 +40,6 @@ public class UserManagementController implements Serializable {
     
     private static final String FORBIDDEN = "You shall not pass!";
 
-    /**
-     * Returns a list of all users.
-     *
-     * @return
-     */
     @GetMapping("/getAll")
     public Collection<User> getUsers() {
     	Collection<User> u = userService.getAllUsers();
@@ -44,6 +47,11 @@ public class UserManagementController implements Serializable {
         return u;
     }
 
+    /**
+     * Check if a user is authorized to perform an action (by username or admin role)
+     * @param username of the user
+     * @return true, if authorized, else false
+     */
     private boolean isAuthorized(String username) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return auth.getName().equals(username) || auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"));

@@ -200,7 +200,6 @@ export default {
       api.poll.get(eventId, userId)
           .then(response => this.poll = response)
           .then(() => {
-            console.log(this.poll)
             this.locations = this.poll.pollLocations.sort((a, b) => b.points - a.points)
             this.timeslots = this.poll.pollTimeslots.sort((a, b) => b.points - a.points).filter(t => t.points !== 0)
             this.disabledTimeslots = []

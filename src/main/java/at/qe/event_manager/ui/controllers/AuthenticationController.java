@@ -16,6 +16,17 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * This class is part of the event manager project which was programmed during the
+ * "PS Software Architecture" course in the winter semester 2021/2022 at the University of Innsbruck.
+ * 
+ * @author Matthias Komar
+ * @author Manuel Reichegger
+ * @author Simon Muscatello
+ * @author Stefan Wagner
+ * 
+ * Controller which controls the authentication of users between backend and frontend.
+ */
 @RestController
 @RequestMapping("/api/auth")
 public class AuthenticationController {
@@ -28,7 +39,14 @@ public class AuthenticationController {
     private JwtUtil jwtTokenUtil;
     @Autowired
     PasswordEncoder encoder;
-
+    
+    /**
+     * Function which checks if user is loggedIn
+     * 
+     * @param loggedInRequest which contains the JSON Web Token sent from the frontend
+     * 
+     * @return response entity with a HTTP status code
+     */
     @PostMapping("/loggedIn")
     public ResponseEntity<String[]> loggedIn(@RequestBody LoggedInRequest loggedInRequest) {
         try {
@@ -44,6 +62,13 @@ public class AuthenticationController {
         }
     }
 
+    /**
+     * Function which handels the login of a user
+     * 
+     * @param loginRequest which contains the username and password of a user 
+     * 
+     * @return response entity with a HTTP status code and eventually a JSON Web Token
+     */
     @PostMapping("/login")
     public ResponseEntity<MessageResponse> loginUser(@RequestBody LoginRequest authenticationRequest) throws AuthenticationException {
         try {
@@ -55,7 +80,14 @@ public class AuthenticationController {
         final String jwt = jwtTokenUtil.generateToken(user);
         return ResponseEntity.ok(new MessageResponse(jwt));
     }
-
+    
+    /**
+     * Function which handels the registration of a new user
+     * 
+     * @param user which contains all the information about a new user
+     * 
+     * @return response entity with a HTTP status code
+     */
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody User user) {
         user.setPassword(encoder.encode(user.getPassword()));
