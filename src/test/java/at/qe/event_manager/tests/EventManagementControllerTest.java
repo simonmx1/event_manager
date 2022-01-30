@@ -1,12 +1,16 @@
 package at.qe.event_manager.tests;
 
 import at.qe.event_manager.model.*;
+import at.qe.event_manager.payload.request.EventCreationRequest;
 import at.qe.event_manager.services.*;
 import at.qe.event_manager.ui.controllers.EventManagementController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.primefaces.shaded.json.JSONArray;
+import org.primefaces.shaded.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
@@ -70,6 +74,31 @@ public class EventManagementControllerTest {
             assertNotNull(event.getCreateDate(), "Event \"" + event.getName() + "\" does not have a CreateDate defined");
         }
     }
+    
+    @DirtiesContext
+    @Test
+    @Transactional
+    @WithMockUser(username = "admin", authorities = {"ROLE_ADMIN"})
+    public void testCreateEvent() {
+    	int eventSize = eventManagementController.getEvents().size();
+    	String name = "Test";
+    	String creatorUsername = "admin";
+    	JSONArray participants = new JSONArray();
+    	participants.put("user1");
+    	participants.put("user2");
+    	JSONArray locations = new JSONArray();
+    	locations.put(2);
+    	locations.put(3);
+    	JSONArray timeslots = new JSONArray();
+    	timeslots.put(new JSONObject().put("start", "2022-02-01T11:00:00.000Z").put("end", "2022-02-01T14:30:00.000Z"));
+    	timeslots.put(new JSONObject().put("start", "2022-02-02T17:30:00.000Z").put("end", "2022-02-02T20:30:00.000Z"));
+    	Boolean creatorIsPreferred = true;
+    	String pollEndDate = "2022-01-30T23:00:00.000Z";
+    	EventCreationRequest request = new EventCreationRequest(name, creatorUsername, participants, locations, timeslots, creatorIsPreferred, pollEndDate);
+    	assertEquals(HttpStatus.CREATED, eventManagementController.create(request).getStatusCode(),
+				"Call to eventManagementController.create should work with proper timeslots");
+    	assertEquals(eventSize+1, eventManagementController.getEvents().size(), "Call to eventManagementController.create did not create a new event");
+    }
 
     @DirtiesContext
     @Test
@@ -83,21 +112,21 @@ public class EventManagementControllerTest {
 
         eventManagementController.delete(event.getId());
 
-        assertEquals(eventSize - 1, eventManagementController.getEvents().size(), "No event has been deleted after calling eventService.deleteEvent");
-        assertNull(eventManagementController.get(eventId), "Deleted Event \"" + event + "\" could still be loaded from test data source via eventService.loadEvent");
+        assertEquals(eventSize - 1, eventManagementController.getEvents().size(), "No event has been deleted after calling eventManagementController.deleteEvent");
+        assertNull(eventManagementController.get(eventId), "Deleted Event \"" + event + "\" could still be loaded from test data source via eventManagementController.get");
 
         for (Event remainingEvent : eventManagementController.getEvents()) {
-            assertNotEquals(event.getId(), remainingEvent.getId(), "Deleted Event \"" + event + "\" could still be loaded from test data source via eventService.getAllEvents()");
+            assertNotEquals(event.getId(), remainingEvent.getId(), "Deleted Event \"" + event + "\" could still be loaded from test data source via eventManagementController.getEvents");
         }
     }
 
     @Test
     @WithMockUser(username = "elvis", authorities = {"ROLE_USER"})
-    public void testUnauthorizedDeleteLocation() {
-        Event toNotBeSavedEvent = eventManagementController.get(2);
-        assertEquals("admin", toNotBeSavedEvent.getCreator().getUsername());
-        assertThrows(AccessDeniedException.class, () -> eventManagementController.delete(toNotBeSavedEvent.getId()),
-                "Call to LocationService.deleteLocation should not work without proper authorization");
+    public void testUnauthorizedDeleteEvent() {
+        Event toNotBeDeletedEvent  = eventManagementController.get(2);
+        assertEquals("admin", toNotBeDeletedEvent.getCreator().getUsername());
+        assertThrows(AccessDeniedException.class, () -> eventManagementController.delete(toNotBeDeletedEvent.getId()),
+                "Call to eventManagementController.delete should not work without proper authorization");
     }
 
     @DirtiesContext

@@ -162,15 +162,6 @@ public class EventManagementController {
 		}
 	}
 
-	@PostMapping("/edit")
-	public ResponseEntity<MessageResponse> edit(@RequestBody Event event) {
-		if (eventService.saveEvent(event) == null) {
-			return ResponseEntity.ok(new MessageResponse("Error: Event does not exist!"));
-		} else {
-			return ResponseEntity.ok(new MessageResponse("Event edited successfully!"));
-		}
-	}
-
 	@PostMapping("/delete")
 	public ResponseEntity<MessageResponse> delete(@RequestBody Integer id) {
 		eventService.deleteEvent(eventService.loadEventByEventId(id));

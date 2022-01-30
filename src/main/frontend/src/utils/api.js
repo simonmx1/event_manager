@@ -154,7 +154,6 @@ export default {
             }).catch(() => false);
         },
         async edit(location) {
-            console.log(location.openingTimes);
             return await axios.post('/api/location/edit', {
                     'locationId': location.locationId,
                     'name': location.name,
@@ -234,7 +233,6 @@ export default {
             }).catch(() => false);
         },
         async create(event) {
-            console.log(event)
             return await axios.post('/api/event/create', {
                     'name': event.name,
                     'creatorUsername': event.creatorUsername,

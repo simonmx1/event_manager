@@ -202,11 +202,11 @@ public class EventServiceTest {
 
     @Test
     @WithMockUser(username = "elvis", authorities = {"ROLE_USER"})
-    public void testUnauthorizedDeleteLocation() {
-        Event toNotBeSavedEvent = eventService.loadEventByEventId(2);
-        assertEquals("admin", toNotBeSavedEvent.getCreator().getUsername());
-        assertThrows(AccessDeniedException.class, () -> eventService.deleteEvent(toNotBeSavedEvent),
-                "Call to LocationService.deleteLocation should not work without proper authorization");
+    public void testUnauthorizedDeleteEvent() {
+        Event toNotBeDeletedEvent = eventService.loadEventByEventId(2);
+        assertEquals("admin", toNotBeDeletedEvent.getCreator().getUsername());
+        assertThrows(AccessDeniedException.class, () -> eventService.deleteEvent(toNotBeDeletedEvent),
+                "Call to eventService.deleteEvent should not work without proper authorization");
     }
 
     @DirtiesContext
